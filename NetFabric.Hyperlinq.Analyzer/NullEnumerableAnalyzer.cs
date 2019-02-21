@@ -23,7 +23,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         static readonly DiagnosticDescriptor rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, 
                 isEnabledByDefault: true, description: Description, 
-                helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq/tree/master/NetFabric.Hyperlinq.Analyzer/docs/reference/HLQ002_NullEnumerable.md");
+                helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ002_NullEnumerable.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
             ImmutableArray.Create(rule);
