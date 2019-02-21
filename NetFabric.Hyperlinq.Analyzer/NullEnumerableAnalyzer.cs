@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -31,49 +30,46 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(AnalyzeReturnStatement, SyntaxKind.ReturnStatement);
-            context.RegisterSyntaxNodeAction(AnalyzeArrowExpressionClause, SyntaxKind.ArrowExpressionClause);
+            context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
         }
 
-        static void AnalyzeReturnStatement(SyntaxNodeAnalysisContext context)
+        static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is ReturnStatementSyntax returnStatementSyntax))
-                return;
-
-            if (!(returnStatementSyntax.Expression is LiteralExpressionSyntax literalExpressionSyntax))
-                return;
-
-            if (!literalExpressionSyntax.IsKind(SyntaxKind.NullLiteralExpression))
+            if (!(context.Node is MethodDeclarationSyntax methodDeclarationSyntax))
                 return;
 
             var semanticModel = context.SemanticModel;
 
-            var methodDeclarationSyntax = returnStatementSyntax.Ancestors().OfType<MethodDeclarationSyntax>().First();
-            var methodReturnTypeSymbol = semanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
-            if (methodReturnTypeSymbol is null || (!methodReturnTypeSymbol.IsEnumerableInterface() && !methodReturnTypeSymbol.IsEnumerable()))
+            var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclarationSyntax);
+            if (methodSymbol.ReturnsVoid)
                 return;
 
-            var diagnostic = Diagnostic.Create(rule, returnStatementSyntax.GetLocation());
-            context.ReportDiagnostic(diagnostic);
-        }
-
-        static void AnalyzeArrowExpressionClause(SyntaxNodeAnalysisContext context)
-        {
-            if (!(context.Node is ArrowExpressionClauseSyntax arrowExpressionClauseSyntax))
+            var returnType = methodSymbol.ReturnType.OriginalDefinition;
+            if (!(returnType.IsEnumerableInterface() || returnType.IsEnumerable()))
                 return;
 
-            if (!arrowExpressionClauseSyntax.Expression.IsKind(SyntaxKind.NullLiteralExpression))
-                return;
-
-            var semanticModel = context.SemanticModel;
-
-            var methodDeclarationSyntax = arrowExpressionClauseSyntax.Ancestors().OfType<MethodDeclarationSyntax>().First();
-            var methodReturnTypeSymbol = semanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
-            if (methodReturnTypeSymbol is null || (!methodReturnTypeSymbol.IsEnumerableInterface() && !methodReturnTypeSymbol.IsEnumerable()))
-                return;
-
-            var diagnostic = Diagnostic.Create(rule, arrowExpressionClauseSyntax.GetLocation());
-            context.ReportDiagnostic(diagnostic);
+            var arrowExpressionClauseSyntax = methodDeclarationSyntax.DescendantNodes()
+                .OfType<ArrowExpressionClauseSyntax>().FirstOrDefault();
+            if (arrowExpressionClauseSyntax is null)
+            {
+                foreach(var returnStatementSyntax in methodDeclarationSyntax.DescendantNodes().OfType<ReturnStatementSyntax>())
+                {
+                    if (returnStatementSyntax.Expression is LiteralExpressionSyntax literalExpressionSyntax &&
+                        literalExpressionSyntax.IsKind(SyntaxKind.NullLiteralExpression))
+                    {
+                        var diagnostic = Diagnostic.Create(rule, returnStatementSyntax.GetLocation());
+                        context.ReportDiagnostic(diagnostic);
+                    }
+                }
+            }
+            else
+            {
+                if (arrowExpressionClauseSyntax.Expression.IsKind(SyntaxKind.NullLiteralExpression))
+                {
+                    var diagnostic = Diagnostic.Create(rule, arrowExpressionClauseSyntax.GetLocation());
+                    context.ReportDiagnostic(diagnostic);
+                }
+            }
         }
     }
 }
