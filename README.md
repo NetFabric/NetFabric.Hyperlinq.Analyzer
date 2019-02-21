@@ -8,7 +8,7 @@ A Roslyn Analyzer that contains several enumeration-related rules to help users 
 
 The analyzer is independent of `NetFabric.Hyperlinq`. The rules are useful even if you only use `IEnumerable<T>` or `System.Linq`.
 
-Check the documentation for the implemented rules at https://github.com/NetFabric/NetFabric.Hyperlinq/tree/master/NetFabric.Hyperlinq.Analyzer/docs/reference
+Check the documentation for the implemented rules at https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/NetFabric.Hyperlinq.Analyzer/docs/reference
 
 # References
 
