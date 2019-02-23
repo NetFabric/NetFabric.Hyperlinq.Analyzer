@@ -12,27 +12,46 @@ namespace NetFabric.Hyperlinq.Analyzer
     static class Utils
     {
         public static bool IsEnumerable(this ITypeSymbol typeSymbol)
+            => IsEnumerable(typeSymbol, out var _);
+
+        public static bool IsEnumerable(this ITypeSymbol typeSymbol, out IPropertySymbol currentProperty)
         {
             var getEnumerator = typeSymbol.GetFirstPublicMethod("GetEnumerator");
             if (getEnumerator is null)
+            {
+                currentProperty = null;
                 return false;
+            }
 
-            return getEnumerator.ReturnType.IsEnumerator();
+            return getEnumerator.ReturnType.IsEnumerator(out currentProperty);
         }
 
         public static bool IsEnumerableValueType(this ITypeSymbol typeSymbol)
+            => IsEnumerableValueType(typeSymbol, out var _);
+
+        public static bool IsEnumerableValueType(this ITypeSymbol typeSymbol, out IPropertySymbol currentProperty)
         {
+            currentProperty = null;
+
             var getEnumerator = typeSymbol.GetFirstPublicMethod("GetEnumerator");
             if (getEnumerator is null)
                 return false;
 
             var returnType = getEnumerator.ReturnType;
-            return returnType.IsValueType && returnType.IsEnumerator();
+            return returnType.IsValueType && returnType.IsEnumerator(out currentProperty);
         }
 
-        public static bool IsEnumerator(this ITypeSymbol typeSymbol) =>
-            typeSymbol.HasPublicMethod("MoveNext") &&
-            typeSymbol.HasPublicProperty("Current");
+        public static bool IsEnumerator(this ITypeSymbol typeSymbol, out IPropertySymbol currentProperty)
+        {
+            if (!typeSymbol.HasPublicMethod("MoveNext"))
+            {
+                currentProperty = null;
+                return false;
+            }
+
+            currentProperty = typeSymbol.GetPublicProperty("Current");
+            return !(currentProperty is null);
+        }
 
         static bool HasPublicMethod(this ITypeSymbol typeSymbol, string name)
         {
@@ -51,20 +70,20 @@ namespace NetFabric.Hyperlinq.Analyzer
             return false;
         }
 
-        static bool HasPublicProperty(this ITypeSymbol typeSymbol, string name)
+        static IPropertySymbol GetPublicProperty(this ITypeSymbol typeSymbol, string name)
         {
             while (!(typeSymbol is null))
             {
                 foreach (var member in typeSymbol.GetMembers(name).OfType<IPropertySymbol>())
                 {
                     if (member.DeclaredAccessibility == Accessibility.Public)
-                        return true;
+                        return member;
                 }
 
                 typeSymbol = typeSymbol.BaseType;
             }
 
-            return false;
+            return null;
         }
 
         static IMethodSymbol GetFirstPublicMethod(this ITypeSymbol typeSymbol, string name)

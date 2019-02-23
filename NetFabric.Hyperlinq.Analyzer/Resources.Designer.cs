@@ -125,7 +125,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enumerable cannot be null..
+        ///   Looks up a localized string similar to Enumerable cannot be null. Return an empty enumerable instead..
         /// </summary>
         internal static string NullEnumerable_MessageFormat {
             get {
@@ -139,6 +139,33 @@ namespace NetFabric.Hyperlinq.Analyzer {
         internal static string NullEnumerable_Title {
             get {
                 return ResourceManager.GetString("NullEnumerable_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The enumerator returns a reference to the item. The type should be declared acordingly so that no copies are performed..
+        /// </summary>
+        internal static string RefEnumerationVariable_Description {
+            get {
+                return ResourceManager.GetString("RefEnumerationVariable_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The enumerator returns a reference to the item. Add &apos;{0}&apos; to the item type..
+        /// </summary>
+        internal static string RefEnumerationVariable_MessageFormat {
+            get {
+                return ResourceManager.GetString("RefEnumerationVariable_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The enumerator returns a reference to the item..
+        /// </summary>
+        internal static string RefEnumerationVariable_Title {
+            get {
+                return ResourceManager.GetString("RefEnumerationVariable_Title", resourceCulture);
             }
         }
     }

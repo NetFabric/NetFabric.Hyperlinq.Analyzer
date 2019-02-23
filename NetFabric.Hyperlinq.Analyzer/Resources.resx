@@ -144,4 +144,13 @@
   <data name="NullEnumerable_Title" xml:space="preserve">
     <value>Enumerable cannot be null.</value>
   </data>
+  <data name="RefEnumerationVariable_Description" xml:space="preserve">
+    <value>The enumerator returns a reference to the item. The type should be declared acordingly so that no copies are performed.</value>
+  </data>
+  <data name="RefEnumerationVariable_MessageFormat" xml:space="preserve">
+    <value>The enumerator returns a reference to the item. Add '{0}' to the item type.</value>
+  </data>
+  <data name="RefEnumerationVariable_Title" xml:space="preserve">
+    <value>The enumerator returns a reference to the item.</value>
+  </data>
 </root>
