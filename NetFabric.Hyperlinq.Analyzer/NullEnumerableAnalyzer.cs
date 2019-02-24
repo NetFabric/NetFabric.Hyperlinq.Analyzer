@@ -66,7 +66,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             {
                 if (arrowExpressionClauseSyntax.Expression.IsKind(SyntaxKind.NullLiteralExpression))
                 {
-                    var diagnostic = Diagnostic.Create(rule, arrowExpressionClauseSyntax.GetLocation());
+                    var diagnostic = Diagnostic.Create(rule, arrowExpressionClauseSyntax.Expression.GetLocation());
                     context.ReportDiagnostic(diagnostic);
                 }
             }

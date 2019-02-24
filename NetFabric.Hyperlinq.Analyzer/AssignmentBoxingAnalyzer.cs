@@ -65,7 +65,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (leftTypeSymbol is null || !leftTypeSymbol.BoxesEnumerator())
                 return;
 
-            var diagnostic = Diagnostic.Create(rule, assignmentExpression.GetLocation(), rightTypeSymbol.Name, leftTypeSymbol.Name);
+            var diagnostic = Diagnostic.Create(rule, assignmentExpression.Left.GetLocation(), rightTypeSymbol.Name, leftTypeSymbol.Name);
             context.ReportDiagnostic(diagnostic);
         }
 
@@ -127,7 +127,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (typeSymbol is null || !typeSymbol.BoxesEnumerator())
                 return;
 
-            var diagnostic = Diagnostic.Create(rule, localDeclarationStatementSyntax.GetLocation(), enumerableTypeSymbol.Name, typeSymbol.Name);
+            var diagnostic = Diagnostic.Create(rule, typeSyntax.GetLocation(), enumerableTypeSymbol.Name, typeSymbol.Name);
             context.ReportDiagnostic(diagnostic);
         }
 
@@ -142,7 +142,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (typeSymbol is null || !typeSymbol.BoxesEnumerator())
                 return;
 
-            var diagnostic = Diagnostic.Create(rule, fieldDeclarationSyntax.GetLocation(), enumerableTypeSymbol.Name, typeSymbol.Name);
+            var diagnostic = Diagnostic.Create(rule, typeSyntax.GetLocation(), enumerableTypeSymbol.Name, typeSymbol.Name);
             context.ReportDiagnostic(diagnostic);
         }
     }

@@ -74,6 +74,8 @@ namespace NetFabric.Hyperlinq.Analyzer
         {
             var semanticModel = context.SemanticModel;
             var expressionType = semanticModel.GetTypeInfo(arrowExpressionClauseSyntax.Expression).Type;
+            if (expressionType is null)
+                return;
 
             switch (returnType)
             {

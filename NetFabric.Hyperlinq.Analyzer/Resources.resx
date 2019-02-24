@@ -139,7 +139,7 @@
     <value>Enumerable can be empty but not null. 'foreach' does not check for null.</value>
   </data>
   <data name="NullEnumerable_MessageFormat" xml:space="preserve">
-    <value>Enumerable cannot be null.</value>
+    <value>Enumerable cannot be null. Return an empty enumerable instead.</value>
   </data>
   <data name="NullEnumerable_Title" xml:space="preserve">
     <value>Enumerable cannot be null.</value>
