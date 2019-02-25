@@ -126,6 +126,15 @@
   <data name="AssignmentBoxing_Title" xml:space="preserve">
     <value>Assigment to interface causes boxing of enumerator</value>
   </data>
+  <data name="AvoidSingle_Description" xml:space="preserve">
+    <value>Single() and SingleOrDefault() may perform much more iterations to perform unnecessary validation. Use First() or FirstOrDefault() instead.</value>
+  </data>
+  <data name="AvoidSingle_MessageFormat" xml:space="preserve">
+    <value>Avoid '{0}()'. Use '{1}()' instead.</value>
+  </data>
+  <data name="AvoidSingle_Title" xml:space="preserve">
+    <value>Avoid Single() and SingleOrDefault()</value>
+  </data>
   <data name="HighestLevelInterface_Description" xml:space="preserve">
     <value>Public methods should return highest admissible level interface.</value>
   </data>

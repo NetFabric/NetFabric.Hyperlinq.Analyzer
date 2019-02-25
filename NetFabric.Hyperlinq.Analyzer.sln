@@ -16,8 +16,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFabric.Hyperlinq.Analyze
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFabric.Hyperlinq.Analyzer.Vsix", "NetFabric.Hyperlinq.Analyzer.Vsix\NetFabric.Hyperlinq.Analyzer.Vsix.csproj", "{3B74358F-11BB-418E-A5F8-425ADE18AB3D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{73FD472F-CF36-4968-9B57-5E91D28199B3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

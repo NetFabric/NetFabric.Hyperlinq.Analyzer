@@ -40,7 +40,7 @@ class C
             var method01 = new DiagnosticResult
             {
                 Id = "HLQ002",
-                Message = "Enumerable cannot be null.",
+                Message = "Enumerable cannot be null. Return an empty enumerable instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
                     new DiagnosticResultLocation("Test0.cs", 8, 9)
@@ -50,17 +50,17 @@ class C
             var method02 = new DiagnosticResult
             {
                 Id = "HLQ002",
-                Message = "Enumerable cannot be null.",
+                Message = "Enumerable cannot be null. Return an empty enumerable instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 11, 33)
+                    new DiagnosticResultLocation("Test0.cs", 11, 36)
                 },
             };
 
             var method04 = new DiagnosticResult
             {
                 Id = "HLQ002",
-                Message = "Enumerable cannot be null.",
+                Message = "Enumerable cannot be null. Return an empty enumerable instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
                     new DiagnosticResultLocation("Test0.cs", 17, 9)

@@ -89,6 +89,33 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Single() and SingleOrDefault() may perform much more iterations to perform unnecessary validation. Use First() or FirstOrDefault() instead..
+        /// </summary>
+        internal static string AvoidSingle_Description {
+            get {
+                return ResourceManager.GetString("AvoidSingle_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Avoid &apos;{0}()&apos;. Use &apos;{1}()&apos; instead..
+        /// </summary>
+        internal static string AvoidSingle_MessageFormat {
+            get {
+                return ResourceManager.GetString("AvoidSingle_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Avoid Single() and SingleOrDefault().
+        /// </summary>
+        internal static string AvoidSingle_Title {
+            get {
+                return ResourceManager.GetString("AvoidSingle_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Public methods should return highest admissible level interface..
         /// </summary>
         internal static string HighestLevelInterface_Description {
