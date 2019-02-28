@@ -8,16 +8,16 @@
 
   <PropertyGroup>
     <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
-    <PackageVersion>1.3.1</PackageVersion>
+    <PackageVersion>1.4.1</PackageVersion>
     <Authors>Antao Almada</Authors>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIconUrl>https://user-images.githubusercontent.com/534533/49182105-390f3a80-f351-11e8-8e84-c785cddd2995.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/NetFabric/NetFabric.Hyperlinq</RepositoryUrl>
+    <RepositoryUrl>https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>NetFabric.Hyperlinq.Analyzer</Description>
+    <Description>A Roslyn analyzer with rules for improving performance of enumeration in .NET</Description>
     <PackageReleaseNotes></PackageReleaseNotes>
     <Copyright>Copyright 2019 Antao Almada</Copyright>
-    <PackageTags>analyzers, linq</PackageTags>
+    <PackageTags>hyperlinq, analyzers, enumerable, linq, performance</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <DevelopmentDependency>true</DevelopmentDependency>
   </PropertyGroup>
