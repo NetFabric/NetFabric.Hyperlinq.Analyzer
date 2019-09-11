@@ -50,12 +50,12 @@ namespace NetFabric.Hyperlinq.Analyzer
             }
 
             currentProperty = typeSymbol.GetPublicProperty("Current");
-            return !(currentProperty is null);
+            return currentProperty is object;
         }
 
         static bool HasPublicMethod(this ITypeSymbol typeSymbol, string name)
         {
-            while (!(typeSymbol is null))
+            while (typeSymbol is object)
             {
                 foreach(var member in typeSymbol.GetMembers(name).OfType<IMethodSymbol>())
                 {
@@ -72,7 +72,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static IPropertySymbol GetPublicProperty(this ITypeSymbol typeSymbol, string name)
         {
-            while (!(typeSymbol is null))
+            while (typeSymbol is object)
             {
                 foreach (var member in typeSymbol.GetMembers(name).OfType<IPropertySymbol>())
                 {
@@ -88,7 +88,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static IMethodSymbol GetFirstPublicMethod(this ITypeSymbol typeSymbol, string name)
         {
-            while (!(typeSymbol is null))
+            while (typeSymbol is object)
             {
                 foreach (var member in typeSymbol.GetMembers(name).OfType<IMethodSymbol>())
                 {
@@ -109,7 +109,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 foreach (var i in typeSymbol.GetAllInterfaces())
                 {
                     var getEnumerator = i.GetMembers("GetEnumerator").OfType<IMethodSymbol>().FirstOrDefault();
-                    if (!(getEnumerator is null) && getEnumerator.Parameters.IsEmpty && getEnumerator.ReturnType.IsEnumeratorInterface())
+                    if (getEnumerator is object && getEnumerator.Parameters.IsEmpty && getEnumerator.ReturnType.IsEnumeratorInterface())
                         return true;
                 }
 
@@ -134,7 +134,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             foreach (var i in typeSymbol.GetAllInterfaces())
             {
                 var getEnumerator = typeSymbol.GetFirstPublicMethod("GetEnumerator");
-                if (!(getEnumerator is null) && getEnumerator.ReturnType.IsEnumeratorInterface())
+                if (getEnumerator is object && getEnumerator.ReturnType.IsEnumeratorInterface())
                     return true;
             }
             return false;

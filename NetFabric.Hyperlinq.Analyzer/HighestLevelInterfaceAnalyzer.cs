@@ -175,13 +175,13 @@ namespace NetFabric.Hyperlinq.Analyzer
             foreach(var node in methodDeclarationSyntax.DescendantNodes().OfType<ReturnStatementSyntax>())
             {
                 var returnType = semanticModel.GetTypeInfo(node.Expression).Type;
-                if(!(returnType is null))
+                if(returnType is object)
                     return false;
             }
             foreach(var node in methodDeclarationSyntax.DescendantNodes().OfType<ArrowExpressionClauseSyntax>())
             {
                 var returnType = semanticModel.GetTypeInfo(node.Expression).Type;
-                if(!(returnType is null))
+                if(returnType is object)
                     return false;
             }
             return true;
