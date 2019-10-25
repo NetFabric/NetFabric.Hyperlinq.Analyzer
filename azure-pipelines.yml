@@ -3,7 +3,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'vs2017-win2016'
+  vmImage: 'windows-2019'
 
 variables:
   buildConfiguration: 'Release'
@@ -13,6 +13,12 @@ steps:
   inputs:
     versionSpec: '4.3.0'
     checkLatest: true
+- task: UseDotNet@2
+  displayName: 'Use .NET Core 3.0 SDK'
+  inputs:
+    packageType: sdk
+    version: 3.0.x
+    installationPath: $(Agent.ToolsDirectory)/dotnet
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:

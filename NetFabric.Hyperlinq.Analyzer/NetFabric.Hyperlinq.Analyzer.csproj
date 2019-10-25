@@ -10,8 +10,8 @@
     <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
     <PackageVersion>1.4.1</PackageVersion>
     <Authors>Antao Almada</Authors>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageIconUrl>https://user-images.githubusercontent.com/534533/49182105-390f3a80-f351-11e8-8e84-c785cddd2995.png</PackageIconUrl>
+    <PackageIcon>Icon.png</PackageIcon>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>A Roslyn analyzer with rules for improving performance of enumeration in .NET</Description>
@@ -23,7 +23,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\Licenses\LICENSE.txt" Pack="true" PackagePath="" />
+    <None Include="..\Icon.png" Pack="true" PackagePath="" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
