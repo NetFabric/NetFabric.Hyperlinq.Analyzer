@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using NetFabric.CodeAnalysis;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -41,12 +42,14 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
 
             var expressionType = semanticModel.GetTypeInfo(forEachStatementSyntax.Expression).Type;
-            if (!expressionType.IsEnumerable(out var currentProperty))
+            if (!expressionType.IsEnumerable(context.Compilation, out var enumerableSymbols))
                 return;
+
+            var enumeratorSymbols = enumerableSymbols.EnumeratorSymbols;
 
             if (forEachStatementSyntax.Type is RefTypeSyntax refTypeSyntax)
             {
-                if (currentProperty.ReturnsByRefReadonly && refTypeSyntax.ReadOnlyKeyword.ValueText is null)
+                if (enumeratorSymbols.Current.ReturnsByRefReadonly && refTypeSyntax.ReadOnlyKeyword.ValueText is null)
                 {
                     var diagnostic = Diagnostic.Create(rule, forEachStatementSyntax.Type.GetLocation(), "ref readonly");
                     context.ReportDiagnostic(diagnostic);
@@ -54,12 +57,12 @@ namespace NetFabric.Hyperlinq.Analyzer
             }
             else
             {
-                if(currentProperty.ReturnsByRef)
+                if(enumeratorSymbols.Current.ReturnsByRef)
                 {
                     var diagnostic = Diagnostic.Create(rule, forEachStatementSyntax.Type.GetLocation(), "ref");
                     context.ReportDiagnostic(diagnostic);
                 }
-                else if (currentProperty.ReturnsByRefReadonly)
+                else if (enumeratorSymbols.Current.ReturnsByRefReadonly)
                 {
                     var diagnostic = Diagnostic.Create(rule, forEachStatementSyntax.Type.GetLocation(), "ref readonly");
                     context.ReportDiagnostic(diagnostic);

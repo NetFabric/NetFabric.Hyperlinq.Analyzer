@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
-    <PackageVersion>1.4.1</PackageVersion>
+    <PackageVersion>1.5.0</PackageVersion>
     <Authors>Antao Almada</Authors>
     <PackageIcon>Icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -28,9 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NetFabric.CodeAnalysis" Version="2.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.8" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.3.1" PrivateAssets="all" />
-    <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

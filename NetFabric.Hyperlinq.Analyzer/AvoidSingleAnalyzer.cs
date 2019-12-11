@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using NetFabric.CodeAnalysis;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
@@ -64,7 +65,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 var semanticModel = context.SemanticModel;
 
                 var type = semanticModel.GetTypeInfo(identifierName).Type;
-                if (!(type.IsEnumerable() || type.IsEnumerableInterface()))
+                if (!type.IsEnumerable(context.Compilation, out _))
                 {
                     var arguments = invocationExpressionSyntax.ArgumentList.Arguments;
                     if (arguments.Count == 0 || arguments.Count > 2)
@@ -72,7 +73,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
                     var firstArgument = arguments[0];
                     var argumentType = semanticModel.GetTypeInfo(firstArgument.Expression).Type;
-                    if (argumentType is null || !(argumentType.IsEnumerable() || argumentType.IsEnumerableInterface()))
+                    if (argumentType is null || !argumentType.IsEnumerable(context.Compilation, out _))
                         return;
                 }
             }

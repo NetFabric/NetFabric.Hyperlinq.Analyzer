@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using NetFabric.CodeAnalysis;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -43,12 +44,13 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
 
             var rightTypeSymbol = semanticModel.GetTypeInfo(assignmentExpression.Right).Type;
-            if (rightTypeSymbol is null || !rightTypeSymbol.IsEnumerableValueType())
+            if (!GetsValueTypeEnumerator(rightTypeSymbol, context.Compilation))
                 return;
 
             var leftSymbol = semanticModel.GetSymbolInfo(assignmentExpression.Left).Symbol;
             if (leftSymbol is null)
                 return;
+
             switch (leftSymbol)
             {
                 case IFieldSymbol fieldSymbol:
@@ -62,7 +64,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             }
 
             var leftTypeSymbol = semanticModel.GetTypeInfo(assignmentExpression.Left).Type;
-            if (leftTypeSymbol is null || !leftTypeSymbol.BoxesEnumerator())
+            if (!GetsReferenceTypeEnumerator(leftTypeSymbol, context.Compilation))
                 return;
 
             var diagnostic = Diagnostic.Create(rule, assignmentExpression.Left.GetLocation(), rightTypeSymbol.Name, leftTypeSymbol.Name);
@@ -77,7 +79,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
 
             var typeSymbol = semanticModel.GetTypeInfo(equalsValueClauseSyntax.Value).Type; 
-            if (typeSymbol is null || !typeSymbol.IsEnumerableValueType())
+            if (!GetsValueTypeEnumerator(typeSymbol, context.Compilation))
                 return;
 
             if (equalsValueClauseSyntax.Parent is PropertyDeclarationSyntax propertyDeclarationSyntax)
@@ -112,7 +114,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
 
             var typeSymbol = semanticModel.GetDeclaredSymbol(propertyDeclarationSyntax).Type;
-            if (typeSymbol is null || !typeSymbol.BoxesEnumerator())
+            if (!GetsReferenceTypeEnumerator(typeSymbol, context.Compilation))
                 return;
 
             var diagnostic = Diagnostic.Create(rule, propertyDeclarationSyntax.GetLocation(), enumerableTypeSymbol.Name, typeSymbol.Name);
@@ -124,7 +126,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             var typeSyntax = localDeclarationStatementSyntax.Declaration.Type;
             var semanticModel = context.SemanticModel;
             var typeSymbol = semanticModel.GetTypeInfo(typeSyntax).Type;
-            if (typeSymbol is null || !typeSymbol.BoxesEnumerator())
+            if (!GetsReferenceTypeEnumerator(typeSymbol, context.Compilation))
                 return;
 
             var diagnostic = Diagnostic.Create(rule, typeSyntax.GetLocation(), enumerableTypeSymbol.Name, typeSymbol.Name);
@@ -139,11 +141,21 @@ namespace NetFabric.Hyperlinq.Analyzer
             var typeSyntax = fieldDeclarationSyntax.Declaration.Type;
             var semanticModel = context.SemanticModel;
             var typeSymbol = semanticModel.GetTypeInfo(typeSyntax).Type;
-            if (typeSymbol is null || !typeSymbol.BoxesEnumerator())
+            if (!GetsReferenceTypeEnumerator(typeSymbol, context.Compilation))
                 return;
 
             var diagnostic = Diagnostic.Create(rule, typeSyntax.GetLocation(), enumerableTypeSymbol.Name, typeSymbol.Name);
             context.ReportDiagnostic(diagnostic);
         }
+
+        static bool GetsValueTypeEnumerator(ITypeSymbol typeSymbol, Compilation compilation)
+            => typeSymbol is object &&
+                typeSymbol.IsEnumerable(compilation, out var enumerableSymbols) &&
+                enumerableSymbols.GetEnumerator.ReturnType.IsValueType;
+
+        static bool GetsReferenceTypeEnumerator(ITypeSymbol typeSymbol, Compilation compilation)
+            => typeSymbol is object &&
+                typeSymbol.IsEnumerable(compilation, out var enumerableSymbols) &&
+                enumerableSymbols.GetEnumerator.ReturnType.IsReferenceType;
     }
 }

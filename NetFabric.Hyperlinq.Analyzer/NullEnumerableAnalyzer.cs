@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using NetFabric.CodeAnalysis;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -45,7 +46,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 return;
 
             var returnType = methodSymbol.ReturnType.OriginalDefinition;
-            if (!(returnType.IsEnumerableInterface() || returnType.IsEnumerable()))
+            if (!returnType.IsEnumerable(context.Compilation, out _))
                 return;
 
             var arrowExpressionClauseSyntax = methodDeclarationSyntax.DescendantNodes()
