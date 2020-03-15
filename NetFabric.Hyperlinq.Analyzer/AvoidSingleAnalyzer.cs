@@ -32,6 +32,8 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         public override void Initialize(AnalysisContext context)
         {
+            context.EnableConcurrentExecution();
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
             context.RegisterSyntaxNodeAction(AnalyzeInvocationExpression, SyntaxKind.InvocationExpression);
         }
 
@@ -40,12 +42,11 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (!(context.Node is InvocationExpressionSyntax invocationExpressionSyntax))
                 return;
 
-            var memberAccessExpressionSyntax = invocationExpressionSyntax.Expression as MemberAccessExpressionSyntax;
-            if (memberAccessExpressionSyntax is null)
+            if (!(invocationExpressionSyntax.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax))
                 return;
 
-            var methodFound = String.Empty;
-            var methodReplace = String.Empty;
+            string methodFound;
+            string methodReplace;
             switch (memberAccessExpressionSyntax.Name.ToString())
             {
                 case "Single":
