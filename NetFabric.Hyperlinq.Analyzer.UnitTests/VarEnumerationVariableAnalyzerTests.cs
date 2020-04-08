@@ -79,14 +79,6 @@ class C
     }
 
 
-    void Method04()
-    {
-        foreach(ref var item in RefReadOnlyEnumerable.GetInstance())
-        {
-
-        }
-    }
-
     void Method05()
     {
         foreach(ref readonly var item in RefReadOnlyEnumerable.GetInstance())
@@ -124,17 +116,7 @@ class C
                 },
             };
 
-            var method04 = new DiagnosticResult
-            {
-                Id = "HLQ004",
-                Message = "The enumerator returns a reference to the item. Add 'ref readonly' to the item type.",
-                Severity = DiagnosticSeverity.Warning,
-                Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 66, 17)
-                },
-            };
-
-            VerifyCSharpDiagnostic(test, method01, method03, method04);
+            VerifyCSharpDiagnostic(test, method01, method03);
         }
 
     }
