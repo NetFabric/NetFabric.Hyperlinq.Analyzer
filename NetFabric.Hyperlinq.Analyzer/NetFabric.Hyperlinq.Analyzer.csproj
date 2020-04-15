@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
-    <PackageVersion>1.5.1</PackageVersion>
+    <PackageVersion>1.5.4</PackageVersion>
     <Authors>Antao Almada</Authors>
     <PackageIcon>Icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -20,6 +20,7 @@
     <PackageTags>hyperlinq, analyzers, enumerable, linq, performance</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <DevelopmentDependency>true</DevelopmentDependency>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +31,10 @@
   <ItemGroup>
     <PackageReference Include="NetFabric.CodeAnalysis" Version="2.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.5.0" />
+    <PackageReference Include="ILRepack.MSBuild.Task" Version="2.0.13" >      
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -41,5 +46,21 @@
     <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="tools" />
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
+
+  <Target Name="ILRepack" AfterTargets="Build">
+    <PropertyGroup>
+      <WorkingDirectory>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(TargetFramework)</WorkingDirectory>
+    </PropertyGroup>
+    <ItemGroup>
+      <InputAssemblies Include="NetFabric.CodeAnalysis.dll" />
+    </ItemGroup>
+    <ILRepack 
+      OutputType="$(OutputType)" 
+      MainAssembly="$(AssemblyName).dll" 
+      OutputAssembly="$(AssemblyName).dll" 
+      InputAssemblies="@(InputAssemblies)" 
+      InternalizeExcludeAssemblies="@(InternalizeExcludeAssemblies)" 
+      WorkingDirectory="$(WorkingDirectory)" />
+  </Target>
 
 </Project>

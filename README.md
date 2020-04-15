@@ -16,3 +16,15 @@ Check the documentation for the implemented rules at https://github.com/NetFabri
 # References
 
 - [Enumeration in .NET](https://blog.usejournal.com/enumeration-in-net-d5674921512e) by Antão Almada
+
+## Credits
+
+The following open-source projects are used to build and test this project:
+
+- [.NET](https://github.com/dotnet)
+- [coveralls](https://coveralls.io)
+- [coverlet](https://github.com/tonerdo/coverlet)
+- [ILRepack](https://github.com/gluck/il-repack)
+- [ILRepack.MSBuild.Task](https://github.com/peters/ILRepack.MSBuild.Task)
+- [NetFabric.CodeAnalysis](https://github.com/NetFabric/NetFabric.CodeAnalysis)
+- [xUnit.net](https://xunit.net/)
