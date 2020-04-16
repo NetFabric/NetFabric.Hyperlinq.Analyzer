@@ -11,7 +11,7 @@ namespace NetFabric.Hyperlinq.Analyzer
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class RefEnumerationVariableAnalyzer : DiagnosticAnalyzer
     {
-        const string DiagnosticId = DiagnosticIds.RefEnumerationVariableId;
+        public const string DiagnosticId = DiagnosticIds.RefEnumerationVariableId;
 
         static readonly LocalizableString Title =
             new LocalizableResourceString(nameof(Resources.RefEnumerationVariable_Title), Resources.ResourceManager, typeof(Resources));
@@ -51,7 +51,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             if (forEachStatementSyntax.Type is RefTypeSyntax refTypeSyntax)
             {
-                if (enumeratorSymbols.Current.ReturnsByRefReadonly && refTypeSyntax.ReadOnlyKeyword.ValueText is null)
+                if (refTypeSyntax.ReadOnlyKeyword.Value is null && enumeratorSymbols.Current.ReturnsByRefReadonly)
                 {
                     var diagnostic = Diagnostic.Create(rule, forEachStatementSyntax.Type.GetLocation(), "ref readonly");
                     context.ReportDiagnostic(diagnostic);
