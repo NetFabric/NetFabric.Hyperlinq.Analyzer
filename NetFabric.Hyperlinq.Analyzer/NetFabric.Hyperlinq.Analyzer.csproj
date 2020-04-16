@@ -31,7 +31,7 @@
   <ItemGroup>
     <PackageReference Include="NetFabric.CodeAnalysis" Version="2.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.5.0" />
-    <PackageReference Include="ILRepack.MSBuild.Task" Version="2.0.13" >      
+    <PackageReference Include="ILRepack.MSBuild.Task" Version="2.0.13">      
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -54,13 +54,7 @@
     <ItemGroup>
       <InputAssemblies Include="NetFabric.CodeAnalysis.dll" />
     </ItemGroup>
-    <ILRepack 
-      OutputType="$(OutputType)" 
-      MainAssembly="$(AssemblyName).dll" 
-      OutputAssembly="$(AssemblyName).dll" 
-      InputAssemblies="@(InputAssemblies)" 
-      InternalizeExcludeAssemblies="@(InternalizeExcludeAssemblies)" 
-      WorkingDirectory="$(WorkingDirectory)" />
+    <ILRepack OutputType="$(OutputType)" MainAssembly="$(AssemblyName).dll" OutputAssembly="$(AssemblyName).dll" InputAssemblies="@(InputAssemblies)" InternalizeExcludeAssemblies="@(InternalizeExcludeAssemblies)" WorkingDirectory="$(WorkingDirectory)" />
   </Target>
 
 </Project>
