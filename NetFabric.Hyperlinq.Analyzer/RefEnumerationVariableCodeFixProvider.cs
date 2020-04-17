@@ -55,18 +55,17 @@ namespace NetFabric.Hyperlinq.Analyzer
                 context.RegisterCodeFix(
                     CodeAction.Create(
                         title: title,
-                        createChangedDocument: cancellationToken => AddRef(context.Document, forEachStatementSyntax, isReadOnly, cancellationToken),
+                        createChangedDocument: cancellationToken => ToRefAsync(context.Document, forEachStatementSyntax, isReadOnly, cancellationToken),
                         equivalenceKey: title),
                     diagnostic);
             }
         }
 
-        async Task<Document> AddRef(Document document, ForEachStatementSyntax forEachStatementSyntax, bool isReadOnly, CancellationToken cancellationToken)
+        async Task<Document> ToRefAsync(Document document, ForEachStatementSyntax forEachStatementSyntax, bool isReadOnly, CancellationToken cancellationToken)
         {
             var newForEachStatementSyntax = forEachStatementSyntax.ToRef(isReadOnly);
 
-            var syntaxTree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
-            var root = syntaxTree.GetRoot();
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             root = root.ReplaceNode(forEachStatementSyntax, newForEachStatementSyntax);
 
             return document.WithSyntaxRoot(root);

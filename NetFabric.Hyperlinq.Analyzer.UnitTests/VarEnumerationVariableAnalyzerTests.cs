@@ -103,54 +103,6 @@ class C
         }
 
         [Fact]
-        public void Verify_MissingReadOnly()
-        {
-            var test = @"
-using System.Collections.Generic;
-using System.Linq;
-
-class C
-{
-    void Method()
-    {
-        foreach(ref var item in RefReadOnlyEnumerable.GetInstance())
-        {
-
-        }
-    }
-}" + RefEnumerables;
-
-            var expected = new DiagnosticResult
-            {
-                Id = "HLQ004",
-                Message = "The enumerator returns a reference to the item. Add 'ref readonly' to the item type.",
-                Severity = DiagnosticSeverity.Warning,
-                Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 9, 17)
-                },
-            };
-
-            VerifyCSharpDiagnostic(test, expected);
-
-            var fixtest = @"
-using System.Collections.Generic;
-using System.Linq;
-
-class C
-{
-    void Method()
-    {
-        foreach(ref readonly var item in RefReadOnlyEnumerable.GetInstance())
-        {
-
-        }
-    }
-}" + RefEnumerables;
-
-            VerifyCSharpFix(test, fixtest);
-        }
-
-        [Fact]
         public void Verify_MissingRefReadOnly()
         {
             var test = @"
