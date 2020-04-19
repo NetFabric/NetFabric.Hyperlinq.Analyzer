@@ -136,13 +136,13 @@
     <value>Avoid Single() and SingleOrDefault()</value>
   </data>
   <data name="GetEnumeratorReturnType_Description" xml:space="preserve">
-    <value>Returning a value-type enumerator allows 'foreach' loops to perform better. Interfaces make method calls to be virtual.</value>
+    <value>Returning a value-type enumerator allows 'foreach' loops to perform better. It will allocate the enumerator on the heap and calls to enumerator methods are not virtual.</value>
   </data>
   <data name="GetEnumeratorReturnType_MessageFormat" xml:space="preserve">
-    <value>'{0}' returns an interface. Consider returning a value-type enumerator.</value>
+    <value>'{0}' returns a reference type. Consider returning a value type.</value>
   </data>
   <data name="GetEnumeratorReturnType_Title" xml:space="preserve">
-    <value>GetEnumerator() or GetAsyncEnumerator() return an interface.</value>
+    <value>GetEnumerator() or GetAsyncEnumerator() should return a value type.</value>
   </data>
   <data name="HighestLevelInterface_Description" xml:space="preserve">
     <value>Public methods should return highest admissible level interface.</value>

@@ -108,7 +108,33 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-readonly struct Enumerable : IEnumerable<int>
+readonly struct Enumerable
+{
+    public Enumerator GetEnumerator() => new Enumerator();
+
+    public class Enumerator
+    {
+        public int Current => 0;
+
+        public bool MoveNext() => false;
+    }
+}
+
+readonly struct Enumerable2 : IEnumerable<int>
+{
+    public Enumerator GetEnumerator() => new Enumerator();
+    IEnumerator<int> IEnumerable<int>.GetEnumerator() => new Enumerator();
+    IEnumerator IEnumerable.GetEnumerator() => new Enumerator();
+
+    public class Enumerator : IEnumerator<int>
+    {
+        public int Current => 0;
+
+        public bool MoveNext() => false;
+    }
+}
+
+readonly struct Enumerable3 : IEnumerable<int>
 {
     public IEnumerator<int> GetEnumerator() => new Enumerator();
     IEnumerator IEnumerable.GetEnumerator() => new Enumerator();
@@ -128,19 +154,38 @@ readonly struct Enumerable : IEnumerable<int>
 }
 ";
 
-            var expected = new DiagnosticResult
+            var expected1 = new DiagnosticResult
             {
                 Id = "HLQ006",
-                Message = "'GetEnumerator' returns an interface. Consider returning a value-type enumerator.",
+                Message = "'GetEnumerator' returns a reference type. Consider returning a value type.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
                     new DiagnosticResultLocation("Test0.cs", 8, 12)
                 },
             };
 
-            VerifyCSharpDiagnostic(test, expected);
-        }
+            var expected2 = new DiagnosticResult
+            {
+                Id = "HLQ006",
+                Message = "'GetEnumerator' returns a reference type. Consider returning a value type.",
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] {
+                    new DiagnosticResultLocation("Test0.cs", 20, 12)
+                },
+            };
 
+            var expected3 = new DiagnosticResult
+            {
+                Id = "HLQ006",
+                Message = "'GetEnumerator' returns a reference type. Consider returning a value type.",
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] {
+                    new DiagnosticResultLocation("Test0.cs", 34, 12)
+                },
+            };
+
+            VerifyCSharpDiagnostic(test, expected1, expected2, expected3);
+        }
 
         [Fact]
         public void Verify_AsyncEnumerable()
@@ -151,7 +196,44 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-readonly struct AsyncEnumerable : IAsyncEnumerable<int>
+readonly struct AsyncEnumerable
+{
+    public Enumerator GetAsyncEnumerator() => new Enumerator();
+
+    public class Enumerator
+    {
+        public int Current => 0;
+
+        public ValueTask<bool> MoveNextAsync() => new ValueTask<bool>(false);
+    }
+}
+
+readonly struct AsyncEnumerable2
+{
+    public Enumerator GetAsyncEnumerator(CancellationToken cancellationToken = default) => new Enumerator();
+
+    public class Enumerator
+    {
+        public int Current => 0;
+
+        public ValueTask<bool> MoveNextAsync() => new ValueTask<bool>(false);
+    }
+}
+
+readonly struct AsyncEnumerable3 : IAsyncEnumerable<int>
+{
+    public Enumerator GetAsyncEnumerator(CancellationToken cancellationToken = default) => new Enumerator();
+    IAsyncEnumerator<int> IAsyncEnumerable<int>.GetAsyncEnumerator(CancellationToken cancellationToken = default) => new Enumerator();
+
+    public class Enumerator : IAsyncEnumerator<int>
+    {
+        public int Current => 0;
+
+        public ValueTask<bool> MoveNextAsync() => new ValueTask<bool>(false);
+    }
+}
+
+readonly struct AsyncEnumerable4 : IAsyncEnumerable<int>
 {
     public IAsyncEnumerator<int> GetAsyncEnumerator(CancellationToken cancellationToken = default) => new Enumerator();
 
@@ -166,17 +248,47 @@ readonly struct AsyncEnumerable : IAsyncEnumerable<int>
 }
 ";
 
-            var expected = new DiagnosticResult
+            var expected1 = new DiagnosticResult
             {
                 Id = "HLQ006",
-                Message = "'GetAsyncEnumerator' returns an interface. Consider returning a value-type enumerator.",
+                Message = "'GetAsyncEnumerator' returns a reference type. Consider returning a value type.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
                     new DiagnosticResultLocation("Test0.cs", 9, 12)
                 },
             };
 
-            VerifyCSharpDiagnostic(test, expected);
+            var expected2 = new DiagnosticResult
+            {
+                Id = "HLQ006",
+                Message = "'GetAsyncEnumerator' returns a reference type. Consider returning a value type.",
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] {
+                    new DiagnosticResultLocation("Test0.cs", 21, 12)
+                },
+            };
+
+            var expected3 = new DiagnosticResult
+            {
+                Id = "HLQ006",
+                Message = "'GetAsyncEnumerator' returns a reference type. Consider returning a value type.",
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] {
+                    new DiagnosticResultLocation("Test0.cs", 33, 12)
+                },
+            };
+
+            var expected4 = new DiagnosticResult
+            {
+                Id = "HLQ006",
+                Message = "'GetAsyncEnumerator' returns a reference type. Consider returning a value type.",
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] {
+                    new DiagnosticResultLocation("Test0.cs", 46, 12)
+                },
+            };
+
+            VerifyCSharpDiagnostic(test, expected1, expected2, expected3, expected4);
         }
     }
 }

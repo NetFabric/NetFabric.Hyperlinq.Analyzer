@@ -44,9 +44,9 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             var semanticModel = context.SemanticModel;
 
-            // check if it returns an interface
+            // check if it does not return a value type
             var returnType = methodDeclarationSyntax.ReturnType;
-            if (semanticModel.GetTypeInfo(returnType).Type.TypeKind != TypeKind.Interface)
+            if (semanticModel.GetTypeInfo(returnType).Type.TypeKind == TypeKind.Struct)
                 return;
 
             // check if it's public

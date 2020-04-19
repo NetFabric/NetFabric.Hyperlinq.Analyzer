@@ -115,7 +115,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Returning a value-type enumerator allows &apos;foreach&apos; loops to perform better. Interfaces make method calls to be virtual..
+        ///   Looks up a localized string similar to Returning a value-type enumerator allows &apos;foreach&apos; loops to perform better. It will allocate the enumerator on the heap and calls to enumerator methods are not virtual..
         /// </summary>
         internal static string GetEnumeratorReturnType_Description {
             get {
@@ -124,7 +124,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; returns an interface. Consider returning a value-type enumerator..
+        ///   Looks up a localized string similar to &apos;{0}&apos; returns a reference type. Consider returning a value type..
         /// </summary>
         internal static string GetEnumeratorReturnType_MessageFormat {
             get {
@@ -133,7 +133,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GetEnumerator() or GetAsyncEnumerator() return an interface..
+        ///   Looks up a localized string similar to GetEnumerator() or GetAsyncEnumerator() should return a value type..
         /// </summary>
         internal static string GetEnumeratorReturnType_Title {
             get {
