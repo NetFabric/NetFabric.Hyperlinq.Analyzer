@@ -19,6 +19,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         {
             var test = @"
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 interface ICustomEnumerable
@@ -104,6 +105,7 @@ readonly struct AsyncEnumerable3 : IAsyncEnumerable<int>
         {
             var test = @"
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 readonly struct Enumerable : IEnumerable<int>
@@ -115,7 +117,13 @@ readonly struct Enumerable : IEnumerable<int>
     {
         public int Current => 0;
 
+        object IEnumerator.Current => throw new NotImplementedException();
+
         public bool MoveNext() => false;
+
+        public void Reset() => throw new NotImplementedException();
+
+        public void Dispose() { }
     }
 }
 ";
@@ -126,7 +134,7 @@ readonly struct Enumerable : IEnumerable<int>
                 Message = "'GetEnumerator' returns an interface. Consider returning a value-type enumerator.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 7, 12)
+                    new DiagnosticResultLocation("Test0.cs", 8, 12)
                 },
             };
 
