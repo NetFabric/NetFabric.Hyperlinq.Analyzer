@@ -10,7 +10,6 @@
 
 namespace NetFabric.Hyperlinq.Analyzer {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -40,7 +39,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("NetFabric.Hyperlinq.Analyzer.Resources", typeof(Resources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("NetFabric.Hyperlinq.Analyzer.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -62,7 +61,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This collection has a value type enumerator. Assigning it to an interface cause it to be boxed and method calls to be virtual, affecting peformance..
+        ///   Looks up a localized string similar to This collection has a value type enumerator. Assigning it to an interface cause it to be boxed and method calls to be virtual, affecting performance..
         /// </summary>
         internal static string AssignmentBoxing_Description {
             get {
@@ -112,6 +111,33 @@ namespace NetFabric.Hyperlinq.Analyzer {
         internal static string AvoidSingle_Title {
             get {
                 return ResourceManager.GetString("AvoidSingle_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Returning a value-type enumerator allows &apos;foreach&apos; loops to perform better. Interfaces make method calls to be virtual..
+        /// </summary>
+        internal static string GetEnumeratorReturnType_Description {
+            get {
+                return ResourceManager.GetString("GetEnumeratorReturnType_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; returns an interface. Consider returning a value-type enumerator..
+        /// </summary>
+        internal static string GetEnumeratorReturnType_MessageFormat {
+            get {
+                return ResourceManager.GetString("GetEnumeratorReturnType_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GetEnumerator() or GetAsyncEnumerator() return an interface..
+        /// </summary>
+        internal static string GetEnumeratorReturnType_Title {
+            get {
+                return ResourceManager.GetString("GetEnumeratorReturnType_Title", resourceCulture);
             }
         }
         

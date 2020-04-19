@@ -7,5 +7,6 @@ namespace NetFabric.Hyperlinq.Analyzer
         public const string HighestLevelInterfaceId = "HLQ003";
         public const string RefEnumerationVariableId = "HLQ004";
         public const string AvoidSingleId = "HLQ005";
+        public const string GetEnumeratorReturnTypeId = "HLQ006";
     }
 }

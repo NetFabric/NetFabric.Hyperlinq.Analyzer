@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AssignmentBoxing_Description" xml:space="preserve">
-    <value>This collection has a value type enumerator. Assigning it to an interface cause it to be boxed and method calls to be virtual, affecting peformance.</value>
+    <value>This collection has a value type enumerator. Assigning it to an interface cause it to be boxed and method calls to be virtual, affecting performance.</value>
   </data>
   <data name="AssignmentBoxing_MessageFormat" xml:space="preserve">
     <value>'{0}' has a value type enumerator. Assigning it to '{1}' causes boxing of the enumerator.</value>
@@ -134,6 +134,15 @@
   </data>
   <data name="AvoidSingle_Title" xml:space="preserve">
     <value>Avoid Single() and SingleOrDefault()</value>
+  </data>
+  <data name="GetEnumeratorReturnType_Description" xml:space="preserve">
+    <value>Returning a value-type enumerator allows 'foreach' loops to perform better. Interfaces make method calls to be virtual.</value>
+  </data>
+  <data name="GetEnumeratorReturnType_MessageFormat" xml:space="preserve">
+    <value>'{0}' returns an interface. Consider returning a value-type enumerator.</value>
+  </data>
+  <data name="GetEnumeratorReturnType_Title" xml:space="preserve">
+    <value>GetEnumerator() or GetAsyncEnumerator() return an interface.</value>
   </data>
   <data name="HighestLevelInterface_Description" xml:space="preserve">
     <value>Public methods should return highest admissible level interface.</value>
