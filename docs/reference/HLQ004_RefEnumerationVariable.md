@@ -4,6 +4,10 @@
 
 The enumerator returns a reference to the items. The enumeration variable is not declared as a reference so a copy of each item will be made.
 
+## Severity
+
+Warning
+
 ## Rule description
 
 ## How to fix violations

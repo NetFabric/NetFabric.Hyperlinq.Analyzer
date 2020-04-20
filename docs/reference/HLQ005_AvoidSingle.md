@@ -4,6 +4,10 @@
 
 Methods `Single()` or `SingleOrDefault()` are used to get the first element of a collection.
 
+## Severity
+
+Warning
+
 ## Rule description
 
 The methods `Single()`, `SingleOrDefault()`, `First()` and `FirstOrDefault()` are tipically used at the end of a LINQ query to get only the first element. 

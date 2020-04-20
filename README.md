@@ -7,11 +7,24 @@
 
 # NetFabric.Hyperlinq.Analyzer
 
-A Roslyn Analyzer that contains several enumeration-related rules to help users improve performance.
+A [Roslyn Analyzer](https://docs.microsoft.com/en-us/visualstudio/code-quality/roslyn-analyzers-overview) that contains several rules to help improve enumeration performance when using C#.
 
-The analyzer is independent of `NetFabric.Hyperlinq`. The rules are useful even if you only use `IEnumerable<T>` or `System.Linq`.
+Check the documentation for the implemented rules at https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference.
 
-Check the documentation for the implemented rules at https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference
+**Note:** This analyzer is independent of [`NetFabric.Hyperlinq`](https://github.com/NetFabric/NetFabric.Hyperlinq). The rules may be useful when you only use `foreach`, `IEnumerable<T>`, `IAsyncEnumerable<T>`, `System.Linq` or `System.Linq.Async`.
+
+# Usage
+
+Add the [NetFabric.Hyperlinq.Analyzer](https://www.nuget.org/packages/NetFabric.Hyperlinq.Analyzer/) package to your project using your favorite NuGet client.
+
+If added manually to the `.csproj`, make sure to set `PrivateAssets` to `all` so that it's not added as a dependency. A [floating version](https://docs.microsoft.com/en-us/nuget/concepts/dependency-resolution#floating-versions) can be used to get the latest version. 
+
+``` xml
+<PackageReference Include="NetFabric.Hyperlinq.Analyzer" Version="1.*">
+  <PrivateAssets>all</PrivateAssets>
+  <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+</PackageReference>
+```
 
 # References
 

@@ -2,6 +2,10 @@
 
 ## Cause
 
+## Severity
+
+Error/Warning
+
 ## Rule description
 
 ## How to fix violations

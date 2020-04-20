@@ -4,9 +4,11 @@
 
 A method that returns an enumerable type is returning `null`.
 
-## Rule description
+## Severity
 
-Returning `null`, in the context of enumerables, is not the same as an empty enumerable. It's an invalid state.
+Error
+
+## Rule description
 
 The following `foreach` loop: 
 
@@ -38,27 +40,19 @@ finally
 }
 ```
 
-Notice that, because `DoSomething()` returns `null`, [a `NullReferenceException` will be thrown](https://sharplab.io/#v2:C4LgTgrgdgNAJiA1AHwAIAYAEqCMBuAWACgNscAWQo41AZjIDZsAmMgdk2IG9jM/t6uJqnKYAsgEMAllAAUASk5F+mHspX8AZgHswAUwkBjABaZZANwlhMU4HoC2NqJgDie4AFEoEe3rASAIwAbPQV5Xg1I3ABOWVsHeSoVAF8IvjTGMloAHhlgAD5Xdy8fP0CQhUwAXkLvIKCqZKA==) when calling `GetEnumerator()`.
+Because `DoSomething()` returns `null`, [a `NullReferenceException` will be thrown](https://sharplab.io/#v2:C4LgTgrgdgNAJiA1AHwAIAYAEqCMBuAWACgNscAWQo41AZjIDZsAmMgdk2IG9jM/t6uJqnKYAsgEMAllAAUASk5F+mHspX8AZgHswAUwkBjABaZZANwlhMU4HoC2NqJgDie4AFEoEe3rASAIwAbPQV5Xg1I3ABOWVsHeSoVAF8IvjTGMloAHhlgAD5Xdy8fP0CQhUwAXkLvIKCqZKA==) when trying to call `GetEnumerator()`.
 
-The enumerable should instead make the enumerator `MoveNext()` return `false` to stop the enumeration loop.
+The same issue applies to `IAsyncEnumerable<T>`.
+
+`null` is not equivalent to an empty enumerable. An empty collection, is a collection where calls to its `MoveNext()` returns always `false`. While `null` is an invalid state.
 
 ## How to fix violations
 
-You can return an empty instance of an array or `List<T>`, or one of the following implementations of an empty enumerable:
-
-[`System.Linq.Enumerable.Empty<TResult>()`](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.empty), if method returns any of the following: 
-- `IEnumerable` 
-- `IEnumerable<TResult>`
-
-`NetFabric.Hyperlinq.Enumerable.Empty<TResult>()`, if method returns any of the following: 
-- `IEnumerable` 
-- `IEnumerable<TResult>`
-- `IReadOnlyCollection<TResult>`
-- `IReadOnlyList<TResult>`
+Return an instance of an empty collection.
 
 ## When to suppress warnings
 
-Supress warning only if you really don't want to return an empty enumerable.
+Should not be suppressed.
 
 ## Example of a violation
 
@@ -67,9 +61,19 @@ Supress warning only if you really don't want to return an empty enumerable.
 ### Code
 
 ```csharp
-IEnumerable<int> Method(bool condition)
+IEnumerable<int> Method()
 {
-    if (condition)
+    if (...)
+        return null;
+
+    ...
+}
+```
+
+```csharp
+IAsyncEnumerable<int> Method()
+{
+    if (...)
         return null;
 
     ...
@@ -81,10 +85,12 @@ IEnumerable<int> Method(bool condition)
 Using an empty array:
 
 ```csharp
-IEnumerable<int> Method1(bool condition)
+using System;
+
+IEnumerable<int> Method()
 {
-    if (condition)
-        return new int[0];
+    if (...)
+        return Array.Empty<int>();
 
     ...
 }
@@ -93,9 +99,11 @@ IEnumerable<int> Method1(bool condition)
 Using an empty `List<T>`:
 
 ```csharp
-IEnumerable<int> Method1(bool condition)
+using System.Collections.Generic;
+
+IEnumerable<int> Method()
 {
-    if (condition)
+    if (...)
         return new List<int>();
 
     ...
@@ -105,10 +113,26 @@ IEnumerable<int> Method1(bool condition)
 Using `Enumerable.Empty<int>()`:
 
 ```csharp
-IEnumerable<int> Method1(bool condition)
+using System.Linq;
+
+IEnumerable<int> Method()
 {
-    if (condition)
+    if (...)
         return Enumerable.Empty<int>();
+
+    ...
+}
+```
+
+Using `AsyncEnumerable.Empty<int>()` (requires [System.Linq.Async](https://www.nuget.org/packages/System.Linq.Async/) package):
+
+```csharp
+using System.Linq.Async;
+
+IAsyncEnumerable<int> Method()
+{
+    if (...)
+        return AsyncEnumerable.Empty<int>();
 
     ...
 }

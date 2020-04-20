@@ -1,6 +1,12 @@
 ﻿# HLQ006: `GetEnumerator()` or `GetAsyncEnumerator()` should return an instance of a value-typed enumerator
 
+## Cause
+
 A `GetEnumerator()` or `GetAsyncEnumerator()` methods returns a reference type.
+
+## Severity
+
+Warning
 
 ## Rule description
 

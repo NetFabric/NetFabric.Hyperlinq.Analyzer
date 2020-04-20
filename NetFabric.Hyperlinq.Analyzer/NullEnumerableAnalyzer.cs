@@ -22,7 +22,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         const string Category = "Performance";
 
         static readonly DiagnosticDescriptor rule =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, 
+            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, 
                 isEnabledByDefault: true, description: Description, 
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ002_NullEnumerable.md");
 
@@ -48,7 +48,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 return;
 
             var returnType = methodSymbol.ReturnType.OriginalDefinition;
-            if (!returnType.IsEnumerable(context.Compilation, out _))
+            if (!returnType.IsEnumerable(context.Compilation, out _) && !returnType.IsAsyncEnumerable(context.Compilation, out _))
                 return;
 
             var arrowExpressionClauseSyntax = methodDeclarationSyntax.DescendantNodes()

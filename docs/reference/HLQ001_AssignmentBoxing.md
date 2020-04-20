@@ -4,6 +4,10 @@
 
 An enumerable that creates value type enumerators is assigned to a non-public variable, field or property whose type causes the enumerator to be boxed.
 
+## Severity
+
+Warning
+
 ## Rule description
 
 Enumerables can be implemented so that they create value type enumerators. The advantage is that calls to its methods are not virtual.

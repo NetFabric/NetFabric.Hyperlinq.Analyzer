@@ -4,6 +4,10 @@
 
 Public method returns a lower level interface than the one supported by the value returned.
 
+## Severity
+
+Warning
+
 ## Rule description
 
 `IEnumerable<T>` is commonly used to return a read-only view of a collection. This interface only allows sequencial enumeration of the items, resulting in methods like [`Count()`](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.count) to have complexity O(n).
