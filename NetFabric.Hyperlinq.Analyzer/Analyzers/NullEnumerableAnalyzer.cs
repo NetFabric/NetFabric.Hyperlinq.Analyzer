@@ -19,7 +19,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             new LocalizableResourceString(nameof(Resources.NullEnumerable_MessageFormat), Resources.ResourceManager, typeof(Resources));
         static readonly LocalizableString Description =
             new LocalizableResourceString(nameof(Resources.NullEnumerable_Description), Resources.ResourceManager, typeof(Resources));
-        const string Category = "Performance";
+        const string Category = "Compiler";
 
         static readonly DiagnosticDescriptor rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, 
