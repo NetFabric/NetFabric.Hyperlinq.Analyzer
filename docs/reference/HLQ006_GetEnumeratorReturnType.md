@@ -1,4 +1,4 @@
-﻿# HLQ006: `GetEnumerator()` or `GetAsyncEnumerator()` should return an instance of a value-typed enumerator
+﻿# HLQ006: `GetEnumerator()` and `GetAsyncEnumerator()` should return an instance of a value-typed enumerator
 
 ## Cause
 

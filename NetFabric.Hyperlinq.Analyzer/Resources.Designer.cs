@@ -169,6 +169,33 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The enumerator returned has an empty Dispose(). Consider returning a non-disposable enumerator..
+        /// </summary>
+        internal static string NonDisposableEnumerator_Description {
+            get {
+                return ResourceManager.GetString("NonDisposableEnumerator_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; has an empty Dispose(). Consider returning a non-disposable enumerator..
+        /// </summary>
+        internal static string NonDisposableEnumerator_MessageFormat {
+            get {
+                return ResourceManager.GetString("NonDisposableEnumerator_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consider returning a non-disposable enumerator..
+        /// </summary>
+        internal static string NonDisposableEnumerator_Title {
+            get {
+                return ResourceManager.GetString("NonDisposableEnumerator_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enumerable can be empty but not null. &apos;foreach&apos; does not check for null..
         /// </summary>
         internal static string NullEnumerable_Description {

@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.5.0" />
-    <PackageReference Include="NetFabric.CodeAnalysis" Version="2.0.0" >      
+    <PackageReference Include="NetFabric.CodeAnalysis" Version="2.0.0">      
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>all</IncludeAssets>
     </PackageReference>
@@ -56,7 +56,6 @@
 
   <ItemGroup>
     <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
-    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
   <Target Name="ILRepack" AfterTargets="Build">
