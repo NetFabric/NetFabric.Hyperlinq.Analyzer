@@ -10,17 +10,19 @@ Warning
 
 ## Rule description
 
-`IEnumerable<T>` is commonly used to return a read-only view of a collection. This interface only allows sequencial enumeration of the items, resulting in methods like [`Count()`](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.count) to have complexity O(n).
+When returning a collection from a method, it's often a bad idea to return it type as it may provide capabilities you don't want it to. It's common to want it to be read-only.
 
-[`Count()`](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.count) contains optimizations to avoid this issue by trying to cast to other types and take advantage of its interfaces. This is not intuitive to the user, complicates the implementation of `Count()` and still incurs on a performance penalty.
+The following interfaces give read-only views of a collection:
 
-The following interfaces also give read-only views of a collection, with more capabilities:
+- [`IEnumerable<T>`](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1) - allows sequential enumeration and can be used as the source for a `foreach` loop.
 
-- [`IReadOnlyCollection<T>`](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlycollection-1) - has a `Count` property with complexity O(1).
-- [`IReadOnlyList<T>`](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlylist-1) - has an indexer that allows random access and the use of `for` loop instead of `foreach`.
-- [`IReadOnlyDictionary<TKey, TValue>`](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlydictionary-2) - all the read operations common to `Dictionary<TKey, TValue>`.
+- [`IReadOnlyCollection<T>`](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlycollection-1) - same as `IEnumerable<T>` plus a `Count` property with complexity *O(1)*.
+- [`IReadOnlyList<T>`](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlylist-1) - same as `IReadOnlyCollection<T>` plus an indexer that allows; random access and the use of `for` loop, which is often more performant than `foreach`.
+- [`IReadOnlyDictionary<TKey, TValue>`](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlydictionary-2) -  same as `IReadOnlyCollection<KeyValuePair<TKey, TValue>>` plus the read operations found in `Dictionary<TKey, TValue>`.
 
-The use of these interfaces makes the capabilities explicit and result in much better performance.
+It's common to return `IEnumerable<T>` but the other interfaces allow the caller to take advantage of the other capabilities.
+
+From the interfaces implemented by the collection you use internally, return the one that provides the most capabilities that are allowed.
 
 ## How to fix violations
 
@@ -32,8 +34,6 @@ When, for contractual reasons, the return type cannot change.
 
 ## Example of a violation
 
-### Code
-
 ```csharp
 IEnumerable<int> Method()
 {
@@ -42,8 +42,6 @@ IEnumerable<int> Method()
 ```
 
 ## Example of how to fix
-
-### Code
 
 ```csharp
 IReadOnlyList<int> Method()
