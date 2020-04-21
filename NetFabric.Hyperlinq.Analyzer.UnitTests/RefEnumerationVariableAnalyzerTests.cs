@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 
 namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
-    public class VarEnumerationVariableAnalyzerTests : CodeFixVerifier
+    public class RefEnumerationVariableAnalyzerTests : CodeFixVerifier
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
             new RefEnumerationVariableAnalyzer();
