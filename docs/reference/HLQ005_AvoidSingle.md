@@ -31,8 +31,6 @@ Supress when unit testing or validating data.
 `GetEmployee()` is an extension method that return an employee with a given `employeeId` from an `IEnumerable<Employee>`. Returns `null` if employee not found.
 Throws an exception if more than one employee found.
 
-### Code
-
 ```csharp
 public static Employee GetEmployee(this IEnumerable<Employee> employees, int employeeId)
     => employees.SingleOrDefault(employee => employee.Id == employeeId);
@@ -41,8 +39,6 @@ public static Employee GetEmployee(this IEnumerable<Employee> employees, int emp
 ## Example of how to fix
 
 Refactor data validation logic so that it's more efficient. Replace `SingleOrDefault` by `FirstOrDefault`. 
-
-### Code
 
 ```csharp
 public static Employee GetEmployee(this IEnumerable<Employee> employees, int employeeId)

@@ -20,8 +20,6 @@ Should not be suppressed.
 
 ## Example of a violation
 
-### Code
-
 ```csharp
 foreach (var item in array.Where(_ => true))
 {
@@ -29,8 +27,6 @@ foreach (var item in array.Where(_ => true))
 ```
 
 ## Example of how to fix
-
-### Code
 
 ```csharp
 foreach (ref readonly var item in array.Where(_ => true))

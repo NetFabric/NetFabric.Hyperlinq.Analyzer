@@ -2,32 +2,38 @@
 
 ## Cause
 
+...
+
 ## Severity
 
 Error/Warning
 
 ## Rule description
 
+...
+
 ## How to fix violations
+
+...
 
 ## When to suppress warnings
 
+...
+
 ## Example of a violation
 
-### Description
-
-### Code
+...
 
 ```csharp
+
 ```
 
 ## Example of how to fix
 
-### Description
-
-### Code
+...
 
 ```csharp
+
 ```
 
 ## Related rules

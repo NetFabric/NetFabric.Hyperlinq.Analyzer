@@ -56,10 +56,6 @@ Should not be suppressed.
 
 ## Example of a violation
 
-### Description
-
-### Code
-
 ```csharp
 IEnumerable<int> Method()
 {
