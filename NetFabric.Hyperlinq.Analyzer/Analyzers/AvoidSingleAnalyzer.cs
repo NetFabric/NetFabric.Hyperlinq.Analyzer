@@ -47,15 +47,28 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             string methodFound;
             string methodReplace;
-            switch (memberAccessExpressionSyntax.Name.ToString())
+            bool isAsync;
+            switch (memberAccessExpressionSyntax.Name.Identifier.Text)
             {
                 case "Single":
                     methodFound = "Single";
                     methodReplace = "First";
+                    isAsync = false;
                     break;
                 case "SingleOrDefault":
                     methodFound = "SingleOrDefault";
                     methodReplace = "FirstOrDefault";
+                    isAsync = false;
+                    break;
+                case "SingleAsync":
+                    methodFound = "SingleAsync";
+                    methodReplace = "FirstAsync";
+                    isAsync = true;
+                    break;
+                case "SingleOrDefaultAsync":
+                    methodFound = "SingleOrDefaultAsync";
+                    methodReplace = "FirstOrDefaultAsync";
+                    isAsync = true;
                     break;
                 default:
                     return;
@@ -66,16 +79,34 @@ namespace NetFabric.Hyperlinq.Analyzer
                 var semanticModel = context.SemanticModel;
 
                 var type = semanticModel.GetTypeInfo(identifierName).Type;
-                if (!type.IsEnumerable(context.Compilation, out _))
-                {
-                    var arguments = invocationExpressionSyntax.ArgumentList.Arguments;
-                    if (arguments.Count == 0 || arguments.Count > 2)
-                        return;
 
-                    var firstArgument = arguments[0];
-                    var argumentType = semanticModel.GetTypeInfo(firstArgument.Expression).Type;
-                    if (argumentType is null || !argumentType.IsEnumerable(context.Compilation, out _))
-                        return;
+                if (isAsync)
+                {
+                    if (!type.IsAsyncEnumerable(context.Compilation, out _))
+                    {
+                        var arguments = invocationExpressionSyntax.ArgumentList.Arguments;
+                        if (arguments.Count < 1)
+                            return;
+
+                        var firstArgument = arguments[0];
+                        var argumentType = semanticModel.GetTypeInfo(firstArgument.Expression).Type;
+                        if (argumentType is null || !argumentType.IsAsyncEnumerable(context.Compilation, out _))
+                            return;
+                    }
+                }
+                else
+                {
+                    if (!type.IsEnumerable(context.Compilation, out _))
+                    {
+                        var arguments = invocationExpressionSyntax.ArgumentList.Arguments;
+                        if (arguments.Count < 1)
+                            return;
+
+                        var firstArgument = arguments[0];
+                        var argumentType = semanticModel.GetTypeInfo(firstArgument.Expression).Type;
+                        if (argumentType is null || !argumentType.IsEnumerable(context.Compilation, out _))
+                            return;
+                    }
                 }
             }
 

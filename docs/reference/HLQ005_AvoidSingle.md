@@ -1,8 +1,8 @@
-﻿# HLQ005: Avoid `Single()` and `SingleOrDefault()`
+﻿# HLQ005: Avoid use of `Single()`, `SingleOrDefault()`, `SingleAsync()` and `SingleOrDefaultAsync()` operations
 
 ## Cause
 
-Methods `Single()` or `SingleOrDefault()` are used to get the first element of a collection.
+Methods `Single()`, `SingleOrDefault()`, `SingleAsync()` or `SingleOrDefaultAsync()` are used to get the first element of a collection.
 
 ## Severity
 
@@ -10,26 +10,21 @@ Warning
 
 ## Rule description
 
-The methods `Single()`, `SingleOrDefault()`, `First()` and `FirstOrDefault()` are tipically used at the end of a LINQ query to get only the first element. 
+The methods `Single()`, `SingleOrDefault()`, `First()` and `FirstOrDefault()` (plus the async counterparts) are typically used get the first element of a LINQ query, 
 
-They throw an exception or return default when the collection is empty.
+The methods `Single()`, `SingleOrDefault()`, `SingleAsync()` or `SingleOrDefaultAsync()` check if there is more than one element that satisfies the query conditions. This means that the source for the query has to be enumerated until a second element is found or, until the end. 
 
-The methods `Single()` and `SingleOrDefault()` also check if there is one more element that satisfies the query conditions. This means that the query has to be performed to all subsequent elements until a second one if found. If none is found, the original collection has to be completely enumerated.
-
-The methods `Single()` and `SingleOrDefault()` can increase considerably the execution time of a query.
+The methods `Single()`, `SingleOrDefault()`, `SingleAsync()` or `SingleOrDefaultAsync()` can reduce considerably the performance of a query. Validate data only when inputting it and not while querying it.
 
 ## How to fix violations
 
-Use `First()` or `FirstOrDefault()` methods instead to get the first element of a collection.
+Use `First()`, `FirstOrDefault()`, `FirstAsync()` or `FirstOrDefaultAsync()` methods to get the first element of a query.
 
 ## When to suppress warnings
 
-Supress when unit testing or validating data.
+Suppress when unit testing, or validating data, and want to guarantee that the collection does not contain duplicates.
 
 ## Example of a violation
-
-`GetEmployee()` is an extension method that return an employee with a given `employeeId` from an `IEnumerable<Employee>`. Returns `null` if employee not found.
-Throws an exception if more than one employee found.
 
 ```csharp
 public static Employee GetEmployee(this IEnumerable<Employee> employees, int employeeId)
@@ -37,8 +32,6 @@ public static Employee GetEmployee(this IEnumerable<Employee> employees, int emp
 ```
 
 ## Example of how to fix
-
-Refactor data validation logic so that it's more efficient. Replace `SingleOrDefault` by `FirstOrDefault`. 
 
 ```csharp
 public static Employee GetEmployee(this IEnumerable<Employee> employees, int employeeId)

@@ -18,28 +18,18 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         {
             var test = @"
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Linq;
-
-static class MyEnumerable
-{
-    public static int Single(this IEnumerable<int> source)
-        => 0;
-}
-
-static class MyNotEnumerable
-{
-    public static int Single(this int source)
-        => source;
-}
 
 class C
 {
     public int Single(int source)
         => source;
 
-    void Method()
+    async void Method()
     {
-        IEnumerable<int> localVariable = new int[];
+        IEnumerable<int> localVariable = null;
+        IAsyncEnumerable<int> localAsynVariable = null;
 
         var a = localVariable.Single();
         var b = localVariable.Single(_ => true);
@@ -47,12 +37,36 @@ class C
         var d = Enumerable.Single(localVariable, _ => true);
         var e = Single(0);
         var f = MyEnumerable.Single(localVariable);
-        var g = MyNotEnumerable.Single(0);
+        var g = await MyAsyncEnumerable.SingleAsync<int>(localAsynVariable);
+        var h = MyNotEnumerable.Single(0);
 
         var aa = localVariable.SingleOrDefault();
         var ab = localVariable.SingleOrDefault(_ => true);
+        var ac = await MyAsyncEnumerable.SingleOrDefaultAsync(localAsynVariable);
     }
-}";
+}
+
+static class MyEnumerable
+{
+    public static T Single<T>(this IEnumerable<T> source)
+        => default;
+}
+
+static class MyAsyncEnumerable
+{
+    public static ValueTask<T> SingleAsync<T>(this IAsyncEnumerable<T> source)
+        => new ValueTask<T>(default(T));
+
+    public static ValueTask<T> SingleOrDefaultAsync<T>(this IAsyncEnumerable<T> source)
+        => new ValueTask<T>(default(T));
+}
+
+static class MyNotEnumerable
+{
+    public static int Single(this int source)
+        => source;
+}
+";
 
             var a = new DiagnosticResult
             {
@@ -60,7 +74,7 @@ class C
                 Message = "Avoid 'Single()'. Use 'First()' instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 26, 31)
+                    new DiagnosticResultLocation("Test0.cs", 16, 31)
                 },
             };
 
@@ -70,7 +84,7 @@ class C
                 Message = "Avoid 'Single()'. Use 'First()' instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 27, 31)
+                    new DiagnosticResultLocation("Test0.cs", 17, 31)
                 },
             };
 
@@ -80,7 +94,7 @@ class C
                 Message = "Avoid 'Single()'. Use 'First()' instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 28, 28)
+                    new DiagnosticResultLocation("Test0.cs", 18, 28)
                 },
             };
 
@@ -90,7 +104,7 @@ class C
                 Message = "Avoid 'Single()'. Use 'First()' instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 29, 28)
+                    new DiagnosticResultLocation("Test0.cs", 19, 28)
                 },
             };
 
@@ -100,7 +114,17 @@ class C
                 Message = "Avoid 'Single()'. Use 'First()' instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 31, 30)
+                    new DiagnosticResultLocation("Test0.cs", 21, 30)
+                },
+            };
+
+            var g = new DiagnosticResult
+            {
+                Id = "HLQ005",
+                Message = "Avoid 'SingleAsync()'. Use 'FirstAsync()' instead.",
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] {
+                    new DiagnosticResultLocation("Test0.cs", 22, 41)
                 },
             };
 
@@ -110,7 +134,7 @@ class C
                 Message = "Avoid 'SingleOrDefault()'. Use 'FirstOrDefault()' instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 34, 32)
+                    new DiagnosticResultLocation("Test0.cs", 25, 32)
                 },
             };
 
@@ -120,11 +144,21 @@ class C
                 Message = "Avoid 'SingleOrDefault()'. Use 'FirstOrDefault()' instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 35, 32)
+                    new DiagnosticResultLocation("Test0.cs", 26, 32)
                 },
             };
 
-            VerifyCSharpDiagnostic(test, a, b, c, d, f, aa, ab);
+            var ac = new DiagnosticResult
+            {
+                Id = "HLQ005",
+                Message = "Avoid 'SingleOrDefaultAsync()'. Use 'FirstOrDefaultAsync()' instead.",
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] {
+                    new DiagnosticResultLocation("Test0.cs", 27, 42)
+                },
+            };
+
+            VerifyCSharpDiagnostic(test, a, b, c, d, f, g, aa, ab, ac);
         }
 
     }
