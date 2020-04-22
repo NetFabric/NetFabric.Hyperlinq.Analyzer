@@ -55,18 +55,18 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             // check if it's "GetEnumerator" or "GetAsyncEnumerator"
             var identifier = methodDeclarationSyntax.Identifier.ValueText;
-            if (identifier == "GetEnumerator" && methodDeclarationSyntax.ParameterList.Parameters.Count == 0)
+            if (identifier == "GetEnumerator" && !methodDeclarationSyntax.ParameterList.Parameters.Any())
             {
                 // check if it returns an enumerator
                 var type = semanticModel.GetTypeInfo(returnType).Type;
-                if (!type.IsEnumerator(semanticModel.Compilation, out var enumerableSymbols))
+                if (!type.IsEnumerator(semanticModel.Compilation, out var _))
                     return;
             }
             else if (identifier == "GetAsyncEnumerator" && methodDeclarationSyntax.ParameterList.Parameters.Count < 2)
             {
                 // check if it returns an async enumerator
                 var type = semanticModel.GetTypeInfo(returnType).Type;
-                if (!type.IsAsyncEnumerator(semanticModel.Compilation, out var enumerableSymbols))
+                if (!type.IsAsyncEnumerator(semanticModel.Compilation, out var _))
                     return;
             }
             else
@@ -74,7 +74,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 return;
             }
 
-            var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), identifier);
+            var diagnostic = Diagnostic.Create(rule, returnType.GetLocation(), identifier);
             context.ReportDiagnostic(diagnostic);
         }
     }
