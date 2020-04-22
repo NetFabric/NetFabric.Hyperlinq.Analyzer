@@ -14,10 +14,10 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>A Roslyn analyzer with rules for improving performance of enumeration in .NET</Description>
+    <Description>A Roslyn analyzer with rules related to generation and consumption of enumerables and async enumerables in C#.</Description>
     <PackageReleaseNotes></PackageReleaseNotes>
     <Copyright>Copyright 2019-2020 Antao Almada</Copyright>
-    <PackageTags>hyperlinq, analyzers, enumerable, linq, performance</PackageTags>
+    <PackageTags>hyperlinq, analyzers, enumerable, async, linq, performance</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <DevelopmentDependency>true</DevelopmentDependency>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
