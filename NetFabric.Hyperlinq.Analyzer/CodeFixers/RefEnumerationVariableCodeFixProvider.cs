@@ -73,7 +73,7 @@ namespace NetFabric.Hyperlinq.Analyzer
     }
 
     // Source: https://github.com/outerminds/Entia/blob/master/Entia.Analyze/Extensions/SyntaxExtensions.cs
-    static class SyntaxExtensions
+    static partial class SyntaxExtensions
     {
         public static bool IsSome(this SyntaxToken token) => !token.IsNone();
         public static bool IsNone(this SyntaxToken token) => token == default;

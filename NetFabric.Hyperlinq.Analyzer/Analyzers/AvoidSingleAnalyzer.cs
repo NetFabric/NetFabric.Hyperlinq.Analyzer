@@ -12,7 +12,7 @@ namespace NetFabric.Hyperlinq.Analyzer
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class AvoidSingleAnalyzer : DiagnosticAnalyzer
     {
-        const string DiagnosticId = DiagnosticIds.AvoidSingleId;
+        public const string DiagnosticId = DiagnosticIds.AvoidSingleId;
 
         static readonly LocalizableString Title =
             new LocalizableResourceString(nameof(Resources.AvoidSingle_Title), Resources.ResourceManager, typeof(Resources));
