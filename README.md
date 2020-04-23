@@ -40,5 +40,4 @@ The following open-source projects are used to build and test this project:
 - [ILRepack](https://github.com/gluck/il-repack)
 - [ILRepack.MSBuild.Task](https://github.com/peters/ILRepack.MSBuild.Task)
 - [NetFabric.CodeAnalysis](https://github.com/NetFabric/NetFabric.CodeAnalysis)
-- [Roslynator.CodeAnalysis.Analyzers](https://github.com/JosefPihrt/Roslynator)
 - [xUnit.net](https://xunit.net/)
