@@ -79,7 +79,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (typeDeclaration is null)
                 return;
 
-            var name = typeDeclaration.GetFullName();
+            var name = typeDeclaration.GetMetadataName();
             var declaredTypeSymbol = compilation.GetTypeByMetadataName(name);
 
             // check if disposable type is an enumerator
@@ -93,7 +93,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (typeDeclaration is null)
                 return;
 
-            name = typeDeclaration.GetFullName();
+            name = typeDeclaration.GetMetadataName();
             declaredTypeSymbol = compilation.GetTypeByMetadataName(name);
 
             if (declaredTypeSymbol is null)
@@ -115,7 +115,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             }
 
             // check if the public GetEnumerator() return the disposable enumerator
-            if (!Equals(getEnumerator.ReturnType, enumeratorTypeSymbol))
+            if (!SymbolEqualityComparer.Default.Equals(getEnumerator.ReturnType, enumeratorTypeSymbol))
                 return;
 
             // find the location of GetEnumerator() return type
@@ -129,9 +129,6 @@ namespace NetFabric.Hyperlinq.Analyzer
             var diagnostic = Diagnostic.Create(rule, getEnumeratorDeclaration.ReturnType.GetLocation(), enumeratorTypeSymbol.Name);
             context.ReportDiagnostic(diagnostic);
         }
-
-        static IEnumerable<INamedTypeSymbol> GetAllTypes(Compilation compilation)
-            => GetAllTypes(compilation.GlobalNamespace);
 
         static IEnumerable<INamedTypeSymbol> GetAllTypes(INamespaceSymbol @namespace)
         {

@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
-    public class AssignmentBoxingTests : CodeFixVerifier
+    public class AssignmentBoxingTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
             new AssignmentBoxingAnalyzer();
@@ -111,6 +111,7 @@ class C
             var test = @"
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 class C
@@ -129,7 +130,7 @@ class C
                 Message = "'OptimizedAsyncEnumerable`1' has a value type enumerator. Assigning it to 'IAsyncEnumerable`1' causes boxing of the enumerator.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 8, 5)
+                    new DiagnosticResultLocation("Test0.cs", 9, 5)
                 },
             };
 
@@ -139,7 +140,7 @@ class C
                 Message = "'OptimizedAsyncEnumerable`1' has a value type enumerator. Assigning it to 'IAsyncEnumerable`1' causes boxing of the enumerator.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 12, 9)
+                    new DiagnosticResultLocation("Test0.cs", 13, 9)
                 },
             };
 
@@ -154,10 +155,10 @@ using System.Collections.Generic;
 
 class C
 {
-    List<int> Property00 { get; } = new List<int>();
-    IEnumerable<int> Property01 { get; } = new NonOptimizedEnumerable<int>();
+    List<int> Property00 { get; set; } = new List<int>();
+    IEnumerable<int> Property01 { get; set; } = new NonOptimizedEnumerable<int>();
 
-    public IList<int> Property11 { get; } = new List<int>(); // boxes enumerator but public
+    public IList<int> Property11 { get; set; } = new List<int>(); // boxes enumerator but public
 
     public void Method()
     {
@@ -177,14 +178,15 @@ class C
             var test = @"
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 class C
 {
-    OptimizedAsyncEnumerable<int> Property00 { get; } = new OptimizedAsyncEnumerable<int>();
-    IAsyncEnumerable<int> Property01 { get; } = new NonOptimizedAsyncEnumerable<int>();
+    OptimizedAsyncEnumerable<int> Property00 { get; set; } = new OptimizedAsyncEnumerable<int>();
+    IAsyncEnumerable<int> Property01 { get; set; } = new NonOptimizedAsyncEnumerable<int>();
 
-    public IAsyncEnumerable<int> Property11 { get; } = new OptimizedAsyncEnumerable<int>(); // boxes enumerator but public
+    public IAsyncEnumerable<int> Property11 { get; set; } = new OptimizedAsyncEnumerable<int>(); // boxes enumerator but public
 
     public void Method() 
     {
@@ -242,6 +244,8 @@ class C
         {
             var test = @"
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 class C
 {
@@ -259,7 +263,7 @@ class C
                 Message = "'OptimizedAsyncEnumerable`1' has a value type enumerator. Assigning it to 'IAsyncEnumerable`1' causes boxing of the enumerator.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 6, 5)
+                    new DiagnosticResultLocation("Test0.cs", 8, 5)
                 },
             };
 
@@ -269,7 +273,7 @@ class C
                 Message = "'OptimizedAsyncEnumerable`1' has a value type enumerator. Assigning it to 'IAsyncEnumerable`1' causes boxing of the enumerator.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 10, 9)
+                    new DiagnosticResultLocation("Test0.cs", 12, 9)
                 },
             };
 
@@ -284,7 +288,7 @@ using System.Collections.Generic;
 
 class C
 {
-    public Method()
+    public void Method()
     {
         List<int> variable00 = new List<int>();
         IEnumerable<int> variable01 = new NonOptimizedEnumerable<int>();
@@ -306,10 +310,12 @@ class C
         {
             var test = @"
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 class C
 {
-    public Method()
+    public void Method()
     {
         OptimizedAsyncEnumerable<int> variable00 = new OptimizedAsyncEnumerable<int>();
         IAsyncEnumerable<int> variable01 = new NonOptimizedAsyncEnumerable<int>();
@@ -334,7 +340,7 @@ using System.Collections.Generic;
 
 class C
 {
-    public Method()
+    public void Method()
     {
         IList<int> variable01 = new List<int>(); 
 
@@ -370,10 +376,12 @@ class C
         {
             var test = @"
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 class C
 {
-    public Method()
+    public void Method()
     {
         IAsyncEnumerable<int> variable01 = new OptimizedAsyncEnumerable<int>(); 
 
@@ -387,7 +395,7 @@ class C
                 Message = "'OptimizedAsyncEnumerable`1' has a value type enumerator. Assigning it to 'IAsyncEnumerable`1' causes boxing of the enumerator.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 8, 9)
+                    new DiagnosticResultLocation("Test0.cs", 10, 9)
                 },
             };
 
@@ -397,7 +405,7 @@ class C
                 Message = "'OptimizedAsyncEnumerable`1' has a value type enumerator. Assigning it to 'IAsyncEnumerable`1' causes boxing of the enumerator.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 10, 9)
+                    new DiagnosticResultLocation("Test0.cs", 12, 9)
                 },
             };
 

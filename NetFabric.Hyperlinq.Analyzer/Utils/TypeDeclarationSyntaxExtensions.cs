@@ -15,7 +15,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         const char TYPEPARAMETER_CLASS_DELIMITER = '`';
 
         // based on https://stackoverflow.com/a/52694992
-        public static string GetFullName(this TypeDeclarationSyntax source)
+        public static string GetMetadataName(this TypeDeclarationSyntax source)
         {
             if (source is null)
                 throw new ArgumentNullException(nameof(source));
