@@ -1,11 +1,10 @@
-﻿using System;
+﻿using NetFabric.Hyperlinq.Analyzer.UnitTests.TestData;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace HLQ007.NoDiagnostic.Interface
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
     readonly struct Enumerable<T> : IEnumerable<T>
     {
         public Enumerator GetEnumerator() => new Enumerator();
@@ -40,7 +39,7 @@ namespace HLQ007.NoDiagnostic.Interface
         void Test()
         {
             // make sure implementation is supported by foreach
-            foreach (var item in new Enumerable<int>())
+            foreach (var item in new Enumerable<TestType>())
                 Console.WriteLine(item);
         }
     }

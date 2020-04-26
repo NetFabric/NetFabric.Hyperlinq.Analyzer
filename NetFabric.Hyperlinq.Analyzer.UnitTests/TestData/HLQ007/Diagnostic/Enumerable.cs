@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetFabric.Hyperlinq.Analyzer.UnitTests.TestData;
+using System;
 
 namespace HLQ007.Diagnostic
 {
@@ -21,7 +22,7 @@ namespace HLQ007.Diagnostic
         void Test()
         {
             // make sure implementation is supported by foreach
-            foreach (var item in new Enumerable<int>())
+            foreach (var item in new Enumerable<TestType>())
                 Console.WriteLine(item);
         }
     }

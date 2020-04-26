@@ -1,12 +1,9 @@
-﻿using System;
-using Xunit;
-using TestHelper;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.CodeFixes;
 using System.IO;
+using System.Linq;
+using TestHelper;
+using Xunit;
 
 namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
@@ -20,14 +17,24 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         [InlineData("TestData/HLQ007/NoDiagnostic/IEnumerable.cs")]
         public void Verify_NoDiagnostics(string path)
         {
-            VerifyCSharpDiagnostic(File.ReadAllText(path));
+            var paths = new[]
+            {
+                path,
+                "TestData/TestType.cs",
+            };
+            VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray());
         }
 
         [Theory]
-        [InlineData("TestData/HLQ007/Diagnostic/Enumerable.cs", "Enumerator", 7, 16)]
-        [InlineData("TestData/HLQ007/Diagnostic/IEnumerable.cs", "Enumerator", 11, 16)]
+        [InlineData("TestData/HLQ007/Diagnostic/Enumerable.cs", "Enumerator", 8, 16)]
+        [InlineData("TestData/HLQ007/Diagnostic/IEnumerable.cs", "Enumerator", 10, 16)]
         public void Verify_Diagnostic(string path, string enumeratorName, int line, int column)
         {
+            var paths = new[]
+            {
+                path,
+                "TestData/TestType.cs",
+            };
             var expected = new DiagnosticResult
             {
                 Id = "HLQ007",
@@ -38,7 +45,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
                 },
             };
 
-            VerifyCSharpDiagnostic(File.ReadAllText(path), expected);
+            VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray(), expected);
         }
     }
 }

@@ -1,10 +1,9 @@
-using System;
-using Xunit;
-using TestHelper;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.IO;
+using System.Linq;
+using TestHelper;
+using Xunit;
 
 namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
@@ -13,96 +12,56 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
             new AssignmentBoxingAnalyzer();
 
-        [Fact]
-        public void Verify_Field_NoDiagnostics()
+        [Theory]
+        [InlineData("TestData/HLQ001/NoDiagnostic/FieldDeclaration.cs")]
+        [InlineData("TestData/HLQ001/NoDiagnostic/FieldDeclaration.Async.cs")]
+        [InlineData("TestData/HLQ001/NoDiagnostic/PropertyDeclaration.cs")]
+        [InlineData("TestData/HLQ001/NoDiagnostic/PropertyDeclaration.Async.cs")]
+        [InlineData("TestData/HLQ001/NoDiagnostic/VariableDeclaration.cs")]
+        [InlineData("TestData/HLQ001/NoDiagnostic/VariableDeclaration.Async.cs")]
+        public void Verify_NoDiagnostics(string path)
         {
-            var test = @"
-using System.Collections.Generic;
-
-class C
-{
-    List<int> field00 = new List<int>();
-    IEnumerable<int> field01 = new NonOptimizedEnumerable<int>();
-
-    public IList<int> field11 = new List<int>(); // boxes enumerator but public
-
-    public void Method()
-    {
-        field00 = new List<int>();
-        field01 = new NonOptimizedEnumerable<int>();
-
-        field11 = new List<int>(); // boxes enumerator but public
-    }
-}" + EnumerableDefinitions;
-
-            VerifyCSharpDiagnostic(test);
+            var paths = new[]
+            {
+                path,
+                "TestData/TestType.cs",
+                "TestData/Enumerables.cs",
+            };
+            VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray());
         }
 
-        [Fact]
-        public void Verify_Field_NoDiagnostics_Async()
+        [Theory]
+        [InlineData("TestData/HLQ001/Diagnostic/EqualsValueClause/FieldDeclaration.cs", "OptimizedEnumerable`1", "IEnumerable`1", 8, 9)]
+        [InlineData("TestData/HLQ001/Diagnostic/EqualsValueClause/FieldDeclaration.Async.cs", "OptimizedAsyncEnumerable`1", "IAsyncEnumerable`1", 8, 9)]
+        [InlineData("TestData/HLQ001/Diagnostic/EqualsValueClause/PropertyDeclaration.cs", "OptimizedEnumerable`1", "IEnumerable`1", 8, 9)]
+        [InlineData("TestData/HLQ001/Diagnostic/EqualsValueClause/PropertyDeclaration.Async.cs", "OptimizedAsyncEnumerable`1", "IAsyncEnumerable`1", 8, 9)]
+        [InlineData("TestData/HLQ001/Diagnostic/EqualsValueClause/VariableDeclaration.cs", "OptimizedEnumerable`1", "IEnumerable`1", 10, 13)]
+        [InlineData("TestData/HLQ001/Diagnostic/EqualsValueClause/VariableDeclaration.Async.cs", "OptimizedAsyncEnumerable`1", "IAsyncEnumerable`1", 11, 13)]
+        [InlineData("TestData/HLQ001/Diagnostic/SimpleAssignment/FieldDeclaration.cs", "OptimizedEnumerable`1", "IEnumerable`1", 12, 13)]
+        [InlineData("TestData/HLQ001/Diagnostic/SimpleAssignment/FieldDeclaration.Async.cs", "OptimizedAsyncEnumerable`1", "IAsyncEnumerable`1", 12, 13)]
+        [InlineData("TestData/HLQ001/Diagnostic/SimpleAssignment/PropertyDeclaration.cs", "OptimizedEnumerable`1", "IEnumerable`1", 12, 13)]
+        [InlineData("TestData/HLQ001/Diagnostic/SimpleAssignment/PropertyDeclaration.Async.cs", "OptimizedAsyncEnumerable`1", "IAsyncEnumerable`1", 12, 13)]
+        [InlineData("TestData/HLQ001/Diagnostic/SimpleAssignment/VariableDeclaration.cs", "OptimizedEnumerable`1", "IEnumerable`1", 12, 13)]
+        [InlineData("TestData/HLQ001/Diagnostic/SimpleAssignment/VariableDeclaration.Async.cs", "OptimizedAsyncEnumerable`1", "IAsyncEnumerable`1", 13, 13)]
+        public void Verify_Diagnostics(string path, string type, string @interface, int line, int column)
         {
-            var test = @"
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-class C
-{
-    OptimizedAsyncEnumerable<int> field00 = new OptimizedAsyncEnumerable<int>();
-    IAsyncEnumerable<int> field01 = new NonOptimizedAsyncEnumerable<int>();
-
-    public IAsyncEnumerable<int> field11 = new OptimizedAsyncEnumerable<int>(); // boxes enumerator but public
-
-    public void Method()
-    {
-        field00 = new OptimizedAsyncEnumerable<int>();
-        field01 = new NonOptimizedAsyncEnumerable();
-
-        field11 = new OptimizedAsyncEnumerable<int>(); // boxes enumerator but public
-    }
-}" + AsyncEnumerableDefinitions;
-
-            VerifyCSharpDiagnostic(test);
-        }
-
-        [Fact]
-        public void Verify_Field()
-        {
-            var test = @"
-using System.Collections.Generic;
-
-class C
-{
-    IList<int> field01 = new List<int>();
-
-    public void Method()
-    {
-        field01 = new List<int>();
-    }
-}" + EnumerableDefinitions;
-
-            var initializer = new DiagnosticResult
+            var paths = new[]
+            {
+                path,
+                "TestData/TestType.cs",
+                "TestData/Enumerables.cs",
+            };
+            var expected = new DiagnosticResult
             {
                 Id = "HLQ001",
-                Message = "'List`1' has a value type enumerator. Assigning it to 'IList`1' causes boxing of the enumerator.",
+                Message = $"'{type}' has a value type enumerator. Assigning it to '{@interface}' causes boxing of the enumerator.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 6, 5)
+                    new DiagnosticResultLocation("Test0.cs", line, column)
                 },
             };
 
-            var method = new DiagnosticResult
-            {
-                Id = "HLQ001",
-                Message = "'List`1' has a value type enumerator. Assigning it to 'IList`1' causes boxing of the enumerator.",
-                Severity = DiagnosticSeverity.Warning,
-                Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 10, 9)
-                },
-            };
-
-            VerifyCSharpDiagnostic(test, initializer, method);
+            VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray(), expected);
         }
 
         [Fact]
@@ -145,59 +104,6 @@ class C
             };
 
             VerifyCSharpDiagnostic(test, initializer, method);
-        }
-
-        [Fact]
-        public void Verify_Property_NoDiagnostics()
-        {
-            var test = @"
-using System.Collections.Generic;
-
-class C
-{
-    List<int> Property00 { get; set; } = new List<int>();
-    IEnumerable<int> Property01 { get; set; } = new NonOptimizedEnumerable<int>();
-
-    public IList<int> Property11 { get; set; } = new List<int>(); // boxes enumerator but public
-
-    public void Method()
-    {
-        Property00 = new List<int>();
-        Property01 = new NonOptimizedEnumerable<int>();
-
-        Property11 = new List<int>(); // boxes enumerator but public
-    }
-}" + EnumerableDefinitions;
-
-            VerifyCSharpDiagnostic(test);
-        }
-
-        [Fact]
-        public void Verify_Property_NoDiagnostics_Async()
-        {
-            var test = @"
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-class C
-{
-    OptimizedAsyncEnumerable<int> Property00 { get; set; } = new OptimizedAsyncEnumerable<int>();
-    IAsyncEnumerable<int> Property01 { get; set; } = new NonOptimizedAsyncEnumerable<int>();
-
-    public IAsyncEnumerable<int> Property11 { get; set; } = new OptimizedAsyncEnumerable<int>(); // boxes enumerator but public
-
-    public void Method() 
-    {
-        Property00 = new OptimizedAsyncEnumerable<int>();
-        Property01 = new NonOptimizedAsyncEnumerable<int>();
-
-        Property11 = new OptimizedAsyncEnumerable<int>(); // boxes enumerator but public
-    }
-}" + EnumerableDefinitions;
-
-            VerifyCSharpDiagnostic(test);
         }
 
         [Fact]
@@ -278,58 +184,6 @@ class C
             };
 
             VerifyCSharpDiagnostic(test, initializer, method);
-        }
-
-        [Fact]
-        public void Verify_LocalVariable_NoDiagnostics()
-        {
-            var test = @"
-using System.Collections.Generic;
-
-class C
-{
-    public void Method()
-    {
-        List<int> variable00 = new List<int>();
-        IEnumerable<int> variable01 = new NonOptimizedEnumerable<int>();
-
-        var variable10 = new List<int>();
-
-        variable00 = new List<int>();
-        variable01 = new NonOptimizedEnumerable<int>();
-
-        variable10 = new List<int>();
-    }
-}" + EnumerableDefinitions;
-
-            VerifyCSharpDiagnostic(test);
-        }
-
-        [Fact]
-        public void Verify_LocalVariable_NoDiagnostics_Async()
-        {
-            var test = @"
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-class C
-{
-    public void Method()
-    {
-        OptimizedAsyncEnumerable<int> variable00 = new OptimizedAsyncEnumerable<int>();
-        IAsyncEnumerable<int> variable01 = new NonOptimizedAsyncEnumerable<int>();
-
-        var variable10 = new OptimizedAsyncEnumerable<int>();
-
-        variable00 = new OptimizedAsyncEnumerable<int>();
-        variable01 = new NonOptimizedAsyncEnumerable<int>();
-
-        variable10 = new OptimizedAsyncEnumerable<int>();
-    }
-}" + EnumerableDefinitions;
-
-            VerifyCSharpDiagnostic(test);
         }
 
         [Fact]

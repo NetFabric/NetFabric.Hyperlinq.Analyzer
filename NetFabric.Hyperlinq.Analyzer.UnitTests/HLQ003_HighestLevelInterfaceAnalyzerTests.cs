@@ -1,10 +1,7 @@
-﻿using System;
-using Xunit;
-using TestHelper;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using TestHelper;
+using Xunit;
 
 namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
