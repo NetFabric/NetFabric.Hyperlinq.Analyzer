@@ -33,4 +33,15 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestData\HLQ006\Diagnostic\" />
+    <Folder Include="TestData\HLQ006\NoDiagnostic\" />
+    <Folder Include="TestData\HLQ005\Diagnostic\" />
+    <Folder Include="TestData\HLQ005\NoDiagnostic\" />
+    <Folder Include="TestData\HLQ004\Diagnostic\" />
+    <Folder Include="TestData\HLQ004\NoDiagnostic\" />
+    <Folder Include="TestData\HLQ003\Diagnostic\" />
+    <Folder Include="TestData\HLQ003\NoDiagnostic\" />
+  </ItemGroup>
+
 </Project>
