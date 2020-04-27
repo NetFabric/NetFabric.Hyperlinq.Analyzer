@@ -28,8 +28,8 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         [Theory]
         [InlineData("TestData/HLQ002/Diagnostic/ArrowExpression/Enumerable.cs", 10, 16)]
         [InlineData("TestData/HLQ002/Diagnostic/ArrowExpression/Enumerable.Async.cs", 11, 16)]
-        [InlineData("TestData/HLQ002/Diagnostic/LiteralExpression/Enumerable.cs", 11, 13)]
-        [InlineData("TestData/HLQ002/Diagnostic/LiteralExpression/Enumerable.Async.cs", 12, 13)]
+        [InlineData("TestData/HLQ002/Diagnostic/MethodDeclaration/Enumerable.cs", 11, 13)]
+        [InlineData("TestData/HLQ002/Diagnostic/MethodDeclaration/Enumerable.Async.cs", 12, 13)]
         public void Verify_Diagnostics(string path, int line, int column)
         {
             var paths = new[]

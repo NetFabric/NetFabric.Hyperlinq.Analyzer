@@ -25,7 +25,8 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             {
                 path,
                 "TestData/TestType.cs",
-                "TestData/Enumerables.cs",
+                "TestData/Enumerable.cs",
+                "TestData/AsyncEnumerable.cs",
             };
             VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray());
         }
@@ -49,7 +50,8 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             {
                 path,
                 "TestData/TestType.cs",
-                "TestData/Enumerables.cs",
+                "TestData/Enumerable.cs",
+                "TestData/AsyncEnumerable.cs",
             };
             var expected = new DiagnosticResult
             {

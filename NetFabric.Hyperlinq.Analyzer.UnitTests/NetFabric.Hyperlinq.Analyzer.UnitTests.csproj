@@ -34,14 +34,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="TestData\HLQ003\Diagnostic\ArrowExpression\IEnumerable\" />
+    <Folder Include="TestData\HLQ003\Diagnostic\ArrowExpression\IReadOnlyCollection\" />
+    <Folder Include="TestData\HLQ003\Diagnostic\ArrowExpression\IReadOnlyList\" />
+    <Folder Include="TestData\HLQ003\Diagnostic\MethodDeclaration\IEnumerable\" />
+    <Folder Include="TestData\HLQ003\Diagnostic\MethodDeclaration\IReadOnlyCollection\" />
+    <Folder Include="TestData\HLQ003\Diagnostic\MethodDeclaration\IReadOnlyList\" />
+    <Folder Include="TestData\HLQ003\NoDiagnostic\IEnumerable\" />
+    <Folder Include="TestData\HLQ003\NoDiagnostic\IReadOnlyCollection\" />
+    <Folder Include="TestData\HLQ003\NoDiagnostic\IReadOnlyList\" />
     <Folder Include="TestData\HLQ006\Diagnostic\" />
     <Folder Include="TestData\HLQ006\NoDiagnostic\" />
     <Folder Include="TestData\HLQ005\Diagnostic\" />
     <Folder Include="TestData\HLQ005\NoDiagnostic\" />
     <Folder Include="TestData\HLQ004\Diagnostic\" />
     <Folder Include="TestData\HLQ004\NoDiagnostic\" />
-    <Folder Include="TestData\HLQ003\Diagnostic\" />
-    <Folder Include="TestData\HLQ003\NoDiagnostic\" />
   </ItemGroup>
 
 </Project>

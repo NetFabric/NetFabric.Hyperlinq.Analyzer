@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace HLQ002.Diagnostic.LiteralExpression
+namespace HLQ002.Diagnostic.MethodDeclaration
 {
     public class TestClass_Async
     {
