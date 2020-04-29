@@ -8,5 +8,8 @@ namespace HLQ003.NoDiagnostic.Enumerable
     {
         public IEnumerable<TestType> MethodArrow() 
             => new OptimizedEnumerable<TestType>();
+
+        public OptimizedEnumerable<TestType> MethodArrow2()
+            => new OptimizedEnumerable<TestType>();
     }
 }

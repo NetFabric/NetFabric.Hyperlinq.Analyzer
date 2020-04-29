@@ -12,7 +12,6 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
             new NullEnumerableAnalyzer();
 
-
         [Theory]
         [InlineData("TestData/HLQ002/NoDiagnostic/Enumerable.cs")]
         [InlineData("TestData/HLQ002/NoDiagnostic/Enumerable.Async.cs")]
@@ -21,6 +20,9 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             var paths = new[]
             {
                 path,
+                "TestData/TestType.cs",
+                "TestData/Enumerable.cs",
+                "TestData/AsyncEnumerable.cs",
             };
             VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray());
         }
@@ -35,6 +37,9 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             var paths = new[]
             {
                 path,
+                "TestData/TestType.cs",
+                "TestData/Enumerable.cs",
+                "TestData/AsyncEnumerable.cs",
             };
             var expected = new DiagnosticResult
             {

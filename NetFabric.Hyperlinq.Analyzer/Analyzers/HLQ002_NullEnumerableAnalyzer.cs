@@ -22,8 +22,8 @@ namespace NetFabric.Hyperlinq.Analyzer
         const string Category = "Compiler";
 
         static readonly DiagnosticDescriptor rule =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, 
-                isEnabledByDefault: true, description: Description, 
+            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error,
+                isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ002_NullEnumerable.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
@@ -41,37 +41,39 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (!(context.Node is MethodDeclarationSyntax methodDeclarationSyntax))
                 return;
 
-            var semanticModel = context.SemanticModel;
-
-            var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclarationSyntax);
-            if (methodSymbol.ReturnsVoid)
+            if (methodDeclarationSyntax.ReturnType.IsKind(SyntaxKind.VoidKeyword))
                 return;
 
-            var returnType = methodSymbol.ReturnType.OriginalDefinition;
-            if (!returnType.IsEnumerable(context.Compilation, out _) && !returnType.IsAsyncEnumerable(context.Compilation, out _))
-                return;
-
-            var arrowExpressionClauseSyntax = methodDeclarationSyntax.DescendantNodes()
-                .OfType<ArrowExpressionClauseSyntax>().FirstOrDefault();
-            if (arrowExpressionClauseSyntax is null)
-            {
-                foreach(var returnStatementSyntax in methodDeclarationSyntax.DescendantNodes().OfType<ReturnStatementSyntax>())
-                {
-                    if (returnStatementSyntax.Expression is LiteralExpressionSyntax literalExpressionSyntax &&
-                        literalExpressionSyntax.IsKind(SyntaxKind.NullLiteralExpression))
-                    {
-                        var diagnostic = Diagnostic.Create(rule, returnStatementSyntax.GetLocation());
-                        context.ReportDiagnostic(diagnostic);
-                    }
-                }
-            }
+            if (methodDeclarationSyntax.Body is null)
+                AnalyzeArrowExpressionClause(context, methodDeclarationSyntax);
             else
+                AnalyzeMethodDeclaration(context, methodDeclarationSyntax);
+        }
+
+        static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclarationSyntax)
+        {
+            foreach (var returnStatementSyntax in methodDeclarationSyntax.DescendantNodes().OfType<ReturnStatementSyntax>())
             {
-                if (arrowExpressionClauseSyntax.Expression.IsKind(SyntaxKind.NullLiteralExpression))
+                if (returnStatementSyntax.Expression.IsKind(SyntaxKind.NullLiteralExpression))
                 {
-                    var diagnostic = Diagnostic.Create(rule, arrowExpressionClauseSyntax.Expression.GetLocation());
+                    var diagnostic = Diagnostic.Create(rule, returnStatementSyntax.GetLocation());
                     context.ReportDiagnostic(diagnostic);
                 }
+            }
+        }
+
+        static void AnalyzeArrowExpressionClause(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclarationSyntax)
+        {
+            var arrowExpressionClauseSyntax = methodDeclarationSyntax.DescendantNodes()
+                .OfType<ArrowExpressionClauseSyntax>()
+                .FirstOrDefault();
+            if (arrowExpressionClauseSyntax is null)
+                return;
+
+            if (arrowExpressionClauseSyntax.Expression.IsKind(SyntaxKind.NullLiteralExpression))
+            {
+                var diagnostic = Diagnostic.Create(rule, arrowExpressionClauseSyntax.Expression.GetLocation());
+                context.ReportDiagnostic(diagnostic);
             }
         }
     }

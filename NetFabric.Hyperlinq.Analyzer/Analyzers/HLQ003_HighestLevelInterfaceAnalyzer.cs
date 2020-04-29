@@ -42,79 +42,86 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (!(context.Node is MethodDeclarationSyntax methodDeclarationSyntax))
                 return;
 
-            var semanticModel = context.SemanticModel;
-
-            var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclarationSyntax);
-            if (methodSymbol.ReturnsVoid || methodSymbol.DeclaredAccessibility != Accessibility.Public)
+            if (methodDeclarationSyntax.ReturnType.IsKind(SyntaxKind.VoidKeyword))
                 return;
 
-            var returnType = methodSymbol.ReturnType.OriginalDefinition.SpecialType;
+            var returnType = context.SemanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type as INamedTypeSymbol;
+            if (returnType is null)
+                return;
 
-            var arrowExpressionClauseSyntax = methodDeclarationSyntax.DescendantNodes()
-                .OfType<ArrowExpressionClauseSyntax>().FirstOrDefault();
-            if (arrowExpressionClauseSyntax is null)
-            {
-                switch (returnType)
-                {
-                    case SpecialType.System_Collections_IEnumerable:
-                        AnalyzeIEnumerableMethod(context, methodDeclarationSyntax);
-                        break;
-                    case SpecialType.System_Collections_Generic_IEnumerable_T:
-                        AnalyzeIEnumerableTMethod(context, methodDeclarationSyntax);
-                        break;
-                    case SpecialType.System_Collections_Generic_IReadOnlyCollection_T:
-                        AnalyzeIReadOnlyCollectionMethod(context, methodDeclarationSyntax);
-                        break;
-                }
-            }
+            var returnSpecialType = returnType.OriginalDefinition.SpecialType;
+            if (returnSpecialType == SpecialType.None)
+                return;
+
+            if (methodDeclarationSyntax.Body is null)
+                AnalyzeArrowExpressionClause(context, methodDeclarationSyntax, returnSpecialType);
             else
+                AnalyzeMethodDeclaration(context, methodDeclarationSyntax, returnSpecialType);
+        }
+
+        static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclarationSyntax, SpecialType methodReturnType)
+        {
+            switch (methodReturnType)
             {
-                AnalyzeArrowExpressionClause(context, methodDeclarationSyntax, arrowExpressionClauseSyntax, returnType);
+                case SpecialType.System_Collections_IEnumerable:
+                    AnalyzeIEnumerableMethod(context, methodDeclarationSyntax);
+                    break;
+                case SpecialType.System_Collections_Generic_IEnumerable_T:
+                    AnalyzeIEnumerableTMethod(context, methodDeclarationSyntax);
+                    break;
+                case SpecialType.System_Collections_Generic_IReadOnlyCollection_T:
+                    AnalyzeIReadOnlyCollectionMethod(context, methodDeclarationSyntax);
+                    break;
             }
         }
 
-        static void AnalyzeArrowExpressionClause(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclarationSyntax, ArrowExpressionClauseSyntax arrowExpressionClauseSyntax, SpecialType returnType)
+        static void AnalyzeArrowExpressionClause(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclarationSyntax, SpecialType methodReturnType)
         {
-            var semanticModel = context.SemanticModel;
-            var expressionType = semanticModel.GetTypeInfo(arrowExpressionClauseSyntax.Expression).Type;
+            var arrowExpressionClauseSyntax = methodDeclarationSyntax.DescendantNodes()
+                .OfType<ArrowExpressionClauseSyntax>()
+                .FirstOrDefault();
+            if (arrowExpressionClauseSyntax is null)
+                return;
+
+            var expressionType = context.SemanticModel.GetTypeInfo(arrowExpressionClauseSyntax.Expression).Type as INamedTypeSymbol;
             if (expressionType is null)
                 return;
 
-            switch (returnType)
+            switch (methodReturnType)
             {
                 case SpecialType.System_Collections_IEnumerable:
                     if (expressionType.ImplementsInterface(SpecialType.System_Collections_Generic_IReadOnlyList_T, out _))
                     {
-                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList<T>");
+                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList`1");
                         context.ReportDiagnostic(diagnostic);
                     }
                     else if (expressionType.ImplementsInterface(SpecialType.System_Collections_Generic_IReadOnlyCollection_T, out _))
                     {
-                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyCollection<T>");
+                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyCollection`1");
                         context.ReportDiagnostic(diagnostic);
                     }
                     else if(expressionType.ImplementsInterface(SpecialType.System_Collections_Generic_IEnumerable_T, out _))
                     {
-                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IEnumerable<T>");
+                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IEnumerable`1");
                         context.ReportDiagnostic(diagnostic);
                     }
                     break;
                 case SpecialType.System_Collections_Generic_IEnumerable_T:
                     if (expressionType.ImplementsInterface(SpecialType.System_Collections_Generic_IReadOnlyList_T, out _))
                     {
-                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList<T>");
+                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList`1");
                         context.ReportDiagnostic(diagnostic);
                     }
                     else if (expressionType.ImplementsInterface(SpecialType.System_Collections_Generic_IReadOnlyCollection_T, out _))
                     {
-                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyCollection<T>");
+                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyCollection`1");
                         context.ReportDiagnostic(diagnostic);
                     }
                     break;
                 case SpecialType.System_Collections_Generic_IReadOnlyCollection_T:
                     if (expressionType.ImplementsInterface(SpecialType.System_Collections_Generic_IReadOnlyList_T, out _))
                     {
-                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList<T>");
+                        var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList`1");
                         context.ReportDiagnostic(diagnostic);
                     }
                     break;
@@ -128,18 +135,23 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyList_T))
             {
-                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList<T>");
+                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList`1");
                 context.ReportDiagnostic(diagnostic);
+                return;
             }
-            else if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyCollection_T))
+
+            if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyCollection_T))
             {
-                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyCollection<T>");
+                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyCollection`1");
                 context.ReportDiagnostic(diagnostic);
+                return;
             }
-            else if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IEnumerable_T))
+
+            if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IEnumerable_T))
             {
-                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IEnumerable<T>");
+                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IEnumerable`1");
                 context.ReportDiagnostic(diagnostic);
+                return;
             }
         }
 
@@ -150,13 +162,16 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyList_T))
             {
-                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList<T>");
+                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList`1");
                 context.ReportDiagnostic(diagnostic);
+                return;
             }
-            else if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyCollection_T))
+
+            if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyCollection_T))
             {
-                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyCollection<T>");
+                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyCollection`1");
                 context.ReportDiagnostic(diagnostic);
+                return;
             }
         }
 
@@ -167,8 +182,9 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyList_T))
             {
-                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList<T>");
+                var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList`1");
                 context.ReportDiagnostic(diagnostic);
+                return;
             }
         }
 
@@ -177,14 +193,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
             foreach(var node in methodDeclarationSyntax.DescendantNodes().OfType<ReturnStatementSyntax>())
             {
-                var returnType = semanticModel.GetTypeInfo(node.Expression).Type;
-                if(returnType is object)
-                    return false;
-            }
-            foreach(var node in methodDeclarationSyntax.DescendantNodes().OfType<ArrowExpressionClauseSyntax>())
-            {
-                var returnType = semanticModel.GetTypeInfo(node.Expression).Type;
-                if(returnType is object)
+                if(!node.Expression.IsKind(SyntaxKind.NullLiteralExpression))
                     return false;
             }
             return true;
@@ -195,14 +204,8 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
             foreach(var node in methodDeclarationSyntax.DescendantNodes().OfType<ReturnStatementSyntax>())
             {
-                var returnType = semanticModel.GetTypeInfo(node.Expression).Type;
-                if(!(returnType is null || returnType.ImplementsInterface(type, out _)))
-                    return false;
-            }
-            foreach(var node in methodDeclarationSyntax.DescendantNodes().OfType<ArrowExpressionClauseSyntax>())
-            {
-                var returnType = semanticModel.GetTypeInfo(node.Expression).Type;
-                if(!(returnType is null || returnType.ImplementsInterface(type, out _)))
+                var returnType = semanticModel.GetTypeInfo(node.Expression).Type as INamedTypeSymbol;
+                if (returnType is null || !returnType.ImplementsInterface(type, out _))
                     return false;
             }
             return true;

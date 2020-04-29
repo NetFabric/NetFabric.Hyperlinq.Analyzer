@@ -6,9 +6,19 @@ namespace HLQ003.NoDiagnostic.ReadOnlyList
 {
     public partial class C
     {
-        public IReadOnlyList<TestType> MethodDeclaration()
+        public IReadOnlyList<TestType> MethodDeclaration(int i)
         {
-            return new OptimizedReadOnlyList<TestType>();
+            switch (i)
+            {
+                case 1:
+                    return new OptimizedReadOnlyList<TestType>();
+
+                case 0:
+                    return new OptimizedReadOnlyList<TestType>();
+
+                default:
+                    return new OptimizedReadOnlyList<TestType>();
+            }
         }
     }
 }

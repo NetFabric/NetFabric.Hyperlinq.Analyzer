@@ -6,9 +6,19 @@ namespace HLQ003.Diagnostic.ReadOnlyCollection.Enumerable
 {
     public partial class C
     {
-        public IEnumerable<TestType> MethodDeclaration()
+        public IEnumerable<TestType> MethodDeclaration(int i)
         {
-            return new OptimizedReadOnlyCollection<TestType>();
+            switch (i)
+            {
+                case 1:
+                    return new OptimizedReadOnlyList<TestType>();
+
+                case 0:
+                    return new OptimizedReadOnlyCollection<TestType>();
+
+                default:
+                    return new OptimizedReadOnlyCollection<TestType>();
+            }
         }
     }
 }

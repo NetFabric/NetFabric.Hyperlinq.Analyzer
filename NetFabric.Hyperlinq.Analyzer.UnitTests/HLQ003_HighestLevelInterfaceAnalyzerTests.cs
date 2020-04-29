@@ -1,5 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.IO;
+using System.Linq;
 using TestHelper;
 using Xunit;
 
@@ -10,230 +12,57 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
             new HighestLevelInterfaceAnalyzer();
 
-        [Fact]
-        public void VerifyIReadOnlyCollection()
+
+        [Theory]
+        [InlineData("TestData/HLQ003/NoDiagnostic/ArrowExpression/Enumerable.cs")]
+        [InlineData("TestData/HLQ003/NoDiagnostic/ArrowExpression/ReadOnlyCollection.cs")]
+        [InlineData("TestData/HLQ003/NoDiagnostic/ArrowExpression/ReadOnlyList.cs")]
+        [InlineData("TestData/HLQ003/NoDiagnostic/MethodDeclaration/Enumerable.cs")]
+        [InlineData("TestData/HLQ003/NoDiagnostic/MethodDeclaration/ReadOnlyCollection.cs")]
+        [InlineData("TestData/HLQ003/NoDiagnostic/MethodDeclaration/ReadOnlyList.cs")]
+        public void Verify_NoDiagnostics(string path)
         {
-            var test = @"
-using System.Collections;
-using System.Collections.Generic;
-
-class ReadOnlyCollection<T> : IReadOnlyCollection<T>
-{
-    readonly List<T> collection = new List<T>();
-
-    public int Count => collection.Count;
-
-    public List<T>.Enumerator GetEnumerator() => collection.GetEnumerator();
-    IEnumerator<T> IEnumerable<T>.GetEnumerator() => collection.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => collection.GetEnumerator();
-
-    public void Dispose() {}
-}
-
-class C
-{
-    void MethodVoid()
-    {
-        return;
-    }
-
-    IEnumerable<int> MethodNull()
-    {
-        return null;
-    }
-
-    IEnumerable<int> MethodNotPublic()
-    {
-        return new ReadOnlyCollection<int>();
-    }
-
-    public IEnumerable<int> Method01()
-    {
-        return new ReadOnlyCollection<int>();
-    }
-
-    public IReadOnlyCollection<int> Method02()
-    {
-        return new ReadOnlyCollection<int>();
-    }
-
-    public ReadOnlyCollection<int> Method03()
-    {
-        return new ReadOnlyCollection<int>();
-    }
-
-    public IEnumerable<int> Method04(int value)
-    {
-        switch(value)
-        {
-            case 0:
-                return null;
-
-            default:
-                return new ReadOnlyCollection<int>();
-        }
-    }
-
-    IEnumerable<int> Method10() => new ReadOnlyCollection<int>();
-
-    public IEnumerable<int> Method11() => new ReadOnlyCollection<int>();
-
-    public IReadOnlyCollection<int> Method12() => new ReadOnlyCollection<int>();
-
-    public ReadOnlyCollection<int> Method13() => new ReadOnlyCollection<int>();
-}";
-            var method01 = new DiagnosticResult
+            var paths = new[]
             {
-                Id = "HLQ003",
-                Message = "Consider returning 'IReadOnlyCollection<T>' instead.",
-                Severity = DiagnosticSeverity.Warning,
-                Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 35, 12)
-                },
+                path,
+                "TestData/TestType.cs",
+                "TestData/Enumerable.cs",
+                "TestData/ReadOnlyCollection.cs",
+                "TestData/ReadOnlyList.cs",
+                "TestData/AsyncEnumerable.cs",
             };
-
-            var method04 = new DiagnosticResult
-            {
-                Id = "HLQ003",
-                Message = "Consider returning 'IReadOnlyCollection<T>' instead.",
-                Severity = DiagnosticSeverity.Warning,
-                Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 50, 12)
-                },
-            };
-
-            var method11 = new DiagnosticResult
-            {
-                Id = "HLQ003",
-                Message = "Consider returning 'IReadOnlyCollection<T>' instead.",
-                Severity = DiagnosticSeverity.Warning,
-                Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 64, 12)
-                },
-            };
-
-            VerifyCSharpDiagnostic(test, method01, method04, method11);
+            VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray());
         }
 
-        [Fact]
-        public void VerifyIReadOnlyList()
+        [Theory]
+        [InlineData("TestData/HLQ003/Diagnostic/ArrowExpression/ReadOnlyCollection/Enumerable.cs", "IReadOnlyCollection`1", 9, 16)]
+        [InlineData("TestData/HLQ003/Diagnostic/ArrowExpression/ReadOnlyList/Enumerable.cs", "IReadOnlyList`1", 9, 16)]
+        [InlineData("TestData/HLQ003/Diagnostic/ArrowExpression/ReadOnlyList/ReadOnlyCollection.cs", "IReadOnlyList`1", 9, 16)]
+        [InlineData("TestData/HLQ003/Diagnostic/MethodDeclaration/ReadOnlyCollection/Enumerable.cs", "IReadOnlyCollection`1", 9, 16)]
+        [InlineData("TestData/HLQ003/Diagnostic/MethodDeclaration/ReadOnlyList/Enumerable.cs", "IReadOnlyList`1", 9, 16)]
+        [InlineData("TestData/HLQ003/Diagnostic/MethodDeclaration/ReadOnlyList/ReadOnlyCollection.cs", "IReadOnlyList`1", 9, 16)]
+        public void Verify_Diagnostics(string path, string @interface, int line, int column)
         {
-            var test = @"
-using System.Collections.Generic;
-
-class C
-{
-    void MethodVoid()
-    {
-        return;
-    }
-
-    IEnumerable<int> MethodNull()
-    {
-        return null;
-    }
-
-    IEnumerable<int> MethodNotPublic()
-    {
-        return new List<int>();
-    }
-
-    public IEnumerable<int> Method01()
-    {
-        return new List<int>();
-    }
-
-    public IReadOnlyCollection<int> Method02()
-    {
-        return new List<int>();
-    }
-
-    public IReadOnlyList<int> Method03()
-    {
-        return new List<int>();
-    }
-
-    public List<int> Method04()
-    {
-        return new List<int>();
-    }
-
-    public IEnumerable<int> Method05(int value)
-    {
-        switch(value)
-        {
-            case 0:
-                return null;
-
-            case 1:
-                return new ReadOnlyCollection<int>();
-
-            default:
-                return new List<int>();
-        }
-    }
-
-    IEnumerable<int> Method10() => new List<int>();
-
-    public IEnumerable<int> Method11() => new List<int>();
-
-    public IReadOnlyCollection<int> Method12() => new List<int>();
-
-    public IReadOnlyList<int> Method13() => new List<int>();
-
-    public List<int> Method14() => new List<int>();
-
-    IEnumerable<int> Method20()
-    {
-        yield break;
-    }
-
-    public IEnumerable<int> Method21()
-    {
-        yield break;
-    }
-}";
-            var method01 = new DiagnosticResult
+            var paths = new[]
+            {
+                path,
+                "TestData/TestType.cs",
+                "TestData/Enumerable.cs",
+                "TestData/ReadOnlyCollection.cs",
+                "TestData/ReadOnlyList.cs",
+                "TestData/AsyncEnumerable.cs",
+            };
+            var expected = new DiagnosticResult
             {
                 Id = "HLQ003",
-                Message = "Consider returning 'IReadOnlyList<T>' instead.",
+                Message = $"Consider returning '{@interface}' instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 21, 12)
+                    new DiagnosticResultLocation("Test0.cs", line, column)
                 },
             };
 
-            var method02 = new DiagnosticResult
-            {
-                Id = "HLQ003",
-                Message = "Consider returning 'IReadOnlyList<T>' instead.",
-                Severity = DiagnosticSeverity.Warning,
-                Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 26, 12)
-                },
-            };
-
-            var method11 = new DiagnosticResult
-            {
-                Id = "HLQ003",
-                Message = "Consider returning 'IReadOnlyList<T>' instead.",
-                Severity = DiagnosticSeverity.Warning,
-                Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 58, 12)
-                },
-            };
-
-            var method12 = new DiagnosticResult
-            {
-                Id = "HLQ003",
-                Message = "Consider returning 'IReadOnlyList<T>' instead.",
-                Severity = DiagnosticSeverity.Warning,
-                Locations = new[] {
-                    new DiagnosticResultLocation("Test0.cs", 60, 12)
-                },
-            };
-
-            VerifyCSharpDiagnostic(test, method01, method02, method11, method12);
+            VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray(), expected);
         }
     }
 }
