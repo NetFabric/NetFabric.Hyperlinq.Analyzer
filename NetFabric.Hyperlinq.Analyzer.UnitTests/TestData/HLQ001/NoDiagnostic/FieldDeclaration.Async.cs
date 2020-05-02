@@ -1,6 +1,8 @@
 ﻿using NetFabric.Hyperlinq.Analyzer.UnitTests.TestData;
 using System.Collections.Generic;
 
+#pragma warning disable IDE0052 // Remove unread private members
+
 namespace HLQ001.NoDiagnostic
 {
     class FieldDeclarationAsync
@@ -19,3 +21,5 @@ namespace HLQ001.NoDiagnostic
         }
     }
 }
+
+#pragma warning restore IDE0052 // Remove unread private members

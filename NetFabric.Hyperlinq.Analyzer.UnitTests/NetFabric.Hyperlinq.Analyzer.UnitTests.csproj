@@ -34,12 +34,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="TestData\**\*.Fix.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestData\**\*.Fix.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="TestData\HLQ006\Diagnostic\" />
     <Folder Include="TestData\HLQ006\NoDiagnostic\" />
     <Folder Include="TestData\HLQ005\Diagnostic\" />
     <Folder Include="TestData\HLQ005\NoDiagnostic\" />
-    <Folder Include="TestData\HLQ004\Diagnostic\" />
-    <Folder Include="TestData\HLQ004\NoDiagnostic\" />
   </ItemGroup>
 
 </Project>

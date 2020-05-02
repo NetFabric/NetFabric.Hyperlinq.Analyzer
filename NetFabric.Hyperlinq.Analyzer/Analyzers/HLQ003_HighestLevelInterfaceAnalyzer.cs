@@ -45,7 +45,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (methodDeclarationSyntax.ReturnType.IsKind(SyntaxKind.VoidKeyword))
                 return;
 
-            var returnType = context.SemanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type as INamedTypeSymbol;
+            var returnType = context.SemanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
             if (returnType is null)
                 return;
 
@@ -83,7 +83,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (arrowExpressionClauseSyntax is null)
                 return;
 
-            var expressionType = context.SemanticModel.GetTypeInfo(arrowExpressionClauseSyntax.Expression).Type as INamedTypeSymbol;
+            var expressionType = context.SemanticModel.GetTypeInfo(arrowExpressionClauseSyntax.Expression).Type;
             if (expressionType is null)
                 return;
 
@@ -130,24 +130,21 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeIEnumerableMethod(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclarationSyntax)
         {
-            if (AllReturnsNull(context, methodDeclarationSyntax))
-                return;
-
-            if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyList_T))
+            if (methodDeclarationSyntax.AllReturnsImplement(SpecialType.System_Collections_Generic_IReadOnlyList_T, context.SemanticModel))
             {
                 var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList`1");
                 context.ReportDiagnostic(diagnostic);
                 return;
             }
 
-            if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyCollection_T))
+            if (methodDeclarationSyntax.AllReturnsImplement(SpecialType.System_Collections_Generic_IReadOnlyCollection_T, context.SemanticModel))
             {
                 var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyCollection`1");
                 context.ReportDiagnostic(diagnostic);
                 return;
             }
 
-            if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IEnumerable_T))
+            if (methodDeclarationSyntax.AllReturnsImplement(SpecialType.System_Collections_Generic_IEnumerable_T, context.SemanticModel))
             {
                 var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IEnumerable`1");
                 context.ReportDiagnostic(diagnostic);
@@ -157,17 +154,14 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeIEnumerableTMethod(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclarationSyntax)
         {
-            if (AllReturnsNull(context, methodDeclarationSyntax))
-                return;
-
-            if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyList_T))
+            if (methodDeclarationSyntax.AllReturnsImplement(SpecialType.System_Collections_Generic_IReadOnlyList_T, context.SemanticModel))
             {
                 var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList`1");
                 context.ReportDiagnostic(diagnostic);
                 return;
             }
 
-            if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyCollection_T))
+            if (methodDeclarationSyntax.AllReturnsImplement(SpecialType.System_Collections_Generic_IReadOnlyCollection_T, context.SemanticModel))
             {
                 var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyCollection`1");
                 context.ReportDiagnostic(diagnostic);
@@ -177,38 +171,12 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeIReadOnlyCollectionMethod(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclarationSyntax)
         {
-            if (AllReturnsNull(context, methodDeclarationSyntax))
-                return;
-
-            if (AllReturnsImplement(context, methodDeclarationSyntax, SpecialType.System_Collections_Generic_IReadOnlyList_T))
+            if (methodDeclarationSyntax.AllReturnsImplement(SpecialType.System_Collections_Generic_IReadOnlyList_T, context.SemanticModel))
             {
                 var diagnostic = Diagnostic.Create(rule, methodDeclarationSyntax.ReturnType.GetLocation(), "IReadOnlyList`1");
                 context.ReportDiagnostic(diagnostic);
                 return;
             }
-        }
-
-        static bool AllReturnsNull(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclarationSyntax)
-        {
-            var semanticModel = context.SemanticModel;
-            foreach(var node in methodDeclarationSyntax.DescendantNodes().OfType<ReturnStatementSyntax>())
-            {
-                if(!node.Expression.IsKind(SyntaxKind.NullLiteralExpression))
-                    return false;
-            }
-            return true;
-        }
-
-        static bool AllReturnsImplement(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclarationSyntax, SpecialType type)
-        {
-            var semanticModel = context.SemanticModel;
-            foreach(var node in methodDeclarationSyntax.DescendantNodes().OfType<ReturnStatementSyntax>())
-            {
-                var returnType = semanticModel.GetTypeInfo(node.Expression).Type as INamedTypeSymbol;
-                if (returnType is null || !returnType.ImplementsInterface(type, out _))
-                    return false;
-            }
-            return true;
         }
     }
 }

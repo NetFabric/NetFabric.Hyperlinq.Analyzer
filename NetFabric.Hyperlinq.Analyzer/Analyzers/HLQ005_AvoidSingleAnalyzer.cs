@@ -79,6 +79,8 @@ namespace NetFabric.Hyperlinq.Analyzer
                 var semanticModel = context.SemanticModel;
 
                 var type = semanticModel.GetTypeInfo(identifierName).Type;
+                if (type is null)
+                    return;
 
                 if (isAsync)
                 {

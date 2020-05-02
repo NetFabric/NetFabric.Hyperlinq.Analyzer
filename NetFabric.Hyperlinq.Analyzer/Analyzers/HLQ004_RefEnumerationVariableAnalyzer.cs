@@ -44,7 +44,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
 
             var expressionType = semanticModel.GetTypeInfo(forEachStatementSyntax.Expression).Type;
-            if (!expressionType.IsEnumerable(context.Compilation, out var enumerableSymbols))
+            if (expressionType is null || !expressionType.IsEnumerable(context.Compilation, out var enumerableSymbols))
                 return;
 
             var enumeratorSymbols = enumerableSymbols.EnumeratorSymbols;

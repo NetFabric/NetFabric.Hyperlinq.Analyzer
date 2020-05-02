@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NetFabric.CodeAnalysis;
+using System;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace NetFabric.Hyperlinq.Analyzer
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+            if (root is null)
+                return;
 
             foreach (var diagnostic in context.Diagnostics)
             {
@@ -32,13 +35,17 @@ namespace NetFabric.Hyperlinq.Analyzer
 
                 var forEachStatementSyntax = root
                     .FindToken(diagnosticSpan.Start)
-                    .Parent.AncestorsAndSelf()
-                    .OfType<ForEachStatementSyntax>().First();
+                    .Parent?.AncestorsAndSelf()
+                    .OfType<ForEachStatementSyntax>().FirstOrDefault();
+                if (forEachStatementSyntax is null)
+                    return;
 
                 var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
+                if (semanticModel is null)
+                    return;
 
                 var expressionType = semanticModel.GetTypeInfo(forEachStatementSyntax.Expression).Type;
-                if (!expressionType.IsEnumerable(semanticModel.Compilation, out var enumerableSymbols))
+                if (expressionType is null || !expressionType.IsEnumerable(semanticModel.Compilation, out var enumerableSymbols))
                     return;
 
                 var enumeratorSymbols = enumerableSymbols.EnumeratorSymbols;
@@ -66,6 +73,9 @@ namespace NetFabric.Hyperlinq.Analyzer
             var newForEachStatementSyntax = forEachStatementSyntax.ToRef(isReadOnly);
 
             var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+            if (root is null)
+                throw new NullReferenceException();
+
             root = root.ReplaceNode(forEachStatementSyntax, newForEachStatementSyntax);
 
             return document.WithSyntaxRoot(root);

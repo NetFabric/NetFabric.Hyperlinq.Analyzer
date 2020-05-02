@@ -96,7 +96,7 @@ class C
     }
 }";
 
-            VerifyCSharpFix(test, fixtest);
+            VerifyCSharpFix(new[] { test }, fixtest);
         }
 
         [Fact]
@@ -142,7 +142,7 @@ class C
     }
 }";
 
-            VerifyCSharpFix(test, fixtest);
+            VerifyCSharpFix(new[] { test }, fixtest);
         }
 
         [Fact]

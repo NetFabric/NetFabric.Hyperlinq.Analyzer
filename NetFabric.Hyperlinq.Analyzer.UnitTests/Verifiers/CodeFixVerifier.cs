@@ -41,25 +41,49 @@ namespace TestHelper
         /// <summary>
         /// Called to test a C# codefix when applied on the inputted string as a source
         /// </summary>
-        /// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
-        /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
+        /// <param name="source">A class in the form of a string to run the analyzer on</param>
+        /// <param name="fixedSource">A source string containing how the first source file should be like when the fix is applied</param>
         /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
-        protected void VerifyCSharpFix(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
+        protected void VerifyCSharpFix(string source, string fixedSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
         {
-            VerifyFix(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzer(), GetCSharpCodeFixProvider(), oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
+            VerifyCSharpFix(new[] { source }, fixedSource, codeFixIndex, allowNewCompilerDiagnostics);
+        }
+
+        /// <summary>
+        /// Called to test a C# codefix when applied on the inputted string as a source
+        /// </summary>
+        /// <param name="sources">An array of strings to create source documents in one project. The analyzer is run on the first one.</param>
+        /// <param name="fixedSource">A source string containing how the first source file should be like when the fix is applied</param>
+        /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
+        /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
+        protected void VerifyCSharpFix(string[] sources, string fixedSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
+        {
+            VerifyFix(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzer(), GetCSharpCodeFixProvider(), sources, fixedSource, codeFixIndex, allowNewCompilerDiagnostics);
         }
 
         /// <summary>
         /// Called to test a VB codefix when applied on the inputted string as a source
         /// </summary>
-        /// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
-        /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
+        /// <param name="source">A class in the form of a string to run the analyzer on</param>
+        /// <param name="fixedSource">A source string containing how the first source file should be like when the fix is applied</param>
         /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
-        protected void VerifyBasicFix(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
+        protected void VerifyBasicFix(string source, string fixedSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
         {
-            VerifyFix(LanguageNames.VisualBasic, GetBasicDiagnosticAnalyzer(), GetBasicCodeFixProvider(), oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
+            VerifyBasicFix(new[] { source }, fixedSource, codeFixIndex, allowNewCompilerDiagnostics);
+        }
+
+        /// <summary>
+        /// Called to test a VB codefix when applied on the inputted string as a source
+        /// </summary>
+        /// <param name="sources">An array of strings to create source documents in one project. The analyzer is run on the first one.</param>
+        /// <param name="fixedSource">A source string containing how the first source file should be like when the fix is applied</param>
+        /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
+        /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
+        protected void VerifyBasicFix(string[] sources, string fixedSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
+        {
+            VerifyFix(LanguageNames.VisualBasic, GetBasicDiagnosticAnalyzer(), GetBasicCodeFixProvider(), sources, fixedSource, codeFixIndex, allowNewCompilerDiagnostics);
         }
 
         /// <summary>
@@ -71,13 +95,13 @@ namespace TestHelper
         /// <param name="language">The language the source code is in</param>
         /// <param name="analyzer">The analyzer to be applied to the source code</param>
         /// <param name="codeFixProvider">The codefix to be applied to the code wherever the relevant Diagnostic is found</param>
-        /// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
-        /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
+        /// <param name="sources">An array of strings to create source documents in one project. The analyzer is run on the first one.</param>
+        /// <param name="fixedSource">A source string containing how the first source file should be like when the fix is applied</param>
         /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
-        private void VerifyFix(string language, DiagnosticAnalyzer analyzer, CodeFixProvider codeFixProvider, string oldSource, string newSource, int? codeFixIndex, bool allowNewCompilerDiagnostics)
+        private void VerifyFix(string language, DiagnosticAnalyzer analyzer, CodeFixProvider codeFixProvider, string[] sources, string fixedSource, int? codeFixIndex, bool allowNewCompilerDiagnostics)
         {
-            var document = CreateDocument(oldSource, language);
+            var document = GetDocuments(sources, language).First();
             var analyzerDiagnostics = GetSortedDiagnosticsFromDocuments(analyzer, new[] { document });
             var compilerDiagnostics = GetCompilerDiagnostics(document);
             var attempts = analyzerDiagnostics.Length;
@@ -126,7 +150,7 @@ namespace TestHelper
 
             //after applying all of the code fixes, compare the resulting string to the inputted one
             var actual = GetStringFromDocument(document);
-            Assert.Equal(newSource, actual);
+            Assert.Equal(fixedSource, actual);
         }
     }
 }

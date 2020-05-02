@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace NetFabric.Hyperlinq.Analyzer
@@ -45,8 +46,10 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             var semanticModel = context.SemanticModel;
 
-            var rightTypeSymbol = semanticModel.GetTypeInfo(assignmentExpression.Right).Type as INamedTypeSymbol;
-            if (!IsEnumerableType(rightTypeSymbol, context.Compilation, out var enumeratorType) || enumeratorType.IsReferenceType)
+            var rightTypeSymbol = semanticModel.GetTypeInfo(assignmentExpression.Right).Type;
+            if (rightTypeSymbol is null 
+                || !IsEnumerableType(rightTypeSymbol, context.Compilation, out var enumeratorType) 
+                || enumeratorType.IsReferenceType)
                 return;
 
             var leftSymbol = semanticModel.GetSymbolInfo(assignmentExpression.Left).Symbol;
@@ -65,8 +68,10 @@ namespace NetFabric.Hyperlinq.Analyzer
                     break;
             }
 
-            var leftTypeSymbol = semanticModel.GetTypeInfo(assignmentExpression.Left).Type as INamedTypeSymbol;
-            if (!IsEnumerableType(leftTypeSymbol, context.Compilation, out enumeratorType) || enumeratorType.IsValueType)
+            var leftTypeSymbol = semanticModel.GetTypeInfo(assignmentExpression.Left).Type;
+            if (leftTypeSymbol is null 
+                || !IsEnumerableType(leftTypeSymbol, context.Compilation, out enumeratorType) 
+                || enumeratorType.IsValueType)
                 return;
 
             var diagnostic = Diagnostic.Create(rule, assignmentExpression.Left.GetLocation(), rightTypeSymbol.MetadataName, leftTypeSymbol.MetadataName);
@@ -80,8 +85,10 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             var semanticModel = context.SemanticModel;
 
-            var typeSymbol = semanticModel.GetTypeInfo(equalsValueClauseSyntax.Value).Type as INamedTypeSymbol; 
-            if (!IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) || enumeratorType.IsReferenceType)
+            var typeSymbol = semanticModel.GetTypeInfo(equalsValueClauseSyntax.Value).Type; 
+            if (typeSymbol is null 
+                || !IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) 
+                || enumeratorType.IsReferenceType)
                 return;
 
             if (equalsValueClauseSyntax.Parent is PropertyDeclarationSyntax propertyDeclarationSyntax)
@@ -115,8 +122,10 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             var semanticModel = context.SemanticModel;
 
-            var typeSymbol = semanticModel.GetDeclaredSymbol(propertyDeclarationSyntax).Type;
-            if (!IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) || enumeratorType.IsValueType)
+            var typeSymbol = semanticModel.GetDeclaredSymbol(propertyDeclarationSyntax)?.Type;
+            if (typeSymbol is null 
+                || !IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) 
+                || enumeratorType.IsValueType)
                 return;
 
             var diagnostic = Diagnostic.Create(rule, propertyDeclarationSyntax.Type.GetLocation(), enumerableTypeSymbol.MetadataName, typeSymbol.MetadataName);
@@ -127,8 +136,10 @@ namespace NetFabric.Hyperlinq.Analyzer
         {
             var typeSyntax = localDeclarationStatementSyntax.Declaration.Type;
             var semanticModel = context.SemanticModel;
-            var typeSymbol = semanticModel.GetTypeInfo(typeSyntax).Type as INamedTypeSymbol;
-            if (!IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) || enumeratorType.IsValueType)
+            var typeSymbol = semanticModel.GetTypeInfo(typeSyntax).Type;
+            if (typeSymbol is null 
+                || !IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) 
+                || enumeratorType.IsValueType)
                 return;
 
             var diagnostic = Diagnostic.Create(rule, typeSyntax.GetLocation(), enumerableTypeSymbol.MetadataName, typeSymbol.MetadataName);
@@ -142,15 +153,17 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             var typeSyntax = fieldDeclarationSyntax.Declaration.Type;
             var semanticModel = context.SemanticModel;
-            var typeSymbol = semanticModel.GetTypeInfo(typeSyntax).Type as INamedTypeSymbol;
-            if (!IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) || enumeratorType.IsValueType)
+            var typeSymbol = semanticModel.GetTypeInfo(typeSyntax).Type;
+            if (typeSymbol is null 
+                || !IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) 
+                || enumeratorType.IsValueType)
                 return;
 
             var diagnostic = Diagnostic.Create(rule, typeSyntax.GetLocation(), enumerableTypeSymbol.MetadataName, typeSymbol.MetadataName);
             context.ReportDiagnostic(diagnostic);
         }
 
-        static bool IsEnumerableType(ITypeSymbol typeSymbol, Compilation compilation, out ITypeSymbol enumeratorType)
+        static bool IsEnumerableType(ITypeSymbol typeSymbol, Compilation compilation, [NotNullWhen(true)] out ITypeSymbol? enumeratorType)
         {
             if (typeSymbol is object)
             {

@@ -26,6 +26,8 @@ namespace NetFabric.Hyperlinq.Analyzer
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+            if (root is null)
+                return;
 
             foreach (var diagnostic in context.Diagnostics)
             {
@@ -33,8 +35,10 @@ namespace NetFabric.Hyperlinq.Analyzer
 
                 var memberAccessExpressionSyntax = root
                     .FindToken(diagnosticSpan.Start)
-                    .Parent.AncestorsAndSelf()
-                    .OfType<MemberAccessExpressionSyntax>().First();
+                    .Parent?.Ancestors()
+                    .OfType<MemberAccessExpressionSyntax>().FirstOrDefault();
+                if (memberAccessExpressionSyntax is null)
+                    return;
 
                 var replacement = memberAccessExpressionSyntax.Name.Identifier.Text switch
                 {
@@ -62,6 +66,9 @@ namespace NetFabric.Hyperlinq.Analyzer
             var newMemberAccessExpressionSyntax = memberAccessExpressionSyntax.WithName(SyntaxFactory.IdentifierName(replacement));
 
             var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+            if (root is null)
+                throw new NullReferenceException();
+
             root = root.ReplaceNode(memberAccessExpressionSyntax, newMemberAccessExpressionSyntax);
 
             return document.WithSyntaxRoot(root);

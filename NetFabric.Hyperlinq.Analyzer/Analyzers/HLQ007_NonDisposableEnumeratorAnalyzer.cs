@@ -64,7 +64,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             else if (methodDeclarationSyntax.Identifier.ValueText == "DisposeAsync")
             {
                 var returnType = semanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
-                if (returnType.Name != "ValueTask")
+                if (returnType is null || returnType.Name != "ValueTask")
                     return;
 
                 // do nothing
@@ -81,6 +81,8 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             var name = typeDeclaration.GetMetadataName();
             var declaredTypeSymbol = compilation.GetTypeByMetadataName(name);
+            if (declaredTypeSymbol is null)
+                return;
 
             // check if disposable type is an enumerator
             if (!declaredTypeSymbol.IsEnumerator(compilation, out var _) && !declaredTypeSymbol.IsAsyncEnumerator(compilation, out var _))
