@@ -45,6 +45,9 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (!(invocationExpressionSyntax.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax))
                 return;
 
+            if (memberAccessExpressionSyntax.Expression is null)
+                return;
+
             string methodFound;
             string methodReplace;
             bool isAsync;
@@ -74,46 +77,43 @@ namespace NetFabric.Hyperlinq.Analyzer
                     return;
             }
 
-            if (memberAccessExpressionSyntax.Expression is IdentifierNameSyntax identifierName)
+            ExpressionSyntax syntaxNode;
+            if (memberAccessExpressionSyntax.Expression is IdentifierNameSyntax) 
             {
-                var semanticModel = context.SemanticModel;
-
-                var type = semanticModel.GetTypeInfo(identifierName).Type;
-                if (type is null)
+                // check if first parameter is enumerable
+                var arguments = invocationExpressionSyntax.ArgumentList.Arguments;
+                if (arguments.Count == 0)
                     return;
 
-                if (isAsync)
-                {
-                    if (!type.IsAsyncEnumerable(context.Compilation, out _))
-                    {
-                        var arguments = invocationExpressionSyntax.ArgumentList.Arguments;
-                        if (arguments.Count < 1)
-                            return;
-
-                        var firstArgument = arguments[0];
-                        var argumentType = semanticModel.GetTypeInfo(firstArgument.Expression).Type;
-                        if (argumentType is null || !argumentType.IsAsyncEnumerable(context.Compilation, out _))
-                            return;
-                    }
-                }
-                else
-                {
-                    if (!type.IsEnumerable(context.Compilation, out _))
-                    {
-                        var arguments = invocationExpressionSyntax.ArgumentList.Arguments;
-                        if (arguments.Count < 1)
-                            return;
-
-                        var firstArgument = arguments[0];
-                        var argumentType = semanticModel.GetTypeInfo(firstArgument.Expression).Type;
-                        if (argumentType is null || !argumentType.IsEnumerable(context.Compilation, out _))
-                            return;
-                    }
-                }
+                syntaxNode = arguments[0].Expression;
             }
+            else 
+            {
+                // check if caller expression is enumerable
+                syntaxNode = memberAccessExpressionSyntax.Expression;
+            }
+
+            var type = context.SemanticModel.GetTypeInfo(syntaxNode).Type;
+            if (type is null || !IsEnumerable(type, context.Compilation, isAsync))
+                return;
 
             var diagnostic = Diagnostic.Create(rule, memberAccessExpressionSyntax.Name.GetLocation(), methodFound, methodReplace);
             context.ReportDiagnostic(diagnostic);
+        }
+
+        static bool IsEnumerable(ITypeSymbol type, Compilation compilation, bool isAsync)
+        {
+            if (isAsync)
+            {
+                if (type.IsAsyncEnumerable(compilation, out _))
+                    return true;
+            }
+            else
+            {
+                if (type.IsEnumerable(compilation, out _))
+                    return true;
+            }
+            return false;
         }
     }
 }

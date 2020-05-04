@@ -43,11 +43,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="TestData\HLQ006\Diagnostic\" />
-    <Folder Include="TestData\HLQ006\NoDiagnostic\" />
-    <Folder Include="TestData\HLQ005\Diagnostic\" />
-    <Folder Include="TestData\HLQ005\NoDiagnostic\" />
-  </ItemGroup>
-
 </Project>
