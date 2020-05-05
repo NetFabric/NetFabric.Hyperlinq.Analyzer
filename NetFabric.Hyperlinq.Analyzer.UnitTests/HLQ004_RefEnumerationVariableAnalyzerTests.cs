@@ -29,8 +29,9 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
                 "TestData/Enumerable.cs",
                 "TestData/HLQ004/RefEnumerables.cs",
             };
+            var sources = paths.Select(path => File.ReadAllText(path)).ToArray();
 
-            VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray());
+            VerifyCSharpDiagnostic(sources);
         }
 
         [Theory]
@@ -45,6 +46,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
                 "TestData/Enumerable.cs",
                 "TestData/HLQ004/RefEnumerables.cs",
             };
+            var sources = paths.Select(path => File.ReadAllText(path)).ToArray();
             var expected = new DiagnosticResult
             {
                 Id = "HLQ004",
@@ -55,9 +57,9 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
                 },
             };
 
-            VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray(), expected);
+            VerifyCSharpDiagnostic(sources, expected);
 
-            VerifyCSharpFix(paths.Select(path => File.ReadAllText(path)).ToArray(), File.ReadAllText(fix));
+            VerifyCSharpFix(sources, File.ReadAllText(fix));
         }
     }
 }

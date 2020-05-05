@@ -97,7 +97,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Avoid &apos;{0}()&apos;. Use &apos;{1}()&apos; instead..
+        ///   Looks up a localized string similar to Avoid the use of &apos;{0}&apos;. Use &apos;{1}&apos; instead..
         /// </summary>
         internal static string AvoidSingle_MessageFormat {
             get {
