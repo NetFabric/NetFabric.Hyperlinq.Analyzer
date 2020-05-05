@@ -171,6 +171,15 @@
   <data name="NullEnumerable_Title" xml:space="preserve">
     <value>Enumerable cannot be null.</value>
   </data>
+  <data name="ReadOnlyRefEnumerable_Description" xml:space="preserve">
+    <value>The enumerable is a value type but is not defined as read only.</value>
+  </data>
+  <data name="ReadOnlyRefEnumerable_MessageFormat" xml:space="preserve">
+    <value>'{0}' is a value type but is not defined as read only.</value>
+  </data>
+  <data name="ReadOnlyRefEnumerable_Title" xml:space="preserve">
+    <value>The enumerable should be readonly value type.</value>
+  </data>
   <data name="RefEnumerationVariable_Description" xml:space="preserve">
     <value>The enumerator returns a reference to the item. The type should be declared acordingly so that no copies are performed.</value>
   </data>

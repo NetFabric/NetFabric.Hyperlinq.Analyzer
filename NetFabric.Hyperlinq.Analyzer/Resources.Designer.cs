@@ -223,6 +223,33 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The enumerable is a value type but is not defined as read only..
+        /// </summary>
+        internal static string ReadOnlyRefEnumerable_Description {
+            get {
+                return ResourceManager.GetString("ReadOnlyRefEnumerable_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is a value type but is not defined as read only..
+        /// </summary>
+        internal static string ReadOnlyRefEnumerable_MessageFormat {
+            get {
+                return ResourceManager.GetString("ReadOnlyRefEnumerable_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The enumerable should be readonly value type..
+        /// </summary>
+        internal static string ReadOnlyRefEnumerable_Title {
+            get {
+                return ResourceManager.GetString("ReadOnlyRefEnumerable_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The enumerator returns a reference to the item. The type should be declared acordingly so that no copies are performed..
         /// </summary>
         internal static string RefEnumerationVariable_Description {
