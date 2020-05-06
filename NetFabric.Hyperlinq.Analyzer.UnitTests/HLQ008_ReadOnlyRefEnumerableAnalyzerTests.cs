@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -7,10 +8,13 @@ using Xunit;
 
 namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
-    public class ReadOnlyRefEnumerableAnalyzerTests : DiagnosticVerifier
+    public class ReadOnlyRefEnumerableAnalyzerTests : CodeFixVerifier
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
             new ReadOnlyRefEnumerableAnalyzer();
+
+        protected override CodeFixProvider GetCSharpCodeFixProvider()
+            => new ReadOnlyRefEnumerableCodeFixProvider();
 
         [Theory]
         [InlineData("TestData/HLQ008/NoDiagnostic/ReadOnlyValueTypeEnumerable.cs")]
@@ -26,13 +30,14 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         }
 
         [Theory]
-        [InlineData("TestData/HLQ008/Diagnostic/ValueTypeEnumerable.cs", "ValueTypeEnumerable", 5, 5)]
-        public void Verify_Diagnostic(string path, string name, int line, int column)
+        [InlineData("TestData/HLQ008/Diagnostic/ValueTypeEnumerable.cs", "ValueTypeEnumerable", "TestData/HLQ008/Diagnostic/ValueTypeEnumerable.Fix.cs", 5, 5)]
+        public void Verify_Diagnostic(string path, string name, string fix, int line, int column)
         {
             var paths = new[]
             {
                 path,
             };
+            var sources = paths.Select(path => File.ReadAllText(path)).ToArray();
             var expected = new DiagnosticResult
             {
                 Id = "HLQ008",
@@ -44,6 +49,8 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             };
 
             VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray(), expected);
+
+            VerifyCSharpFix(sources, File.ReadAllText(fix));
         }
     }
 }

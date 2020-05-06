@@ -12,7 +12,7 @@ namespace NetFabric.Hyperlinq.Analyzer
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ReadOnlyRefEnumerableAnalyzer : DiagnosticAnalyzer
     {
-        const string DiagnosticId = DiagnosticIds.ReadOnlyRefEnumerableId;
+        public const string DiagnosticId = DiagnosticIds.ReadOnlyRefEnumerableId;
 
         static readonly LocalizableString Title =
             new LocalizableResourceString(nameof(Resources.ReadOnlyRefEnumerable_Title), Resources.ResourceManager, typeof(Resources));
