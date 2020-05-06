@@ -23,7 +23,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         const string Category = "Performance";
 
         static readonly DiagnosticDescriptor rule =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
+            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Info,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ008_ReadOnlyRefEnumerable.md");
 
@@ -41,6 +41,18 @@ namespace NetFabric.Hyperlinq.Analyzer
         {
             if (!(context.Node is StructDeclarationSyntax structDeclarationSyntax))
                 return;
+
+            if (structDeclarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.ReadOnlyKeyword) || modifier.IsKind(SyntaxKind.RefKeyword)))
+                return;
+
+            // check if the type is enumerable
+            var name = structDeclarationSyntax.GetMetadataName();
+            var declaredTypeSymbol = context.Compilation.GetTypeByMetadataName(name);
+            if (declaredTypeSymbol is null || !declaredTypeSymbol.IsEnumerable(context.Compilation, out var _))
+                return;
+
+            var diagnostic = Diagnostic.Create(rule, structDeclarationSyntax.Keyword.GetLocation(), structDeclarationSyntax.Identifier.Text);
+            context.ReportDiagnostic(diagnostic);
         }
     }
 }

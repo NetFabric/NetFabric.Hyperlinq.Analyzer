@@ -232,7 +232,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; is a value type but is not defined as read only..
+        ///   Looks up a localized string similar to &apos;{0}&apos; is a value type. Consider making it &apos;readonly&apos;..
         /// </summary>
         internal static string ReadOnlyRefEnumerable_MessageFormat {
             get {

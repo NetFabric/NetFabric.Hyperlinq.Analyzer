@@ -2,7 +2,7 @@
 
 namespace HLQ008.NoDiagnostic
 {
-    class ReferenceValueEnumerable<T>
+    class ReferenceTypeEnumerable<T>
     {
         public Enumerator GetEnumerator() => new Enumerator();
 

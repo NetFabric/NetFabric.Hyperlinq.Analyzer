@@ -10,7 +10,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
     public class ReadOnlyRefEnumerableAnalyzerTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
-            new NonDisposableEnumeratorAnalyzer();
+            new ReadOnlyRefEnumerableAnalyzer();
 
         [Theory]
         [InlineData("TestData/HLQ008/NoDiagnostic/ReadOnlyValueTypeEnumerable.cs")]
@@ -26,7 +26,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         }
 
         [Theory]
-        [InlineData("TestData/HLQ008/Diagnostic/ValueTypeEnumerable.cs", "ValueTypeEnumerable", 8, 16)]
+        [InlineData("TestData/HLQ008/Diagnostic/ValueTypeEnumerable.cs", "ValueTypeEnumerable", 5, 5)]
         public void Verify_Diagnostic(string path, string name, int line, int column)
         {
             var paths = new[]
@@ -36,8 +36,8 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             var expected = new DiagnosticResult
             {
                 Id = "HLQ008",
-                Message = $"'{name}' is a value type but is not defined as read only.",
-                Severity = DiagnosticSeverity.Warning,
+                Message = $"'{name}' is a value type. Consider making it 'readonly'.",
+                Severity = DiagnosticSeverity.Info,
                 Locations = new[] {
                     new DiagnosticResultLocation("Test0.cs", line, column)
                 },

@@ -175,7 +175,7 @@
     <value>The enumerable is a value type but is not defined as read only.</value>
   </data>
   <data name="ReadOnlyRefEnumerable_MessageFormat" xml:space="preserve">
-    <value>'{0}' is a value type but is not defined as read only.</value>
+    <value>'{0}' is a value type. Consider making it 'readonly'.</value>
   </data>
   <data name="ReadOnlyRefEnumerable_Title" xml:space="preserve">
     <value>The enumerable should be readonly value type.</value>
