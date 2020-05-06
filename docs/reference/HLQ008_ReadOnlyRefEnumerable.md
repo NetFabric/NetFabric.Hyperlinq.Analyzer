@@ -1,4 +1,4 @@
-﻿# HLQ008: Consider adding 'readonly'.
+﻿# HLQ008: Consider adding `readonly`.
 
 ## Cause
 
@@ -10,7 +10,7 @@ Info
 
 ## Rule description
 
-When the compiler doesn't know if a value type is immutable, it may create defensive copies when a member method are called. Adding the `readonly` modifier to the method definition, informs the compiler that the method does not change the internal state of the enumerable. In this case, the defensive copy is not required.
+When the compiler doesn't know if a value type is immutable, it may create defensive copies when a member method is called. Adding the `readonly` modifier to the method definition, informs the compiler that the method does not change the internal state of the enumerable. In this case, the defensive copy is not required.
 
 If the enumerable is immutable, it's better to add the `readonly` modifier to the type definition. It forces the fields to be `readonly` and sets all the methods are automatically set to `readonly`.
 
