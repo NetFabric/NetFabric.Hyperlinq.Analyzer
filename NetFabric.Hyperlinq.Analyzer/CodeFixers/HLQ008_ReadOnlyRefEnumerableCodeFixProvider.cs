@@ -51,7 +51,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         async Task<Document> ToRefAsync(Document document, StructDeclarationSyntax structDeclarationSyntax, CancellationToken cancellationToken)
         {
-            var newStructDeclarationSyntax = structDeclarationSyntax.WithModifiers(structDeclarationSyntax.Modifiers.Add(SyntaxKind.ReadOnlyKeyword.ToToken()));
+            var newStructDeclarationSyntax = structDeclarationSyntax.WithModifiers(structDeclarationSyntax.Modifiers.Insert(0, SyntaxKind.ReadOnlyKeyword.ToToken()));
 
             var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             if (root is null)

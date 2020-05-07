@@ -23,13 +23,13 @@ namespace NetFabric.Hyperlinq.Analyzer
             new LocalizableResourceString(nameof(Resources.AssignmentBoxing_Description), Resources.ResourceManager, typeof(Resources));
         const string Category = "Performance";
 
-        static readonly DiagnosticDescriptor rule =
+        static readonly DiagnosticDescriptor Rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, 
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ001_AssignmentBoxing.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            ImmutableArray.Create(rule);
+            ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -74,7 +74,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 || enumeratorType.IsValueType)
                 return;
 
-            var diagnostic = Diagnostic.Create(rule, assignmentExpression.Left.GetLocation(), rightTypeSymbol.MetadataName, leftTypeSymbol.MetadataName);
+            var diagnostic = Diagnostic.Create(Rule, assignmentExpression.Left.GetLocation(), rightTypeSymbol.MetadataName, leftTypeSymbol.MetadataName);
             context.ReportDiagnostic(diagnostic);
         }
 
@@ -128,7 +128,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 || enumeratorType.IsValueType)
                 return;
 
-            var diagnostic = Diagnostic.Create(rule, propertyDeclarationSyntax.Type.GetLocation(), enumerableTypeSymbol.MetadataName, typeSymbol.MetadataName);
+            var diagnostic = Diagnostic.Create(Rule, propertyDeclarationSyntax.Type.GetLocation(), enumerableTypeSymbol.MetadataName, typeSymbol.MetadataName);
             context.ReportDiagnostic(diagnostic);
         }
 
@@ -142,7 +142,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 || enumeratorType.IsValueType)
                 return;
 
-            var diagnostic = Diagnostic.Create(rule, typeSyntax.GetLocation(), enumerableTypeSymbol.MetadataName, typeSymbol.MetadataName);
+            var diagnostic = Diagnostic.Create(Rule, typeSyntax.GetLocation(), enumerableTypeSymbol.MetadataName, typeSymbol.MetadataName);
             context.ReportDiagnostic(diagnostic);
         }
 
@@ -159,7 +159,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 || enumeratorType.IsValueType)
                 return;
 
-            var diagnostic = Diagnostic.Create(rule, typeSyntax.GetLocation(), enumerableTypeSymbol.MetadataName, typeSymbol.MetadataName);
+            var diagnostic = Diagnostic.Create(Rule, typeSyntax.GetLocation(), enumerableTypeSymbol.MetadataName, typeSymbol.MetadataName);
             context.ReportDiagnostic(diagnostic);
         }
 

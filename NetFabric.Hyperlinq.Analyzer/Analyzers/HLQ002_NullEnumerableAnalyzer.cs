@@ -21,13 +21,13 @@ namespace NetFabric.Hyperlinq.Analyzer
             new LocalizableResourceString(nameof(Resources.NullEnumerable_Description), Resources.ResourceManager, typeof(Resources));
         const string Category = "Compiler";
 
-        static readonly DiagnosticDescriptor rule =
+        static readonly DiagnosticDescriptor Rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ002_NullEnumerable.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            ImmutableArray.Create(rule);
+            ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -41,7 +41,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (!(context.Node is MethodDeclarationSyntax methodDeclarationSyntax))
                 return;
 
-            if (methodDeclarationSyntax.ReturnType.IsKind(SyntaxKind.VoidKeyword))
+            if (methodDeclarationSyntax.ReturnsVoid())
                 return;
 
             if (methodDeclarationSyntax.Body is null)
@@ -56,7 +56,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             {
                 if (returnStatementSyntax.Expression.IsKind(SyntaxKind.NullLiteralExpression))
                 {
-                    var diagnostic = Diagnostic.Create(rule, returnStatementSyntax.GetLocation());
+                    var diagnostic = Diagnostic.Create(Rule, returnStatementSyntax.GetLocation());
                     context.ReportDiagnostic(diagnostic);
                 }
             }
@@ -72,7 +72,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             if (arrowExpressionClauseSyntax.Expression.IsKind(SyntaxKind.NullLiteralExpression))
             {
-                var diagnostic = Diagnostic.Create(rule, arrowExpressionClauseSyntax.Expression.GetLocation());
+                var diagnostic = Diagnostic.Create(Rule, arrowExpressionClauseSyntax.Expression.GetLocation());
                 context.ReportDiagnostic(diagnostic);
             }
         }

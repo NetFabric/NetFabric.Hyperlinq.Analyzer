@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace HLQ008.NoDiagnostic
+namespace HLQ008.Diagnostic
 {
-    readonly ref struct RefValueTypeEnumerable<T>
+    ref struct RefValueTypeEnumerable<T>
     {
         public Enumerator GetEnumerator() => new Enumerator();
 

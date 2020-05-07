@@ -22,13 +22,13 @@ namespace NetFabric.Hyperlinq.Analyzer
             new LocalizableResourceString(nameof(Resources.GetEnumeratorReturnType_Description), Resources.ResourceManager, typeof(Resources));
         const string Category = "Performance";
 
-        static readonly DiagnosticDescriptor rule =
+        static readonly DiagnosticDescriptor Rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ006_GetEnumeratorReturnType.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            ImmutableArray.Create(rule);
+            ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -75,7 +75,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 return;
             }
 
-            var diagnostic = Diagnostic.Create(rule, returnType.GetLocation(), identifier);
+            var diagnostic = Diagnostic.Create(Rule, returnType.GetLocation(), identifier);
             context.ReportDiagnostic(diagnostic);
         }
     }

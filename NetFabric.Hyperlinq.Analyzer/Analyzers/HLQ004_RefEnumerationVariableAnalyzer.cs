@@ -21,13 +21,13 @@ namespace NetFabric.Hyperlinq.Analyzer
             new LocalizableResourceString(nameof(Resources.RefEnumerationVariable_Description), Resources.ResourceManager, typeof(Resources));
         const string Category = "Performance";
 
-        static readonly DiagnosticDescriptor rule =
+        static readonly DiagnosticDescriptor Rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ004_RefEnumerationVariable.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            ImmutableArray.Create(rule);
+            ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -53,7 +53,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             {
                 if (refTypeSyntax.ReadOnlyKeyword.Value is null && enumeratorSymbols.Current.ReturnsByRefReadonly)
                 {
-                    var diagnostic = Diagnostic.Create(rule, forEachStatementSyntax.Type.GetLocation(), "ref readonly");
+                    var diagnostic = Diagnostic.Create(Rule, forEachStatementSyntax.Type.GetLocation(), "ref readonly");
                     context.ReportDiagnostic(diagnostic);
                 }
             }
@@ -61,12 +61,12 @@ namespace NetFabric.Hyperlinq.Analyzer
             {
                 if(enumeratorSymbols.Current.ReturnsByRef)
                 {
-                    var diagnostic = Diagnostic.Create(rule, forEachStatementSyntax.Type.GetLocation(), "ref");
+                    var diagnostic = Diagnostic.Create(Rule, forEachStatementSyntax.Type.GetLocation(), "ref");
                     context.ReportDiagnostic(diagnostic);
                 }
                 else if (enumeratorSymbols.Current.ReturnsByRefReadonly)
                 {
-                    var diagnostic = Diagnostic.Create(rule, forEachStatementSyntax.Type.GetLocation(), "ref readonly");
+                    var diagnostic = Diagnostic.Create(Rule, forEachStatementSyntax.Type.GetLocation(), "ref readonly");
                     context.ReportDiagnostic(diagnostic);
                 }
             }

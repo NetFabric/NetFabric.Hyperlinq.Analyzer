@@ -22,13 +22,13 @@ namespace NetFabric.Hyperlinq.Analyzer
             new LocalizableResourceString(nameof(Resources.ReadOnlyRefEnumerable_Description), Resources.ResourceManager, typeof(Resources));
         const string Category = "Performance";
 
-        static readonly DiagnosticDescriptor rule =
+        static readonly DiagnosticDescriptor Rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Info,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ008_ReadOnlyRefEnumerable.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            ImmutableArray.Create(rule);
+            ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -42,16 +42,14 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (!(context.Node is StructDeclarationSyntax structDeclarationSyntax))
                 return;
 
-            if (structDeclarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.ReadOnlyKeyword) || modifier.IsKind(SyntaxKind.RefKeyword)))
+            if (structDeclarationSyntax.Modifiers
+                .Any(modifier => modifier.IsKind(SyntaxKind.ReadOnlyKeyword)))
                 return;
 
-            // check if the type is enumerable
-            var name = structDeclarationSyntax.GetMetadataName();
-            var declaredTypeSymbol = context.Compilation.GetTypeByMetadataName(name);
-            if (declaredTypeSymbol is null || !declaredTypeSymbol.IsEnumerable(context.Compilation, out var _))
+            if (!structDeclarationSyntax.IsEnumerable(context))
                 return;
 
-            var diagnostic = Diagnostic.Create(rule, structDeclarationSyntax.Keyword.GetLocation(), structDeclarationSyntax.Identifier.Text);
+            var diagnostic = Diagnostic.Create(Rule, structDeclarationSyntax.Keyword.GetLocation(), structDeclarationSyntax.Identifier.Text);
             context.ReportDiagnostic(diagnostic);
         }
     }

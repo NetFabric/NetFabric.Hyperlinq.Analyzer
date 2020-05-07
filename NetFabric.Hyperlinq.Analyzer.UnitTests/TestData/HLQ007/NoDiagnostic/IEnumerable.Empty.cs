@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace HLQ007.NoDiagnostic.Interface
+namespace HLQ007.NoDiagnostic.Empty
 {
     readonly struct Enumerable<T> : IEnumerable<T>
     {
@@ -15,10 +15,7 @@ namespace HLQ007.NoDiagnostic.Interface
         {
             public int Current => default;
 
-            public bool MoveNext()
-            {
-                return false;
-            }
+            public bool MoveNext() => false;
         }
 
         class DisposableEnumerator : IEnumerator<T>
@@ -34,9 +31,9 @@ namespace HLQ007.NoDiagnostic.Interface
         }
     }
 
-    class C
+    partial class Tests
     {
-        void Test()
+        void Test_Enumerable()
         {
             // make sure implementation is supported by foreach
             foreach (var item in new Enumerable<TestType>())

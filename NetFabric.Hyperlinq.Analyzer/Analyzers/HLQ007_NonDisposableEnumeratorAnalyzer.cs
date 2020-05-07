@@ -24,13 +24,13 @@ namespace NetFabric.Hyperlinq.Analyzer
             new LocalizableResourceString(nameof(Resources.NonDisposableEnumerator_Description), Resources.ResourceManager, typeof(Resources));
         const string Category = "Performance";
 
-        static readonly DiagnosticDescriptor rule =
+        static readonly DiagnosticDescriptor Rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ006_NonDisposableEnumerator.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            ImmutableArray.Create(rule);
+            ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -47,19 +47,16 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
             var compilation = context.Compilation;
 
-            // check if it has an empty body
-            if (methodDeclarationSyntax.Body?.Statements.Any() ?? true)
-                return;
-
             // check if it's Dispose or DisposeAsync
             if (methodDeclarationSyntax.ParameterList.Parameters.Any())
                 return;
 
-            if (methodDeclarationSyntax.Identifier.ValueText == "Dispose")
-                //&& methodDeclarationSyntax.ReturnType is PredefinedTypeSyntax predefinedTypeSyntax 
-                //&& predefinedTypeSyntax.IsKind(SyntaxKind.VoidKeyword))
+            if (methodDeclarationSyntax.Identifier.ValueText == "Dispose"
+                && methodDeclarationSyntax.ReturnsVoid())
             {
-                // do nothing
+                // check if it has an empty body
+                if (methodDeclarationSyntax.Body?.Statements.Any() ?? true)
+                    return;
             }
             else if (methodDeclarationSyntax.Identifier.ValueText == "DisposeAsync")
             {
@@ -67,7 +64,29 @@ namespace NetFabric.Hyperlinq.Analyzer
                 if (returnType is null || returnType.Name != "ValueTask")
                     return;
 
-                // do nothing
+                // check if it simply returns a new instance of ValueTask
+                if (methodDeclarationSyntax.Body is null)
+                {
+                    if (methodDeclarationSyntax.ExpressionBody is null)
+                        return;
+                    var expression = methodDeclarationSyntax.ExpressionBody.Expression.ToString();
+                    if (expression != "default" && expression != "new ValueTask()")
+                        return;
+                }
+                else
+                {
+                    var returnStatements = methodDeclarationSyntax.Body.DescendantNodes().OfType<ReturnStatementSyntax>();
+
+                    foreach (var returnStatement in returnStatements)
+                    {
+                        if (returnStatement.Expression is object)
+                        {
+                            var expression = returnStatement.Expression.ToString();
+                            if (expression != "default" && expression != "new ValueTask()")
+                                return;
+                        }
+                    }
+                }
             }
             else
             {
@@ -84,31 +103,44 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (declaredTypeSymbol is null)
                 return;
 
-            // check if disposable type is an enumerator
-            if (!declaredTypeSymbol.IsEnumerator(compilation, out var _) && !declaredTypeSymbol.IsAsyncEnumerator(compilation, out var _))
-                return;
-
             var enumeratorTypeSymbol = declaredTypeSymbol;
-
-            // check if there's an outer type
-            typeDeclaration = typeDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
-            if (typeDeclaration is null)
-                return;
-
-            name = typeDeclaration.GetMetadataName();
-            declaredTypeSymbol = compilation.GetTypeByMetadataName(name);
-
-            if (declaredTypeSymbol is null)
-                throw new Exception(name);
-
-            // check if outer type is an enumerable
             IMethodSymbol getEnumerator;
-            if (declaredTypeSymbol.IsEnumerable(compilation, out var enumerableSymbols))
+
+            // check if disposable type is an enumerator
+            if (declaredTypeSymbol.IsEnumerator(compilation, out var _))
             {
+                // check if there's an outer type
+                typeDeclaration = typeDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+                if (typeDeclaration is null)
+                    return;
+
+                name = typeDeclaration.GetMetadataName();
+                declaredTypeSymbol = compilation.GetTypeByMetadataName(name);
+                if (declaredTypeSymbol is null)
+                    return;
+
+                // check if outer type is an enumerable
+                if (!declaredTypeSymbol.IsEnumerable(compilation, out var enumerableSymbols))
+                    return;
+
                 getEnumerator = enumerableSymbols.GetEnumerator;
             }
-            else if (declaredTypeSymbol.IsAsyncEnumerable(compilation, out var asyncEnumerableSymbols))
+            else if (declaredTypeSymbol.IsAsyncEnumerator(compilation, out var _))
             {
+                // check if there's an outer type
+                typeDeclaration = typeDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+                if (typeDeclaration is null)
+                    return;
+
+                name = typeDeclaration.GetMetadataName();
+                declaredTypeSymbol = compilation.GetTypeByMetadataName(name);
+                if (declaredTypeSymbol is null)
+                    return;
+
+                // check if outer type is an async enumerable
+                if (!declaredTypeSymbol.IsAsyncEnumerable(compilation, out var asyncEnumerableSymbols))
+                    return;
+
                 getEnumerator = asyncEnumerableSymbols.GetAsyncEnumerator;
             }
             else
@@ -116,8 +148,9 @@ namespace NetFabric.Hyperlinq.Analyzer
                 return;
             }
 
-            // check if the public GetEnumerator() return the disposable enumerator
-            if (!SymbolEqualityComparer.Default.Equals(getEnumerator.ReturnType, enumeratorTypeSymbol))
+            // check if the public GetEnumerator() returns the disposable enumerator
+            if (getEnumerator.ReturnType.TypeKind != TypeKind.Interface 
+                && !SymbolEqualityComparer.Default.Equals(getEnumerator.ReturnType, enumeratorTypeSymbol))
                 return;
 
             // find the location of GetEnumerator() return type
@@ -128,7 +161,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                     method.Modifiers.Any(token => token.Text == "public") 
                     && (method.Identifier.Text == getEnumerator.Name));
 
-            var diagnostic = Diagnostic.Create(rule, getEnumeratorDeclaration.ReturnType.GetLocation(), enumeratorTypeSymbol.Name);
+            var diagnostic = Diagnostic.Create(Rule, getEnumeratorDeclaration.ReturnType.GetLocation(), enumeratorTypeSymbol.Name);
             context.ReportDiagnostic(diagnostic);
         }
 

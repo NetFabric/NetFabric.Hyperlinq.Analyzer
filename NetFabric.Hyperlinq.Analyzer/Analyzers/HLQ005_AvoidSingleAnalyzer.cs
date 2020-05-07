@@ -22,13 +22,13 @@ namespace NetFabric.Hyperlinq.Analyzer
             new LocalizableResourceString(nameof(Resources.AvoidSingle_Description), Resources.ResourceManager, typeof(Resources));
         const string Category = "Performance";
 
-        static readonly DiagnosticDescriptor rule =
+        static readonly DiagnosticDescriptor Rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ005_AvoidSingle.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            ImmutableArray.Create(rule);
+            ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -97,7 +97,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (type is null || !IsEnumerable(type, context.Compilation, isAsync))
                 return;
 
-            var diagnostic = Diagnostic.Create(rule, memberAccessExpressionSyntax.Name.GetLocation(), methodFound, methodReplace);
+            var diagnostic = Diagnostic.Create(Rule, memberAccessExpressionSyntax.Name.GetLocation(), methodFound, methodReplace);
             context.ReportDiagnostic(diagnostic);
         }
 

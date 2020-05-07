@@ -31,6 +31,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 
         [Theory]
         [InlineData("TestData/HLQ008/Diagnostic/ValueTypeEnumerable.cs", "ValueTypeEnumerable", "TestData/HLQ008/Diagnostic/ValueTypeEnumerable.Fix.cs", 5, 5)]
+        [InlineData("TestData/HLQ008/Diagnostic/RefValueTypeEnumerable.cs", "RefValueTypeEnumerable", "TestData/HLQ008/Diagnostic/RefValueTypeEnumerable.Fix.cs", 5, 9)]
         public void Verify_Diagnostic(string path, string name, string fix, int line, int column)
         {
             var paths = new[]

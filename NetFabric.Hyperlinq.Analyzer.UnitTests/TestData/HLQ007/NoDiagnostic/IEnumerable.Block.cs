@@ -3,16 +3,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace HLQ007.Diagnostic.Interface
+namespace HLQ007.NoDiagnostic.Block
 {
-    readonly struct Enumerable<T> : IEnumerable<T>
+    readonly struct Enumerable<T>: IEnumerable<T>
     {
-        public Enumerator GetEnumerator() => new Enumerator();
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator();
+        public IEnumerator<T> GetEnumerator() => new Enumerator();
         IEnumerator IEnumerable.GetEnumerator() => new Enumerator();
 
-        public struct Enumerator : IEnumerator<T>
+        class Enumerator: IEnumerator<T>
         {
+            readonly IDisposable disposable = new Disposable();
+
             public T Current => default;
             object IEnumerator.Current => default;
 
@@ -20,7 +21,12 @@ namespace HLQ007.Diagnostic.Interface
 
             public void Reset() { }
 
-            public void Dispose() { }
+            public void Dispose()
+            {
+#pragma warning disable IDE0022 // Use expression body for methods
+                disposable.Dispose();
+#pragma warning restore IDE0022 // Use expression body for methods
+            }
         }
     }
 

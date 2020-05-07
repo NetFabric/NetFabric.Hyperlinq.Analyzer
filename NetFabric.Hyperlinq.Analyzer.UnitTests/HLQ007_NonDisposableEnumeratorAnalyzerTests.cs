@@ -13,20 +13,26 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             new NonDisposableEnumeratorAnalyzer();
 
         [Theory]
-        [InlineData("TestData/HLQ007/NoDiagnostic/Enumerable.cs")]
-        [InlineData("TestData/HLQ007/NoDiagnostic/IEnumerable.cs")]
+        [InlineData("TestData/HLQ007/NoDiagnostic/IAsyncEnumerable.Arrow.cs")]
+        [InlineData("TestData/HLQ007/NoDiagnostic/IAsyncEnumerable.Block.cs")]
+        [InlineData("TestData/HLQ007/NoDiagnostic/IAsyncEnumerable.Empty.cs")]
+        [InlineData("TestData/HLQ007/NoDiagnostic/IEnumerable.Arrow.cs")]
+        [InlineData("TestData/HLQ007/NoDiagnostic/IEnumerable.Block.cs")]
+        [InlineData("TestData/HLQ007/NoDiagnostic/IEnumerable.Empty.cs")]
         public void Verify_NoDiagnostics(string path)
         {
             var paths = new[]
             {
                 path,
                 "TestData/TestType.cs",
+                "TestData/HLQ007/Disposable.cs",
             };
             VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray());
         }
 
         [Theory]
-        [InlineData("TestData/HLQ007/Diagnostic/Enumerable.cs", "Enumerator", 8, 16)]
+        [InlineData("TestData/HLQ007/Diagnostic/IAsyncEnumerable.Arrow.cs", "Enumerator", 11, 16)]
+        [InlineData("TestData/HLQ007/Diagnostic/IAsyncEnumerable.Block.cs", "Enumerator", 11, 16)]
         [InlineData("TestData/HLQ007/Diagnostic/IEnumerable.cs", "Enumerator", 10, 16)]
         public void Verify_Diagnostic(string path, string enumeratorName, int line, int column)
         {
@@ -34,6 +40,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             {
                 path,
                 "TestData/TestType.cs",
+                "TestData/HLQ007/Disposable.cs",
             };
             var expected = new DiagnosticResult
             {
