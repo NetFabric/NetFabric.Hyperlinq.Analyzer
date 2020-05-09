@@ -14,13 +14,21 @@ namespace NetFabric.Hyperlinq.Analyzer
             => methodDeclarationSyntax.ReturnType is PredefinedTypeSyntax predefinedTypeSyntax
                && predefinedTypeSyntax.Keyword.IsKind(SyntaxKind.VoidKeyword);
 
+        public static bool ReturnsEnumerable(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
+        {
+            var typeSymbol = context.SemanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
+            return typeSymbol is object 
+                && (typeSymbol.IsEnumerable(context.Compilation, out var _)
+                || typeSymbol.IsAsyncEnumerable(context.Compilation, out var _));
+        }
+
         public static bool IsExtensionMethod(this MethodDeclarationSyntax methodDeclarationSyntax, [NotNullWhen(true)] out ParameterSyntax? parameterSyntax)
         {
             var parameters = methodDeclarationSyntax.ParameterList.Parameters;
             if (parameters.Count != 0)
             {
                 parameterSyntax = parameters[0];
-                return parameterSyntax.Modifiers.Any(modifier => modifier.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.ThisKeyword));
+                return parameterSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.ThisKeyword));
             }
 
             parameterSyntax = null;
@@ -42,7 +50,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                     var typeSymbol = context.SemanticModel.GetTypeInfo(parameterSyntax.Type).Type;
                     if (typeSymbol is object)
                     {
-                        return typeSymbol.IsEnumerable(context.Compilation, out var _);
+                        return typeSymbol.IsEnumerable(context.Compilation, out var _) || typeSymbol.IsAsyncEnumerable(context.Compilation, out var _);
                     }
                 }
             }

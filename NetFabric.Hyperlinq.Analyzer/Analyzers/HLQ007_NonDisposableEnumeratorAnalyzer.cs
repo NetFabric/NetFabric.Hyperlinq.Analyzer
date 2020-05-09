@@ -75,17 +75,11 @@ namespace NetFabric.Hyperlinq.Analyzer
                 }
                 else
                 {
-                    var returnStatements = methodDeclarationSyntax.Body.DescendantNodes().OfType<ReturnStatementSyntax>();
-
-                    foreach (var returnStatement in returnStatements)
-                    {
-                        if (returnStatement.Expression is object)
-                        {
-                            var expression = returnStatement.Expression.ToString();
-                            if (expression != "default" && expression != "new ValueTask()")
-                                return;
-                        }
-                    }
+                    if (methodDeclarationSyntax.Body.DescendantNodes().OfType<MemberAccessExpressionSyntax>()
+                        .Any(memberAccesses =>
+                            memberAccesses.Name.Identifier.ValueText == "Dispose"
+                            || memberAccesses.Name.Identifier.ValueText == "DisposeAsync"))
+                        return;
                 }
             }
             else

@@ -51,7 +51,7 @@ If mandatory, implement one more enumerator type with no `Dispose()`method and r
 
 ## When to suppress warnings
 
-When the performance improvement is not essential.
+When the enumerable will never be called by a `foreach` or `GetEnumerator()` will only be called explicitly (not through interfaces).
 
 ## Example of a violation
 

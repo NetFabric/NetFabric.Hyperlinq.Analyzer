@@ -61,6 +61,9 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclarationSyntax, SpecialType methodReturnType)
         {
+            if (methodDeclarationSyntax.DescendantNodes().OfType<YieldStatementSyntax>().Any())
+                return;
+
             switch (methodReturnType)
             {
                 case SpecialType.System_Collections_IEnumerable:

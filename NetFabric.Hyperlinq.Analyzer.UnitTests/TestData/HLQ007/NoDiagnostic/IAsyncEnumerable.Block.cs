@@ -20,7 +20,7 @@ namespace HLQ007.NoDiagnostic.Block
 
         class DisposableEnumerator : IAsyncEnumerator<T>
         {
-            readonly IAsyncDisposable disposable = new AsyncDisposable();
+            readonly IDisposable disposable = new Disposable();
 
             public T Current => default;
 
@@ -30,9 +30,8 @@ namespace HLQ007.NoDiagnostic.Block
 
             public ValueTask DisposeAsync()
             {
-#pragma warning disable IDE0022 // Use expression body for methods
-                return disposable.DisposeAsync();
-#pragma warning restore IDE0022 // Use expression body for methods
+                disposable.Dispose();
+                return default;
             }
         }
     }
