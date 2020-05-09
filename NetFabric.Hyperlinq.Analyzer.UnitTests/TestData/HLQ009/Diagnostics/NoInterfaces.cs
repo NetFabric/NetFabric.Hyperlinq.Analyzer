@@ -13,7 +13,10 @@ namespace HLQ009.Diagnostics
 
             public bool MoveNext() => false;
 
-            public void Reset() => throw new NotImplementedException();
+            public void Reset()
+            {
+                throw new NotImplementedException();
+            }
 
             public void Dispose() { }
         }

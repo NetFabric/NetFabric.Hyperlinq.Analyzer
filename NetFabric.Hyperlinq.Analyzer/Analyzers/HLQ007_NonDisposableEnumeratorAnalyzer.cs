@@ -47,45 +47,9 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
             var compilation = context.Compilation;
 
-            // check if it's Dispose or DisposeAsync
-            if (methodDeclarationSyntax.ParameterList.Parameters.Any())
+            // check if it's an empty Dispose or DisposeAsync
+            if (!methodDeclarationSyntax.IsEmptyDispose())
                 return;
-
-            if (methodDeclarationSyntax.Identifier.ValueText == "Dispose"
-                && methodDeclarationSyntax.ReturnsVoid())
-            {
-                // check if it has an empty body
-                if (methodDeclarationSyntax.Body?.Statements.Any() ?? true)
-                    return;
-            }
-            else if (methodDeclarationSyntax.Identifier.ValueText == "DisposeAsync")
-            {
-                var returnType = semanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
-                if (returnType is null || returnType.Name != "ValueTask")
-                    return;
-
-                // check if it simply returns a new instance of ValueTask
-                if (methodDeclarationSyntax.Body is null)
-                {
-                    if (methodDeclarationSyntax.ExpressionBody is null)
-                        return;
-                    var expression = methodDeclarationSyntax.ExpressionBody.Expression.ToString();
-                    if (expression != "default" && expression != "new ValueTask()")
-                        return;
-                }
-                else
-                {
-                    if (methodDeclarationSyntax.Body.DescendantNodes().OfType<MemberAccessExpressionSyntax>()
-                        .Any(memberAccesses =>
-                            memberAccesses.Name.Identifier.ValueText == "Dispose"
-                            || memberAccesses.Name.Identifier.ValueText == "DisposeAsync"))
-                        return;
-                }
-            }
-            else
-            {
-                return;
-            }
 
             // find the disposable type
             var typeDeclaration = methodDeclarationSyntax.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();

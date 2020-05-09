@@ -67,6 +67,76 @@ namespace NetFabric.Hyperlinq.Analyzer
             return false;
         }
 
+        public static bool IsEmptyDispose(this MethodDeclarationSyntax methodDeclarationSyntax)
+        {
+            if (methodDeclarationSyntax.IsDispose())
+            {
+                return !(methodDeclarationSyntax.Body?.Statements.Any() ?? true);
+            }
+
+            if (methodDeclarationSyntax.IsAsyncDispose())
+            {
+                // check if it simply returns a new instance of ValueTask
+                if (methodDeclarationSyntax.Body is null)
+                {
+                    if (methodDeclarationSyntax.ExpressionBody is null)
+                        return false;
+                    var expression = methodDeclarationSyntax.ExpressionBody.Expression.ToString();
+                    return expression == "default" || expression == "new ValueTask()";
+                }
+                else
+                {
+                    // check if any there's any resource being disposed
+                    return !methodDeclarationSyntax.Body.DescendantNodes()
+                        .OfType<MemberAccessExpressionSyntax>()
+                        .Any(memberAccesses =>
+                            memberAccesses.Name.Identifier.ValueText == "Dispose"
+                            || memberAccesses.Name.Identifier.ValueText == "DisposeAsync");
+                }
+            }
+
+            return false;
+        }
+
+        public static bool IsEmptyReset(this MethodDeclarationSyntax methodDeclarationSyntax)
+        {
+            if (!methodDeclarationSyntax.IsReset())
+                return false;
+
+            // check if body is empty or just throws an exception
+            if (methodDeclarationSyntax.Body is null)
+            {
+                var expression = methodDeclarationSyntax.ExpressionBody?.Expression.ToString();
+                if (expression is object && expression.StartsWith("throw"))
+                    return true;
+            }
+            else
+            {
+                var statements = methodDeclarationSyntax.Body.Statements;
+                if (statements.Count == 0
+                    || (statements.Count == 1 && statements[0].ToString().StartsWith("throw")))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsDispose(this MethodDeclarationSyntax methodDeclarationSyntax)
+            => methodDeclarationSyntax.Identifier.ValueText == "Dispose"
+                && methodDeclarationSyntax.ReturnsVoid()
+                && methodDeclarationSyntax.ParameterList.Parameters.Count == 0;
+
+        public static bool IsAsyncDispose(this MethodDeclarationSyntax methodDeclarationSyntax)
+            => methodDeclarationSyntax.Identifier.ValueText == "DisposeAsync"
+                && methodDeclarationSyntax.ReturnType is IdentifierNameSyntax identifierNameSyntax
+                && identifierNameSyntax.Identifier.ValueText == "ValueTask"
+                && methodDeclarationSyntax.ParameterList.Parameters.Count < 2; // TODO: check if it's CancellationToken
+
+        public static bool IsReset(this MethodDeclarationSyntax methodDeclarationSyntax)
+            => methodDeclarationSyntax.Identifier.ValueText == "Reset"
+                && methodDeclarationSyntax.ReturnsVoid()
+                && methodDeclarationSyntax.ParameterList.Parameters.Count == 0;
+
         public static bool IsPublic(this MethodDeclarationSyntax methodDeclarationSyntax)
         {
             for (SyntaxNode? node = methodDeclarationSyntax; node is object; node = node.Parent)
