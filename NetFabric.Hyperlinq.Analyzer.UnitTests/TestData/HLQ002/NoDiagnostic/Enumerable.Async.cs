@@ -12,10 +12,12 @@ namespace HLQ002.NoDiagnostic
              yield return await Task.FromResult(new TestType());
         }
 
+#pragma warning disable IDE0022 // Use expression body for methods
         public IAsyncEnumerable<TestType> Method()
         {
             return Method_AsyncIterator();
         }
+#pragma warning restore IDE0022 // Use expression body for methods
 
         public IAsyncEnumerable<TestType> MethodArrow() 
             => Method_AsyncIterator();

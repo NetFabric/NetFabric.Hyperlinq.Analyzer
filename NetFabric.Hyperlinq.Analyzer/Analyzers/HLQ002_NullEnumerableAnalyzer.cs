@@ -41,7 +41,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (!(context.Node is MethodDeclarationSyntax methodDeclarationSyntax))
                 return;
 
-            if (!methodDeclarationSyntax.ReturnsEnumerable(context))
+            if (!methodDeclarationSyntax.ReturnsEnumerableInterface(context))
                 return;
 
             if (methodDeclarationSyntax.Body is null)
