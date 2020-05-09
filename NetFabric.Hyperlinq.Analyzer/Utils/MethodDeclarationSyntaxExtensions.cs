@@ -22,6 +22,15 @@ namespace NetFabric.Hyperlinq.Analyzer
                 || typeSymbol.IsAsyncEnumerable(context.Compilation, out var _));
         }
 
+        public static bool ReturnsEnumerableInterface(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
+        {
+            var typeSymbol = context.SemanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
+            return typeSymbol is object
+                && typeSymbol.TypeKind == TypeKind.Interface
+                && (typeSymbol.IsEnumerable(context.Compilation, out var _)
+                || typeSymbol.IsAsyncEnumerable(context.Compilation, out var _));
+        }
+
         public static bool IsExtensionMethod(this MethodDeclarationSyntax methodDeclarationSyntax, [NotNullWhen(true)] out ParameterSyntax? parameterSyntax)
         {
             var parameters = methodDeclarationSyntax.ParameterList.Parameters;

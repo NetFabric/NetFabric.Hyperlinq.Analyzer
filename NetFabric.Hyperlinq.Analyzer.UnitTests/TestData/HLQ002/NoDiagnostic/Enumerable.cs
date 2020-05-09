@@ -11,12 +11,24 @@ namespace HLQ002.NoDiagnostic
             yield return new TestType();
         }
 
+#pragma warning disable IDE0022 // Use expression body for methods
         public IEnumerable<TestType> Method()
         {
             return Method_Iterator();
         }
+#pragma warning restore IDE0022 // Use expression body for methods
 
         public IEnumerable<TestType> MethodArrow() 
             => Method_Iterator();
+
+#pragma warning disable IDE0022 // Use expression body for methods
+        public string StringMethod()
+        {
+            return null;
+        }
+#pragma warning restore IDE0022 // Use expression body for methods
+
+        public string StringMethodArrow()
+            => null;
     }
 }
