@@ -25,6 +25,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Analyzers\HLQ009_RemoveOptionalMethodsAnalyzer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="..\Icon.png" Pack="true" PackagePath="" />
     <None Include="..\LICENSE" Pack="true" PackagePath="" />

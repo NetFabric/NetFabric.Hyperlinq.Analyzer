@@ -12,22 +12,22 @@ using System.Text;
 namespace NetFabric.Hyperlinq.Analyzer
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public sealed class NonDisposableEnumeratorAnalyzer : DiagnosticAnalyzer
+    public sealed class RemoveOptionalMethodsAnalyzer : DiagnosticAnalyzer
     {
-        const string DiagnosticId = DiagnosticIds.NonDisposableEnumeratorId;
+        const string DiagnosticId = DiagnosticIds.RemoveOptionalMethodsId;
 
         static readonly LocalizableString Title =
-            new LocalizableResourceString(nameof(Resources.NonDisposableEnumerator_Title), Resources.ResourceManager, typeof(Resources));
+            new LocalizableResourceString(nameof(Resources.RemoveOptionalMethods_Title), Resources.ResourceManager, typeof(Resources));
         static readonly LocalizableString MessageFormat =
-            new LocalizableResourceString(nameof(Resources.NonDisposableEnumerator_MessageFormat), Resources.ResourceManager, typeof(Resources));
+            new LocalizableResourceString(nameof(Resources.RemoveOptionalMethods_MessageFormat), Resources.ResourceManager, typeof(Resources));
         static readonly LocalizableString Description =
-            new LocalizableResourceString(nameof(Resources.NonDisposableEnumerator_Description), Resources.ResourceManager, typeof(Resources));
+            new LocalizableResourceString(nameof(Resources.RemoveOptionalMethods_Description), Resources.ResourceManager, typeof(Resources));
         const string Category = "Performance";
 
         static readonly DiagnosticDescriptor Rule =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
+            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Info,
                 isEnabledByDefault: true, description: Description,
-                helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ007_NonDisposableEnumerator.md");
+                helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ009_RemoveOptionalMethods.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
             ImmutableArray.Create(Rule);
@@ -48,20 +48,8 @@ namespace NetFabric.Hyperlinq.Analyzer
             var compilation = context.Compilation;
 
             // check if it's an empty Dispose or DisposeAsync
-            if (methodDeclarationSyntax.IsDispose())
-            {
-                if (!methodDeclarationSyntax.IsEmptyMethod())
-                    return;
-            }
-            else if (methodDeclarationSyntax.IsAsyncDispose(context))
-            {
-                if (!methodDeclarationSyntax.IsEmptyAsyncMethod())
-                    return;
-            }
-            else
-            {
+            if (!methodDeclarationSyntax.IsEmptyDispose())
                 return;
-            }
 
             // find the disposable type
             var typeDeclaration = methodDeclarationSyntax.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
@@ -133,25 +121,6 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             var diagnostic = Diagnostic.Create(Rule, getEnumeratorDeclaration.ReturnType.GetLocation(), enumeratorTypeSymbol.Name);
             context.ReportDiagnostic(diagnostic);
-        }
-
-        static IEnumerable<INamedTypeSymbol> GetAllTypes(INamespaceSymbol @namespace)
-        {
-            foreach (var type in @namespace.GetTypeMembers())
-                foreach (var nestedType in GetNestedTypes(type))
-                    yield return nestedType;
-
-            foreach (var nestedNamespace in @namespace.GetNamespaceMembers())
-                foreach (var type in GetAllTypes(nestedNamespace))
-                    yield return type;
-        }
-
-        static IEnumerable<INamedTypeSymbol> GetNestedTypes(INamedTypeSymbol type)
-        {
-            yield return type;
-            foreach (var nestedType in type.GetTypeMembers()
-                .SelectMany(nestedType => GetNestedTypes(nestedType)))
-                yield return nestedType;
         }
     }
 }

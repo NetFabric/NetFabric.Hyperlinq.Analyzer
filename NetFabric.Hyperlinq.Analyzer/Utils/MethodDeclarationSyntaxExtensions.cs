@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -13,6 +14,10 @@ namespace NetFabric.Hyperlinq.Analyzer
         public static bool ReturnsVoid(this MethodDeclarationSyntax methodDeclarationSyntax)
             => methodDeclarationSyntax.ReturnType is PredefinedTypeSyntax predefinedTypeSyntax
                && predefinedTypeSyntax.Keyword.IsKind(SyntaxKind.VoidKeyword);
+
+        public static bool Returns(this MethodDeclarationSyntax methodDeclarationSyntax, string valueText)
+            => methodDeclarationSyntax.ReturnType is IdentifierNameSyntax identifierNameSyntax
+                && identifierNameSyntax.Identifier.ValueText == valueText;
 
         public static bool ReturnsEnumerable(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
         {
@@ -67,37 +72,6 @@ namespace NetFabric.Hyperlinq.Analyzer
             return false;
         }
 
-        public static bool IsEmptyDispose(this MethodDeclarationSyntax methodDeclarationSyntax)
-        {
-            if (methodDeclarationSyntax.IsDispose())
-            {
-                return !(methodDeclarationSyntax.Body?.Statements.Any() ?? true);
-            }
-
-            if (methodDeclarationSyntax.IsAsyncDispose())
-            {
-                // check if it simply returns a new instance of ValueTask
-                if (methodDeclarationSyntax.Body is null)
-                {
-                    if (methodDeclarationSyntax.ExpressionBody is null)
-                        return false;
-                    var expression = methodDeclarationSyntax.ExpressionBody.Expression.ToString();
-                    return expression == "default" || expression == "new ValueTask()";
-                }
-                else
-                {
-                    // check if any there's any resource being disposed
-                    return !methodDeclarationSyntax.Body.DescendantNodes()
-                        .OfType<MemberAccessExpressionSyntax>()
-                        .Any(memberAccesses =>
-                            memberAccesses.Name.Identifier.ValueText == "Dispose"
-                            || memberAccesses.Name.Identifier.ValueText == "DisposeAsync");
-                }
-            }
-
-            return false;
-        }
-
         public static bool IsEmptyReset(this MethodDeclarationSyntax methodDeclarationSyntax)
         {
             if (!methodDeclarationSyntax.IsReset())
@@ -126,16 +100,77 @@ namespace NetFabric.Hyperlinq.Analyzer
                 && methodDeclarationSyntax.ReturnsVoid()
                 && methodDeclarationSyntax.ParameterList.Parameters.Count == 0;
 
-        public static bool IsAsyncDispose(this MethodDeclarationSyntax methodDeclarationSyntax)
+        public static bool IsAsyncDispose(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
             => methodDeclarationSyntax.Identifier.ValueText == "DisposeAsync"
-                && methodDeclarationSyntax.ReturnType is IdentifierNameSyntax identifierNameSyntax
-                && identifierNameSyntax.Identifier.ValueText == "ValueTask"
-                && methodDeclarationSyntax.ParameterList.Parameters.Count < 2; // TODO: check if it's CancellationToken
+                && methodDeclarationSyntax.Returns("ValueTask")
+                && methodDeclarationSyntax.ParameterList.Parameters.Count == 0; 
 
         public static bool IsReset(this MethodDeclarationSyntax methodDeclarationSyntax)
             => methodDeclarationSyntax.Identifier.ValueText == "Reset"
                 && methodDeclarationSyntax.ReturnsVoid()
                 && methodDeclarationSyntax.ParameterList.Parameters.Count == 0;
+
+        public static bool IsEmptyMethod(this MethodDeclarationSyntax methodDeclarationSyntax)
+        {
+            if (methodDeclarationSyntax.Body is null)
+            {
+                if (methodDeclarationSyntax.ExpressionBody is null)
+                    return false;
+
+                var expression = methodDeclarationSyntax.ExpressionBody.Expression.ToString().Trim();
+                if (expression.StartsWith("throw"))
+                    return true;
+            }
+            else
+            {
+                var statements = methodDeclarationSyntax.Body.Statements;
+                if (statements.Count == 0)
+                    return true;
+
+                if (statements.Count == 1)
+                {
+                    var statement = statements[0].ToString().Trim();
+
+                    if (statement.StartsWith("throw"))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool IsEmptyAsyncMethod(this MethodDeclarationSyntax methodDeclarationSyntax)
+        {
+            if (methodDeclarationSyntax.Body is null)
+            {
+                if (methodDeclarationSyntax.ExpressionBody is null)
+                    return false;
+
+                var expression = methodDeclarationSyntax.ExpressionBody.Expression.ToString().Trim();
+                if (expression.StartsWith("default")
+                    || expression.StartsWith("new ValueTask")
+                    || expression.StartsWith("throw"))
+                    return true;
+            }
+            else
+            {
+                var statements = methodDeclarationSyntax.Body.Statements;
+                if (statements.Count == 0)
+                    return true;
+
+                if (statements.Count == 1)
+                {
+                    var statement = statements[0].ToString().Trim();
+
+                    if (statement.StartsWith("return default") 
+                        || statement.StartsWith("return new ValueTask") 
+                        || statement.StartsWith("throw"))
+                        return true;
+                }
+            }
+
+            return false;
+        }
 
         public static bool IsPublic(this MethodDeclarationSyntax methodDeclarationSyntax)
         {
@@ -155,7 +190,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             return true;
         }
 
-        public static bool AllReturnsImplement(this MethodDeclarationSyntax methodDeclarationSyntax, SpecialType type, SemanticModel semanticModel)
+        public static bool AllReturnsImplement(this MethodDeclarationSyntax methodDeclarationSyntax, SpecialType type, SyntaxNodeAnalysisContext context)
         {
             foreach (var returnStatementSyntax in methodDeclarationSyntax.DescendantNodes().OfType<ReturnStatementSyntax>())
             {
@@ -163,7 +198,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 if (expression is null)
                     return false;
 
-                var returnType = semanticModel.GetTypeInfo(expression).Type;
+                var returnType = context.SemanticModel.GetTypeInfo(expression).Type;
                 if (returnType is null || !returnType.ImplementsInterface(type, out _))
                     return false;
             }

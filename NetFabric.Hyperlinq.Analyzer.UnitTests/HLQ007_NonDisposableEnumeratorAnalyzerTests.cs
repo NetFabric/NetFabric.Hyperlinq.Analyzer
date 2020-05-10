@@ -32,7 +32,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 
         [Theory]
         [InlineData("TestData/HLQ007/Diagnostic/IAsyncEnumerable.Arrow.cs", "Enumerator", 11, 16)]
-        [InlineData("TestData/HLQ007/Diagnostic/IAsyncEnumerable.Block.cs", "Enumerator", 11, 16)]
+        [InlineData("TestData/HLQ007/Diagnostic/IAsyncEnumerable.Block.cs", "Enumerator", 13, 16)]
         [InlineData("TestData/HLQ007/Diagnostic/IEnumerable.cs", "Enumerator", 10, 16)]
         public void Verify_Diagnostic(string path, string enumeratorName, int line, int column)
         {
