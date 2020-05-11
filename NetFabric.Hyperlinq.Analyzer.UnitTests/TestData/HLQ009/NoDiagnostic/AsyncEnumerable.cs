@@ -1,7 +1,7 @@
 ﻿using NetFabric.Hyperlinq.Analyzer.UnitTests.TestData;
 using System.Threading.Tasks;
 
-namespace HLQ009.Diagnostics.Async
+namespace HLQ009.NoDiagnostics
 {
     readonly struct AsyncEnumerable<T>
     {
@@ -15,9 +15,9 @@ namespace HLQ009.Diagnostics.Async
         }
     }
 
-    class C
+    partial class C
     {
-        public async ValueTask TestAsync()
+        public async ValueTask Test_AsyncEnumerable()
         {
             await foreach (var _ in new AsyncEnumerable<TestType>())
             {

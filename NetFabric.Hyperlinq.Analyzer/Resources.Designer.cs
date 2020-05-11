@@ -302,5 +302,32 @@ namespace NetFabric.Hyperlinq.Analyzer {
                 return ResourceManager.GetString("RefEnumerationVariable_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The method is empty and is only required when an enumerator interface is implemented..
+        /// </summary>
+        internal static string RemoveOptionalMethods_Description {
+            get {
+                return ResourceManager.GetString("RemoveOptionalMethods_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consider removing the empty optional enumerator method &apos;{0}&apos;..
+        /// </summary>
+        internal static string RemoveOptionalMethods_MessageFormat {
+            get {
+                return ResourceManager.GetString("RemoveOptionalMethods_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consider removing an empty optional enumerator method..
+        /// </summary>
+        internal static string RemoveOptionalMethods_Title {
+            get {
+                return ResourceManager.GetString("RemoveOptionalMethods_Title", resourceCulture);
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HLQ009.NoDiagnostics
 {
-    readonly struct InterfacesAsyncEnumerable<T> : IAsyncEnumerable<T>
+    readonly struct DisposeAsyncEnumerable<T> : IAsyncEnumerable<T>
     {
         public Enumerator GetAsyncEnumerator() => new Enumerator();
         IAsyncEnumerator<T> IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken cancellationToken) => new Enumerator();
@@ -23,9 +23,9 @@ namespace HLQ009.NoDiagnostics
 
     partial class C
     {
-        public async ValueTask Test_InterfacesAsyncEnumerable()
+        public async ValueTask Test_DisposeAsyncEnumerable()
         {
-            await foreach (var _ in new InterfacesAsyncEnumerable<TestType>())
+            await foreach (var _ in new DisposeAsyncEnumerable<TestType>())
             {
 
             }

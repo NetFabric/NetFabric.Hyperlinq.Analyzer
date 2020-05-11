@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace HLQ009.NoDiagnostics
 {
-    readonly struct InterfaceEnumerable<T> : IEnumerable<T>
+    readonly struct DisposeEnumerable<T> : IEnumerable<T>
     {
         public Enumerator GetEnumerator() => new Enumerator();
         IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator();
@@ -26,9 +26,9 @@ namespace HLQ009.NoDiagnostics
 
     partial class C
     {
-        public void Test_InterfaceEnumerable()
+        public void Test_DisposeEnumerable()
         {
-            foreach (var _ in new InterfaceEnumerable<TestType>())
+            foreach (var _ in new DisposeEnumerable<TestType>())
             {
 
             }

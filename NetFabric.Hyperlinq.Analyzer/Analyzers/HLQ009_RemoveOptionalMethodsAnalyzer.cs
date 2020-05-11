@@ -44,82 +44,34 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (!(context.Node is MethodDeclarationSyntax methodDeclarationSyntax))
                 return;
 
-            var semanticModel = context.SemanticModel;
-            var compilation = context.Compilation;
-
-            // check if it's an empty Dispose or DisposeAsync
-            if (!methodDeclarationSyntax.IsEmptyDispose())
-                return;
-
-            // find the disposable type
-            var typeDeclaration = methodDeclarationSyntax.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
-            if (typeDeclaration is null)
-                return;
-
-            var name = typeDeclaration.GetMetadataName();
-            var declaredTypeSymbol = compilation.GetTypeByMetadataName(name);
-            if (declaredTypeSymbol is null)
-                return;
-
-            var enumeratorTypeSymbol = declaredTypeSymbol;
-            IMethodSymbol getEnumerator;
-
-            // check if disposable type is an enumerator
-            if (declaredTypeSymbol.IsEnumerator(compilation, out var _))
+            if (methodDeclarationSyntax.IsReset() && methodDeclarationSyntax.IsEmptyMethod())
             {
-                // check if there's an outer type
-                typeDeclaration = typeDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
-                if (typeDeclaration is null)
+                var enumeratorDeclaration = methodDeclarationSyntax.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+                if (enumeratorDeclaration is null || enumeratorDeclaration.ImplementsInterface(SpecialType.System_Collections_IEnumerator, context))
                     return;
-
-                name = typeDeclaration.GetMetadataName();
-                declaredTypeSymbol = compilation.GetTypeByMetadataName(name);
-                if (declaredTypeSymbol is null)
-                    return;
-
-                // check if outer type is an enumerable
-                if (!declaredTypeSymbol.IsEnumerable(compilation, out var enumerableSymbols))
-                    return;
-
-                getEnumerator = enumerableSymbols.GetEnumerator;
             }
-            else if (declaredTypeSymbol.IsAsyncEnumerator(compilation, out var _))
+            else if (methodDeclarationSyntax.IsDispose() && methodDeclarationSyntax.IsEmptyMethod())
             {
-                // check if there's an outer type
-                typeDeclaration = typeDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
-                if (typeDeclaration is null)
+                var enumeratorDeclaration = methodDeclarationSyntax.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+                if (enumeratorDeclaration is null || enumeratorDeclaration.ImplementsInterface(SpecialType.System_Collections_Generic_IEnumerator_T, context))
+                    return;
+            }
+            else if (methodDeclarationSyntax.IsAsyncDispose() && methodDeclarationSyntax.IsEmptyAsyncMethod())
+            {
+                var enumeratorDeclaration = methodDeclarationSyntax.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+                if (enumeratorDeclaration is null)
                     return;
 
-                name = typeDeclaration.GetMetadataName();
-                declaredTypeSymbol = compilation.GetTypeByMetadataName(name);
-                if (declaredTypeSymbol is null)
+                var asyncEnumeratorType = context.Compilation.GetTypeByMetadataName("System.Collections.Generic.IAsyncEnumerator`1");
+                if (asyncEnumeratorType is null || enumeratorDeclaration.ImplementsInterface(asyncEnumeratorType, context))
                     return;
-
-                // check if outer type is an async enumerable
-                if (!declaredTypeSymbol.IsAsyncEnumerable(compilation, out var asyncEnumerableSymbols))
-                    return;
-
-                getEnumerator = asyncEnumerableSymbols.GetAsyncEnumerator;
             }
             else
             {
                 return;
             }
 
-            // check if the public GetEnumerator() returns the disposable enumerator
-            if (getEnumerator.ReturnType.TypeKind != TypeKind.Interface 
-                && !SymbolEqualityComparer.Default.Equals(getEnumerator.ReturnType, enumeratorTypeSymbol))
-                return;
-
-            // find the location of GetEnumerator() return type
-            var enumerableTypeDeclaration = typeDeclaration;
-            var getEnumeratorDeclaration = enumerableTypeDeclaration.ChildNodes()
-                .OfType<MethodDeclarationSyntax>()
-                .First(method => 
-                    method.Modifiers.Any(token => token.Text == "public") 
-                    && (method.Identifier.Text == getEnumerator.Name));
-
-            var diagnostic = Diagnostic.Create(Rule, getEnumeratorDeclaration.ReturnType.GetLocation(), enumeratorTypeSymbol.Name);
+            var diagnostic = Diagnostic.Create(Rule, methodDeclarationSyntax.Identifier.GetLocation(), methodDeclarationSyntax.Identifier.ValueText);
             context.ReportDiagnostic(diagnostic);
         }
     }
