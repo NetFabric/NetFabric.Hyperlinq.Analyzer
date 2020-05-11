@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
 using System;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {

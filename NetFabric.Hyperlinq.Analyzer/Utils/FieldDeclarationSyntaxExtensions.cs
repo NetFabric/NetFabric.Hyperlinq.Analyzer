@@ -1,13 +1,16 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace NetFabric.Hyperlinq.Analyzer.Utils
+namespace NetFabric.Hyperlinq.Analyzer
 {
-    static class PropertyDeclarationSyntaxExtensions
+    static class FieldDeclarationSyntaxExtensions
     {
-        public static bool IsPublic(this PropertyDeclarationSyntax propertyDeclarationSyntax)
+        public static bool IsPublic(this FieldDeclarationSyntax fieldDeclarationSyntax)
         {
-            for (SyntaxNode? node = propertyDeclarationSyntax; node is object; node = node.Parent)
+            for (SyntaxNode? node = fieldDeclarationSyntax; node is object; node = node.Parent)
             {
                 if (node is TypeDeclarationSyntax type)
                 {

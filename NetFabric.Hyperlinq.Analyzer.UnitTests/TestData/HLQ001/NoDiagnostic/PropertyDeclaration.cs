@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HLQ001.NoDiagnostic
 {
-    class PropertyDeclaration
+    public class PropertyDeclaration
     {
         OptimizedEnumerable<TestType> Property00 { get; set; } = new OptimizedEnumerable<TestType>();
         IEnumerable<TestType> Property01 { get; set; } = new NonOptimizedEnumerable<TestType>();

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 #pragma warning disable IDE0052 // Remove unread private members
 
 namespace HLQ001.NoDiagnostic
-{ 
-    class FieldDeclaration
+{
+    public class FieldDeclaration
     {
         OptimizedEnumerable<TestType> field00 = new OptimizedEnumerable<TestType>();
         IEnumerable<TestType> field01 = new NonOptimizedEnumerable<TestType>();

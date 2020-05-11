@@ -72,35 +72,12 @@ namespace NetFabric.Hyperlinq.Analyzer
             return false;
         }
 
-        public static bool IsEmptyReset(this MethodDeclarationSyntax methodDeclarationSyntax)
-        {
-            if (!methodDeclarationSyntax.IsReset())
-                return false;
-
-            // check if body is empty or just throws an exception
-            if (methodDeclarationSyntax.Body is null)
-            {
-                var expression = methodDeclarationSyntax.ExpressionBody?.Expression.ToString();
-                if (expression is object && expression.StartsWith("throw"))
-                    return true;
-            }
-            else
-            {
-                var statements = methodDeclarationSyntax.Body.Statements;
-                if (statements.Count == 0
-                    || (statements.Count == 1 && statements[0].ToString().StartsWith("throw")))
-                    return true;
-            }
-
-            return false;
-        }
-
         public static bool IsDispose(this MethodDeclarationSyntax methodDeclarationSyntax)
             => methodDeclarationSyntax.Identifier.ValueText == "Dispose"
                 && methodDeclarationSyntax.ReturnsVoid()
                 && methodDeclarationSyntax.ParameterList.Parameters.Count == 0;
 
-        public static bool IsAsyncDispose(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
+        public static bool IsAsyncDispose(this MethodDeclarationSyntax methodDeclarationSyntax)
             => methodDeclarationSyntax.Identifier.ValueText == "DisposeAsync"
                 && methodDeclarationSyntax.Returns("ValueTask")
                 && methodDeclarationSyntax.ParameterList.Parameters.Count == 0; 

@@ -3,10 +3,9 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
-using System.Collections.Generic;
+using NetFabric.Hyperlinq.Analyzer.Utils;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {
@@ -117,7 +116,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzePropertyDeclaration(SyntaxNodeAnalysisContext context, PropertyDeclarationSyntax propertyDeclarationSyntax, ITypeSymbol enumerableTypeSymbol)
         {
-            if (propertyDeclarationSyntax.Modifiers.Any(token => token.Text == "public"))
+            if (propertyDeclarationSyntax.IsPublic())
                 return;
 
             var semanticModel = context.SemanticModel;
@@ -148,7 +147,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeFieldDeclaration(SyntaxNodeAnalysisContext context, FieldDeclarationSyntax fieldDeclarationSyntax, ITypeSymbol enumerableTypeSymbol)
         {
-            if (fieldDeclarationSyntax.Modifiers.Any(token => token.Text == "public"))
+            if (fieldDeclarationSyntax.IsPublic())
                 return;
 
             var typeSyntax = fieldDeclarationSyntax.Declaration.Type;

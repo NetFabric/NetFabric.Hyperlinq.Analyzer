@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HLQ001.NoDiagnostic
 {
-    class PropertyDeclarationAsync
+    public class PropertyDeclarationAsync
     {
         OptimizedAsyncEnumerable<TestType> Property00 { get; set; } = new OptimizedAsyncEnumerable<TestType>();
         IAsyncEnumerable<TestType> Property01 { get; set; } = new NonOptimizedAsyncEnumerable<TestType>();

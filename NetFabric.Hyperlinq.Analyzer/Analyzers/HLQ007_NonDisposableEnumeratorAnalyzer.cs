@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {
@@ -53,7 +52,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 if (!methodDeclarationSyntax.IsEmptyMethod())
                     return;
             }
-            else if (methodDeclarationSyntax.IsAsyncDispose(context))
+            else if (methodDeclarationSyntax.IsAsyncDispose())
             {
                 if (!methodDeclarationSyntax.IsEmptyAsyncMethod())
                     return;
@@ -128,7 +127,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             var getEnumeratorDeclaration = enumerableTypeDeclaration.ChildNodes()
                 .OfType<MethodDeclarationSyntax>()
                 .First(method => 
-                    method.Modifiers.Any(token => token.Text == "public") 
+                    method.Modifiers.Any(token => token.IsKind(SyntaxKind.PublicKeyword)) 
                     && (method.Identifier.Text == getEnumerator.Name));
 
             var diagnostic = Diagnostic.Create(Rule, getEnumeratorDeclaration.ReturnType.GetLocation(), enumeratorTypeSymbol.Name);

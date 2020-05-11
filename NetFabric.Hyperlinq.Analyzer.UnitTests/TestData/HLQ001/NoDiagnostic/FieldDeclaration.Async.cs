@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace HLQ001.NoDiagnostic
 {
-    class FieldDeclarationAsync
+    public class FieldDeclarationAsync
     {
         OptimizedAsyncEnumerable<TestType> field00 = new OptimizedAsyncEnumerable<TestType>();
         IAsyncEnumerable<TestType> field01 = new NonOptimizedAsyncEnumerable<TestType>();
