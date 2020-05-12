@@ -20,6 +20,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFabric.Hyperlinq.Analyze
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFabric.Hyperlinq.Analyzer.UnitTests", "NetFabric.Hyperlinq.Analyzer.UnitTests\NetFabric.Hyperlinq.Analyzer.UnitTests.csproj", "{F16FCAAB-9A72-464A-85F1-65E72DA662F7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{595B72F0-593D-40C6-A231-79582FC5B6C7}"
+	ProjectSection(SolutionItems) = preProject
+		docs\reference\HLQ000_Template.md = docs\reference\HLQ000_Template.md
+		docs\reference\HLQ001_AssignmentBoxing.md = docs\reference\HLQ001_AssignmentBoxing.md
+		docs\reference\HLQ002_NullEnumerable.md = docs\reference\HLQ002_NullEnumerable.md
+		docs\reference\HLQ003_HighestLevelInterface.md = docs\reference\HLQ003_HighestLevelInterface.md
+		docs\reference\HLQ004_RefEnumerationVariable.md = docs\reference\HLQ004_RefEnumerationVariable.md
+		docs\reference\HLQ005_AvoidSingle.md = docs\reference\HLQ005_AvoidSingle.md
+		docs\reference\HLQ006_GetEnumeratorReturnType.md = docs\reference\HLQ006_GetEnumeratorReturnType.md
+		docs\reference\HLQ007_NonDisposableEnumerator.md = docs\reference\HLQ007_NonDisposableEnumerator.md
+		docs\reference\HLQ008_ReadOnlyRefEnumerable.md = docs\reference\HLQ008_ReadOnlyRefEnumerable.md
+		docs\reference\HLQ009_RemoveOptionalMethods.md = docs\reference\HLQ009_RemoveOptionalMethods.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
