@@ -133,24 +133,5 @@ namespace NetFabric.Hyperlinq.Analyzer
             var diagnostic = Diagnostic.Create(Rule, getEnumeratorDeclaration.ReturnType.GetLocation(), enumeratorTypeSymbol.Name);
             context.ReportDiagnostic(diagnostic);
         }
-
-        static IEnumerable<INamedTypeSymbol> GetAllTypes(INamespaceSymbol @namespace)
-        {
-            foreach (var type in @namespace.GetTypeMembers())
-                foreach (var nestedType in GetNestedTypes(type))
-                    yield return nestedType;
-
-            foreach (var nestedNamespace in @namespace.GetNamespaceMembers())
-                foreach (var type in GetAllTypes(nestedNamespace))
-                    yield return type;
-        }
-
-        static IEnumerable<INamedTypeSymbol> GetNestedTypes(INamedTypeSymbol type)
-        {
-            yield return type;
-            foreach (var nestedType in type.GetTypeMembers()
-                .SelectMany(nestedType => GetNestedTypes(nestedType)))
-                yield return nestedType;
-        }
     }
 }

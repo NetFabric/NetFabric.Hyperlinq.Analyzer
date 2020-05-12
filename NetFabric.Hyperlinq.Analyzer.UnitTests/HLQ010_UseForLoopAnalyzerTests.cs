@@ -7,17 +7,14 @@ using Xunit;
 
 namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
-    public class RemoveOptionalMethodsAnalyzerTests : DiagnosticVerifier
+    public class UseForLoopAnalyzerTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
-            new RemoveOptionalMethodsAnalyzer();
+            new UseForLoopAnalyzer();
 
         [Theory]
-        [InlineData("TestData/HLQ009/NoDiagnostic/AsyncEnumerable.cs")]
-        [InlineData("TestData/HLQ009/NoDiagnostic/Dispose.cs")]
-        [InlineData("TestData/HLQ009/NoDiagnostic/DisposeAsync.cs")]
-        [InlineData("TestData/HLQ009/NoDiagnostic/Enumerable.cs")]
-        [InlineData("TestData/HLQ009/NoDiagnostic/Reset.cs")]
+        [InlineData("TestData/HLQ010/NoDiagnostic/Array.cs")]
+        [InlineData("TestData/HLQ010/NoDiagnostic/Dictionary.cs")]
         public void Verify_NoDiagnostics(string path)
         {
             var paths = new[]
@@ -28,10 +25,8 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         }
 
         [Theory]
-        [InlineData("TestData/HLQ009/Diagnostic/Dispose.cs", "Dispose", 16, 25)]
-        [InlineData("TestData/HLQ009/Diagnostic/DisposeAsync.cs", "DisposeAsync", 18, 30)]
-        [InlineData("TestData/HLQ009/Diagnostic/Reset.cs", "Reset", 16, 25)]
-        public void Verify_Diagnostic(string path, string name, int line, int column)
+        [InlineData("TestData/HLQ010/Diagnostic/List.cs", 10, 34)]
+        public void Verify_Diagnostic(string path, int line, int column)
         {
             var paths = new[]
             {
@@ -40,9 +35,9 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             var sources = paths.Select(path => File.ReadAllText(path)).ToArray();
             var expected = new DiagnosticResult
             {
-                Id = "HLQ009",
-                Message = $"Consider removing the empty optional enumerator method '{name}'.",
-                Severity = DiagnosticSeverity.Info,
+                Id = "HLQ010",
+                Message = "The collection has an indexer. Consider using a 'for' loop instead.",
+                Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
                     new DiagnosticResultLocation("Test0.cs", line, column)
                 },
