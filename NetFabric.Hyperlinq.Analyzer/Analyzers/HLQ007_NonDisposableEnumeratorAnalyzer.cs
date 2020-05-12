@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {
@@ -27,7 +26,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         static readonly DiagnosticDescriptor Rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
                 isEnabledByDefault: true, description: Description,
-                helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ006_NonDisposableEnumerator.md");
+                helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ007_NonDisposableEnumerator.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
             ImmutableArray.Create(Rule);
@@ -47,40 +46,16 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
             var compilation = context.Compilation;
 
-            // check if it's Dispose or DisposeAsync
-            if (methodDeclarationSyntax.ParameterList.Parameters.Any())
-                return;
-
-            if (methodDeclarationSyntax.Identifier.ValueText == "Dispose"
-                && methodDeclarationSyntax.ReturnsVoid())
+            // check if it's an empty Dispose or DisposeAsync
+            if (methodDeclarationSyntax.IsDispose())
             {
-                // check if it has an empty body
-                if (methodDeclarationSyntax.Body?.Statements.Any() ?? true)
+                if (!methodDeclarationSyntax.IsEmptyMethod())
                     return;
             }
-            else if (methodDeclarationSyntax.Identifier.ValueText == "DisposeAsync")
+            else if (methodDeclarationSyntax.IsAsyncDispose())
             {
-                var returnType = semanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
-                if (returnType is null || returnType.Name != "ValueTask")
+                if (!methodDeclarationSyntax.IsEmptyAsyncMethod())
                     return;
-
-                // check if it simply returns a new instance of ValueTask
-                if (methodDeclarationSyntax.Body is null)
-                {
-                    if (methodDeclarationSyntax.ExpressionBody is null)
-                        return;
-                    var expression = methodDeclarationSyntax.ExpressionBody.Expression.ToString();
-                    if (expression != "default" && expression != "new ValueTask()")
-                        return;
-                }
-                else
-                {
-                    if (methodDeclarationSyntax.Body.DescendantNodes().OfType<MemberAccessExpressionSyntax>()
-                        .Any(memberAccesses =>
-                            memberAccesses.Name.Identifier.ValueText == "Dispose"
-                            || memberAccesses.Name.Identifier.ValueText == "DisposeAsync"))
-                        return;
-                }
             }
             else
             {
@@ -152,7 +127,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             var getEnumeratorDeclaration = enumerableTypeDeclaration.ChildNodes()
                 .OfType<MethodDeclarationSyntax>()
                 .First(method => 
-                    method.Modifiers.Any(token => token.Text == "public") 
+                    method.Modifiers.Any(token => token.IsKind(SyntaxKind.PublicKeyword)) 
                     && (method.Identifier.Text == getEnumerator.Name));
 
             var diagnostic = Diagnostic.Create(Rule, getEnumeratorDeclaration.ReturnType.GetLocation(), enumeratorTypeSymbol.Name);

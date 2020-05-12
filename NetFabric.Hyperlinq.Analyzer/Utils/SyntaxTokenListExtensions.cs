@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using System;
 
-namespace NetFabric.Hyperlinq.Analyzer.Utils
+namespace NetFabric.Hyperlinq.Analyzer
 {
     static class SyntaxTokenListExtensions
     {

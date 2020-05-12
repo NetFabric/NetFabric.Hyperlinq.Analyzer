@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {

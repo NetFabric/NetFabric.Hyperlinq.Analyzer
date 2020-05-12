@@ -28,6 +28,42 @@ namespace NetFabric.Hyperlinq.Analyzer
                 || declaredTypeSymbol.IsAsyncEnumerable(context.Compilation, out var _));
         }
 
+        public static bool ImplementsInterface(this TypeDeclarationSyntax typeDeclarationSyntax, SpecialType interfaceType, SyntaxNodeAnalysisContext context)
+        {
+            var baseList = typeDeclarationSyntax.BaseList;
+            if (baseList is object)
+            {
+                foreach (var type in baseList.Types.Select(baseType => baseType.Type))
+                {
+                    var typeSymbol = context.SemanticModel.GetTypeInfo(type).Type;
+                    if (typeSymbol is object 
+                        && (typeSymbol.OriginalDefinition.SpecialType == interfaceType 
+                        || typeSymbol.ImplementsInterface(interfaceType, out var _)))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool ImplementsInterface(this TypeDeclarationSyntax typeDeclarationSyntax, INamedTypeSymbol interfaceType, SyntaxNodeAnalysisContext context)
+        {
+            var baseList = typeDeclarationSyntax.BaseList;
+            if (baseList is object)
+            {
+                foreach (var type in baseList.Types.Select(baseType => baseType.Type))
+                {
+                    var typeSymbol = context.SemanticModel.GetTypeInfo(type).Type;
+                    if (typeSymbol is object
+                        && (SymbolEqualityComparer.Default.Equals(typeSymbol.OriginalDefinition, interfaceType)
+                        || typeSymbol.ImplementsInterface(interfaceType, out var _)))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         // based on https://stackoverflow.com/a/52694992
         public static string GetMetadataName(this TypeDeclarationSyntax typeDeclarationSyntax)
         {

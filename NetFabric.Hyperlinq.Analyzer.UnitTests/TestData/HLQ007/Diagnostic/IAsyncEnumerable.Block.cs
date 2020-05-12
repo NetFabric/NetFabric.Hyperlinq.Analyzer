@@ -1,4 +1,6 @@
-﻿using NetFabric.Hyperlinq.Analyzer.UnitTests.TestData;
+﻿#pragma warning disable IDE0022 // Use expression body for methods
+
+using NetFabric.Hyperlinq.Analyzer.UnitTests.TestData;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -20,9 +22,7 @@ namespace HLQ007.Diagnostic.Block
 
             public ValueTask DisposeAsync()
             {
-#pragma warning disable IDE0022 // Use expression body for methods
                 return default;
-#pragma warning restore IDE0022 // Use expression body for methods
             }
         }
     }
@@ -37,3 +37,5 @@ namespace HLQ007.Diagnostic.Block
         }
     }
 }
+
+#pragma warning restore IDE0022 // Use expression body for methods
