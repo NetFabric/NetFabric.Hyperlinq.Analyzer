@@ -329,5 +329,32 @@ namespace NetFabric.Hyperlinq.Analyzer {
                 return ResourceManager.GetString("RemoveOptionalMethods_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The collection has an indexer. Consider using a &apos;for&apos; loop instead..
+        /// </summary>
+        internal static string UseForLoop_Description {
+            get {
+                return ResourceManager.GetString("UseForLoop_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The collection has an indexer. Consider using a &apos;for&apos; loop instead..
+        /// </summary>
+        internal static string UseForLoop_MessageFormat {
+            get {
+                return ResourceManager.GetString("UseForLoop_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consider using a &apos;for&apos; loop instead..
+        /// </summary>
+        internal static string UseForLoop_Title {
+            get {
+                return ResourceManager.GetString("UseForLoop_Title", resourceCulture);
+            }
+        }
     }
 }
