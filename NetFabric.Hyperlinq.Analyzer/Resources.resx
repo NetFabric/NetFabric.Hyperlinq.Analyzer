@@ -171,6 +171,15 @@
   <data name="NullEnumerable_Title" xml:space="preserve">
     <value>Enumerable cannot be null.</value>
   </data>
+  <data name="ReadOnlyEnumeratorField_Description" xml:space="preserve">
+    <value>Mutable value-type enumerators cannot be stored in a 'readonly' field.</value>
+  </data>
+  <data name="ReadOnlyEnumeratorField_MessageFormat" xml:space="preserve">
+    <value>'{0}' is a mutable value-type enumerator. It cannot be stored in a 'readonly' field.</value>
+  </data>
+  <data name="ReadOnlyEnumeratorField_Title" xml:space="preserve">
+    <value>Mutable value-type enumerators cannot be stored in a 'readonly' field.</value>
+  </data>
   <data name="ReadOnlyRefEnumerable_Description" xml:space="preserve">
     <value>The enumerable is a value type. If it's immutable, add the 'readonly' modifier.</value>
   </data>

@@ -1,8 +1,9 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.CodeAnalysis.Diagnostics;
+using NetFabric.CodeAnalysis;
+using System.Linq;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {
@@ -10,14 +11,44 @@ namespace NetFabric.Hyperlinq.Analyzer
     {
         public static bool IsPublic(this FieldDeclarationSyntax fieldDeclarationSyntax)
         {
-            for (SyntaxNode? node = fieldDeclarationSyntax; node is object; node = node.Parent)
+            if (!fieldDeclarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PublicKeyword)))
+                return false;
+
+            for (var node = fieldDeclarationSyntax.Parent; node is object; node = node.Parent)
             {
                 if (node is TypeDeclarationSyntax type)
                 {
-                    if (!type.Modifiers.Any(modifier => modifier.Text == "public"))
+                    if (!type.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PublicKeyword)))
                         return false;
-                }
+                } 
             }
+            return true;
+        }
+
+        public static bool IsEnumerableValueType(this FieldDeclarationSyntax fieldDeclarationSyntax, SyntaxNodeAnalysisContext context)
+        {
+            var typeSymbol = context.SemanticModel.GetTypeInfo(fieldDeclarationSyntax.Declaration.Type).Type;
+            if (typeSymbol is null)
+                return false;
+
+            if (typeSymbol.TypeKind == TypeKind.TypeParameter)
+            {
+                var typeDeclaration = fieldDeclarationSyntax.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+                if (typeDeclaration is null)
+                    return false;
+
+                var constraintClauses = typeDeclaration.ConstraintClauses.FirstOrDefault(node => node.Name.Identifier.ValueText == typeSymbol.Name);
+                if (constraintClauses is null || !constraintClauses.Constraints.Any(constraint => constraint.IsEnumerator(context)))
+                    return false;
+            }
+            else
+            {
+                if (!typeSymbol.IsValueType
+                    || !(typeSymbol.IsEnumerator(context.Compilation, out var _)
+                        || typeSymbol.IsAsyncEnumerator(context.Compilation, out var _)))
+                    return false;
+            }
+
             return true;
         }
     }
