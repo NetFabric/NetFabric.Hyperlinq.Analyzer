@@ -15,8 +15,6 @@ The following `foreach` loop:
 ```csharp
 foreach (var item in DoSomething())
     Console.WriteLine(item);
-
-IEnumerable<int> DoSomething() => null;
 ```
 
 is interpreted by the compiler as:
@@ -40,9 +38,9 @@ finally
 }
 ```
 
-Because `DoSomething()` returns `null`, [a `NullReferenceException` will be thrown](https://sharplab.io/#v2:C4LgTgrgdgNAJiA1AHwAIAYAEqCMBuAWACgNscAWQo41AZjIDZsAmMgdk2IG9jM/t6uJqnKYAsgEMAllAAUASk5F+mHspX8AZgHswAUwkBjABaZZANwlhMU4HoC2NqJgDie4AFEoEe3rASAIwAbPQV5Xg1I3ABOWVsHeSoVAF8IvjTGMloAHhlgAD5Xdy8fP0CQhUwAXkLvIKCqZKA==) when trying to call `GetEnumerator()`.
+If the method `DoSomething()` returns `null`, [a `NullReferenceException` will be thrown](https://sharplab.io/#v2:C4LgTgrgdgNAJiA1AHwAIAYAEqCMBuAWACgNscAWQo41AZjIDZsAmMgdk2IG9jM/t6uJqnKYAsgEMAllAAUASk5F+mHspX8AZgHswAUwkBjABaZZANwlhMU4HoC2NqJgDie4AFEoEe3rASAIwAbPQV5Xg1I3ABOWVsHeSoVAF8IvjTGMloAHhlgAD5Xdy8fP0CQhUwAXkLvIKCqZKA==) when trying to call `GetEnumerator()`.
 
-The same issue applies to `IAsyncEnumerable<T>`.
+The same issue applies to `IAsyncEnumerator<T>`.
 
 `null` is not equivalent to an empty enumerable. An empty collection, is a collection where calls to its `MoveNext()` returns always `false`. While `null` is an invalid state.
 
