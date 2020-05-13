@@ -223,33 +223,6 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If the method does not change the internal state of the enumerable, add the &apos;Pure&apos; attribute..
-        /// </summary>
-        internal static string PureAttribute_Description {
-            get {
-                return ResourceManager.GetString("PureAttribute_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Consider adding the &apos;Pure&apos; attribute to the method..
-        /// </summary>
-        internal static string PureAttribute_MessageFormat {
-            get {
-                return ResourceManager.GetString("PureAttribute_MessageFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Consider adding the &apos;Pure&apos; attribute to the method..
-        /// </summary>
-        internal static string PureAttribute_Title {
-            get {
-                return ResourceManager.GetString("PureAttribute_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The enumerable is a value type. If it&apos;s immutable, add the &apos;readonly&apos; modifier..
         /// </summary>
         internal static string ReadOnlyRefEnumerable_Description {

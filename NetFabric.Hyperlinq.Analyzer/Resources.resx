@@ -171,15 +171,6 @@
   <data name="NullEnumerable_Title" xml:space="preserve">
     <value>Enumerable cannot be null.</value>
   </data>
-  <data name="PureAttribute_Description" xml:space="preserve">
-    <value>If the method does not change the internal state of the enumerable, add the 'Pure' attribute.</value>
-  </data>
-  <data name="PureAttribute_MessageFormat" xml:space="preserve">
-    <value>Consider adding the 'Pure' attribute to the method.</value>
-  </data>
-  <data name="PureAttribute_Title" xml:space="preserve">
-    <value>Consider adding the 'Pure' attribute to the method.</value>
-  </data>
   <data name="ReadOnlyRefEnumerable_Description" xml:space="preserve">
     <value>The enumerable is a value type. If it's immutable, add the 'readonly' modifier.</value>
   </data>
