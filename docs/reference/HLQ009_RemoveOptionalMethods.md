@@ -10,7 +10,7 @@ Info
 
 ## Rule description
 
-The methods `Reset`, `Dispose` and `DisposeAsync` are not required for an enumerator to be valid for a `foreach`. These are only required when the enumerator implements `IEnumerator`, `IEnunerator<>` or `IAsyncEnumerator<>`. 
+The methods `Reset`, `Dispose` and `DisposeAsync` are not required for an enumerator to be accepted by `foreach`. These are only required when the enumerator implements `IEnumerator`, `IEnumerator<>` or `IAsyncEnumerator<>`. 
 
 ## How to fix violations
 
@@ -27,8 +27,7 @@ readonly struct Enumerable<T>
 {
     public Enumerator GetEnumerator() => new Enumerator();
 
-    // not enumerator interfaces implemented
-    public struct Enumerator
+    public struct Enumerator // no enumerator interfaces implemented
     {
         public T Current => default;
 

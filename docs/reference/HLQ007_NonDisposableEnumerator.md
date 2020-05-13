@@ -39,15 +39,15 @@ finally
 
 Notice the use of  `try` and `finally` so that the enumerator is disposed either an exception is thrown or not. Unfortunately this makes the `foreach` loop not inlinable, denying possible performance improvements.
 
-In this case, the `Dispose()` method is added because it's part of the `IEnumerator<T>` contract but it's left empty as there's no resource to be disposed.
+The `Dispose()` method is tipically implemented because it's part of the `IEnumerator<T>` contract but often is left empty.
 
-`foreach` uses the type returned by the public `GetEnumerator()` method but this one doesn't have to implement `IEnumerator<T>`. 
+`foreach` uses the type returned by the public `GetEnumerator()` method but this type doesn't have to implement `IEnumerator<T>`. 
 
 ## How to fix violations
 
 When the `Dispose()` method is not mandatory, simply remove it.
 
-If mandatory, implement one more enumerator type with no `Dispose()`method and return it from the public  `GetEnumerator()` method. Return the disposable enumerator from other overloads.
+If mandatory, because of a interface, implement one more enumerator type that doesn't have a `Dispose()` method and return it from the public  `GetEnumerator()` method. Return the disposable enumerator from other overloads implemented explicitly.
 
 ## When to suppress warnings
 
@@ -131,4 +131,4 @@ readonly struct Enumerable<T> : IEnumerable<T>
 
 ## Related rules
 
-[HLQ006: `GetEnumerator()` and `GetAsyncEnumerator()` should return an instance of a value-typed enumerator](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ006_GetEnumeratorReturnType.md)
+- [HLQ006: `GetEnumerator()` and `GetAsyncEnumerator()` should return an instance of a value-typed enumerator](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ006_GetEnumeratorReturnType.md)

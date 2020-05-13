@@ -38,4 +38,4 @@ Error/Warning
 
 ## Related rules
 
-[HLQ000: Friendly related rule name](https://github.com/NetFabric/NetFabric.Hyperlinq/tree/master/NetFabric.Hyperlinq.Analyzer/docs/reference/HLQ000_FriendlyRelatedRuleName.md)
+- [HLQ000: Friendly related rule name](https://github.com/NetFabric/NetFabric.Hyperlinq/tree/master/NetFabric.Hyperlinq.Analyzer/docs/reference/HLQ000_FriendlyRelatedRuleName.md)
