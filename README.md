@@ -9,9 +9,21 @@
 
 A [Roslyn Analyzer](https://docs.microsoft.com/en-us/visualstudio/code-quality/roslyn-analyzers-overview) that contains several rules to help improve enumeration performance when using C#.
 
-Check the documentation for the implemented rules at https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference.
-
 **Note:** This analyzer is independent of [`NetFabric.Hyperlinq`](https://github.com/NetFabric/NetFabric.Hyperlinq). The rules may be useful when you only use `foreach`, `IEnumerable<T>`, `IAsyncEnumerable<T>`, `System.Linq` or `System.Linq.Async`.
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
+[HLQ001](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ001_AssignmentBoxing.md)  | Performance | Warning  | Assigment to interface causes boxing of enumerator 
+[HLQ002](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ002_NullEnumerable.md)  | Compiler | Error | Enumerable cannot be null. 
+[HLQ003](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ003_HighestLevelInterface.md)  | Performance | Warning  | Public methods should return highest admissible level interface. 
+[HLQ004](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ004_RefEnumerationVariable.md)  | Performance | Warning  | The enumerator returns a reference to the item. 
+[HLQ005](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ005_AvoidSingle.md)  | Performance | Warning  | Avoid use of Single() and SingleOrDefault()
+[HLQ006](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ006_GetEnumeratorReturnType.md)  | Performance | Warning  | GetEnumerator() or GetAsyncEnumerator() should return a value type. 
+[HLQ007](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ007_NonDisposableEnumerator.md)  | Performance |  Warning | Consider returning a non-disposable enumerator.
+[HLQ008](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ008_ReadOnlyRefEnumerable.md)  | Performance |  Info | The enumerable is a value type. Consider making it 'readonly'.
+[HLQ009](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ009_RemoveOptionalMethods.md)  | Performance |  Info | Consider removing an empty optional enumerator method.
+[HLQ010](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ010_UseForLoop.md)  | Performance |  Warning | Consider using a 'for' loop instead.
+
 
 # Usage
 
