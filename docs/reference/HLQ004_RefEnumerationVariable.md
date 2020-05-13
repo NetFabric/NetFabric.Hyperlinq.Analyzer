@@ -21,16 +21,18 @@ Should not be suppressed.
 ## Example of a violation
 
 ```csharp
-foreach (var item in array.Where(_ => true))
-{
-}
+var span = new ReadOnlySpan<int>(new[] { 0, 1, 2, 3, 4, 5 });
+
+foreach(var item in span)
+    Console.WriteLine(item);
 ```
 
 ## Example of how to fix
 
 ```csharp
-foreach (ref readonly var item in array.Where(_ => true))
-{
-}
+var span = new ReadOnlySpan<int>(new[] { 0, 1, 2, 3, 4, 5 });
+
+foreach(ref readonly var item in span) // add 'ref readonly' here
+    Console.WriteLine(item);
 ```
 
