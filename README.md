@@ -30,6 +30,7 @@ If added manually to the `.csproj`, make sure to set `PrivateAssets` to `all` so
 
 - [Enumeration in .NET](https://blog.usejournal.com/enumeration-in-net-d5674921512e) by Antão Almada
 - [NetFabric.Hyperlinq — Optimizing LINQ](https://medium.com/@antao.almada/netfabric-hyperlinq-optimizing-linq-348e02566cef) by Antão Almada
+- [Unit testing a Roslyn Analyzer](https://medium.com/@antao.almada/unit-testing-a-roslyn-analyzer-b3da666f0252) by Antão Almada
 
 ## Credits
 
