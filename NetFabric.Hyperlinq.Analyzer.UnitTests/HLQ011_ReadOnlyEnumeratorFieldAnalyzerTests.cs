@@ -14,6 +14,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 
         [Theory]
         [InlineData("TestData/HLQ011/NoDiagnostic/Explicit.cs")]
+        [InlineData("TestData/HLQ011/NoDiagnostic/ExplicitReadOnlyStruct.cs")]
         [InlineData("TestData/HLQ011/NoDiagnostic/Generic.cs")]
         public void Verify_NoDiagnostics(string path)
         {

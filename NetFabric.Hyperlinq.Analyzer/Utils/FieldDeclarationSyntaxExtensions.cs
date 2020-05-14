@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace NetFabric.Hyperlinq.Analyzer
@@ -20,14 +21,14 @@ namespace NetFabric.Hyperlinq.Analyzer
                 {
                     if (!type.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PublicKeyword)))
                         return false;
-                } 
+                }
             }
             return true;
         }
 
-        public static bool IsEnumerableValueType(this FieldDeclarationSyntax fieldDeclarationSyntax, SyntaxNodeAnalysisContext context)
+        public static bool IsEnumerableValueType(this FieldDeclarationSyntax fieldDeclarationSyntax, SyntaxNodeAnalysisContext context, [NotNullWhen(true)] out ITypeSymbol? typeSymbol)
         {
-            var typeSymbol = context.SemanticModel.GetTypeInfo(fieldDeclarationSyntax.Declaration.Type).Type;
+            typeSymbol = context.SemanticModel.GetTypeInfo(fieldDeclarationSyntax.Declaration.Type).Type;
             if (typeSymbol is null)
                 return false;
 
@@ -37,7 +38,8 @@ namespace NetFabric.Hyperlinq.Analyzer
                 if (typeDeclaration is null)
                     return false;
 
-                var constraintClauses = typeDeclaration.ConstraintClauses.FirstOrDefault(node => node.Name.Identifier.ValueText == typeSymbol.Name);
+                var typeName = typeSymbol.Name;
+                var constraintClauses = typeDeclaration.ConstraintClauses.FirstOrDefault(node => node.Name.Identifier.ValueText == typeName);
                 if (constraintClauses is null || !constraintClauses.Constraints.Any(constraint => constraint.IsEnumerator(context)))
                     return false;
             }

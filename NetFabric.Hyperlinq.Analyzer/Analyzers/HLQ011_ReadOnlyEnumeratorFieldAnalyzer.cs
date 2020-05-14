@@ -45,7 +45,8 @@ namespace NetFabric.Hyperlinq.Analyzer
                 return;
 
             if (!fieldDeclaration.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.ReadOnlyKeyword))
-                || !fieldDeclaration.IsEnumerableValueType(context))
+                || !fieldDeclaration.IsEnumerableValueType(context, out var typeSymbol)
+                || typeSymbol.IsReadOnly)
                 return;
 
             var diagnostic = Diagnostic.Create(Rule, fieldDeclaration.Declaration.Type.GetLocation(), fieldDeclaration.Declaration.Type.ToString());
