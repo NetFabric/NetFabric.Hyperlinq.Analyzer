@@ -155,12 +155,12 @@ namespace NetFabric.Hyperlinq.Analyzer
             {
                 if (node is TypeDeclarationSyntax type)
                 {
-                    if (!type.Modifiers.Any(modifier => modifier.Text == "public"))
+                    if (!type.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PublicKeyword)))
                         return false;
                 }
                 else if (node is MethodDeclarationSyntax method)
                 {
-                    if (!method.Modifiers.Any(modifier => modifier.Text == "public"))
+                    if (!method.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PublicKeyword)))
                         return false;
                 }
             }

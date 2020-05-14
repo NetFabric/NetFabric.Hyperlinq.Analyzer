@@ -223,6 +223,33 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mutable value-type enumerators cannot be stored in a &apos;readonly&apos; field..
+        /// </summary>
+        internal static string ReadOnlyEnumeratorField_Description {
+            get {
+                return ResourceManager.GetString("ReadOnlyEnumeratorField_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is a mutable value-type enumerator. It cannot be stored in a &apos;readonly&apos; field..
+        /// </summary>
+        internal static string ReadOnlyEnumeratorField_MessageFormat {
+            get {
+                return ResourceManager.GetString("ReadOnlyEnumeratorField_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mutable value-type enumerators cannot be stored in a &apos;readonly&apos; field..
+        /// </summary>
+        internal static string ReadOnlyEnumeratorField_Title {
+            get {
+                return ResourceManager.GetString("ReadOnlyEnumeratorField_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The enumerable is a value type. If it&apos;s immutable, add the &apos;readonly&apos; modifier..
         /// </summary>
         internal static string ReadOnlyRefEnumerable_Description {

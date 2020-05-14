@@ -23,6 +23,7 @@ Rule ID | Category | Severity | Notes
 [HLQ008](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ008_ReadOnlyRefEnumerable.md)  | Performance |  Info | The enumerable is a value type. Consider making it 'readonly'.
 [HLQ009](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ009_RemoveOptionalMethods.md)  | Performance |  Info | Consider removing an empty optional enumerator method.
 [HLQ010](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ010_UseForLoop.md)  | Performance |  Warning | Consider using a 'for' loop instead.
+[HLQ011](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ011_ReadOnlyEnumeratorField.md)  | Compiler |  Error | Mutable value-type enumerators cannot be stored in a 'readonly' field.
 
 
 # Usage
