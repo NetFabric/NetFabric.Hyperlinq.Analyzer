@@ -126,9 +126,11 @@ namespace NetFabric.Hyperlinq.Analyzer
             var enumerableTypeDeclaration = typeDeclaration;
             var getEnumeratorDeclaration = enumerableTypeDeclaration.ChildNodes()
                 .OfType<MethodDeclarationSyntax>()
-                .First(method => 
+                .FirstOrDefault(method => 
                     method.Modifiers.Any(token => token.IsKind(SyntaxKind.PublicKeyword)) 
                     && (method.Identifier.Text == getEnumerator.Name));
+            if (getEnumeratorDeclaration is null)
+                return;
 
             var diagnostic = Diagnostic.Create(Rule, getEnumeratorDeclaration.ReturnType.GetLocation(), enumeratorTypeSymbol.Name);
             context.ReportDiagnostic(diagnostic);
