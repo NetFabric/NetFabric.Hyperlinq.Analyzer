@@ -33,7 +33,7 @@ Add the [NetFabric.Hyperlinq.Analyzer](https://www.nuget.org/packages/NetFabric.
 If added manually to the `.csproj`, make sure to set `PrivateAssets` to `all` so that it's not added as a dependency. A [floating version](https://docs.microsoft.com/en-us/nuget/concepts/dependency-resolution#floating-versions) can be used to get the latest version. 
 
 ``` xml
-<PackageReference Include="NetFabric.Hyperlinq.Analyzer" Version="1.*">
+<PackageReference Include="NetFabric.Hyperlinq.Analyzer" Version="2.*">
   <PrivateAssets>all</PrivateAssets>
   <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 </PackageReference>
