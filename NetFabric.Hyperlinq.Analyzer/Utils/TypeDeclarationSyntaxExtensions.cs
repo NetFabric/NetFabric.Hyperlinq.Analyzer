@@ -24,8 +24,8 @@ namespace NetFabric.Hyperlinq.Analyzer
             var name = typeDeclarationSyntax.GetMetadataName();
             var declaredTypeSymbol = context.Compilation.GetTypeByMetadataName(name);
             return declaredTypeSymbol is object 
-                && (declaredTypeSymbol.IsEnumerable(context.Compilation, out var _) 
-                || declaredTypeSymbol.IsAsyncEnumerable(context.Compilation, out var _));
+                && (declaredTypeSymbol.IsEnumerable(context.Compilation, out _) 
+                || declaredTypeSymbol.IsAsyncEnumerable(context.Compilation, out _));
         }
 
         public static bool ImplementsInterface(this TypeDeclarationSyntax typeDeclarationSyntax, SpecialType interfaceType, SyntaxNodeAnalysisContext context)
@@ -38,7 +38,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                     var typeSymbol = context.SemanticModel.GetTypeInfo(type).Type;
                     if (typeSymbol is object 
                         && (typeSymbol.OriginalDefinition.SpecialType == interfaceType 
-                        || typeSymbol.ImplementsInterface(interfaceType, out var _)))
+                        || typeSymbol.ImplementsInterface(interfaceType, out _)))
                         return true;
                 }
             }
@@ -56,7 +56,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                     var typeSymbol = context.SemanticModel.GetTypeInfo(type).Type;
                     if (typeSymbol is object
                         && (SymbolEqualityComparer.Default.Equals(typeSymbol.OriginalDefinition, interfaceType)
-                        || typeSymbol.ImplementsInterface(interfaceType, out var _)))
+                        || typeSymbol.ImplementsInterface(interfaceType, out _)))
                         return true;
                 }
             }

@@ -14,8 +14,8 @@ namespace NetFabric.Hyperlinq.Analyzer
             {
                 var typeSymbol = context.SemanticModel.GetTypeInfo(typeConstraintSyntax.Type).Type;
                 if (typeSymbol is object
-                    && (typeSymbol.IsEnumerator(context.Compilation, out var _)
-                    || typeSymbol.IsAsyncEnumerator(context.Compilation, out var _)))
+                    && (typeSymbol.IsEnumerator(context.Compilation, out _)
+                    || typeSymbol.IsAsyncEnumerator(context.Compilation, out _)))
                     return true;
             }
             return false;

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <Features>strict</Features>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
