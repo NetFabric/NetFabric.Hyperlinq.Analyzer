@@ -7,35 +7,18 @@ on:
     branches: [ master ]
 
 jobs:
-  linux:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1.4.0
-      with:
-        dotnet-version: 3.1.102
-    - name: Build solution
-      run: dotnet build -c:Release
-    - name: Tests
-      run: dotnet test ./NetFabric.Hyperlinq.Analyzer.UnitTests/NetFabric.Hyperlinq.Analyzer.UnitTests.csproj -f:netcoreapp3.1 -c:Release
-      
   windows:
     runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1.4.0
+      uses: actions/setup-dotnet@v1.7.2
       with:
-        dotnet-version: 3.1.102
+        dotnet-version: '3.1.408'
     - name: Build with dotnet
       run: dotnet build -c:Release
     - name: Tests
-      run: dotnet test ./NetFabric.Hyperlinq.Analyzer.UnitTests/NetFabric.Hyperlinq.Analyzer.UnitTests.csproj -c:Release
-    - name: Generate coverage report
       run: dotnet test ./NetFabric.Hyperlinq.Analyzer.UnitTests/NetFabric.Hyperlinq.Analyzer.UnitTests.csproj -c:Release -f:netcoreapp3.1 -p:CollectCoverage=true -p:CoverletOutputFormat=lcov -p:CoverletOutput=TestResults/
     - name: Publish coverage report to coveralls.io
       uses: coverallsapp/github-action@master

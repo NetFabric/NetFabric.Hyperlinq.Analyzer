@@ -46,8 +46,8 @@ namespace NetFabric.Hyperlinq.Analyzer
             else
             {
                 if (!typeSymbol.IsValueType
-                    || !(typeSymbol.IsEnumerator(context.Compilation, out var _)
-                        || typeSymbol.IsAsyncEnumerator(context.Compilation, out var _)))
+                    || !(typeSymbol.IsEnumerator(context.Compilation, out _)
+                        || typeSymbol.IsAsyncEnumerator(context.Compilation, out _)))
                     return false;
             }
 

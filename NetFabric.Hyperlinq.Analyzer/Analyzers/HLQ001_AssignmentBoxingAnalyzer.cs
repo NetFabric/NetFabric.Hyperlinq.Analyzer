@@ -164,7 +164,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static bool IsEnumerableType(ITypeSymbol typeSymbol, Compilation compilation, [NotNullWhen(true)] out ITypeSymbol? enumeratorType)
         {
-            if (typeSymbol is object)
+            if (!(typeSymbol is null))
             {
                 if (typeSymbol.IsEnumerable(compilation, out var enumerableSymbols))
                 {

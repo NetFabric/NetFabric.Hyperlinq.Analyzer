@@ -76,7 +76,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             IMethodSymbol getEnumerator;
 
             // check if disposable type is an enumerator
-            if (declaredTypeSymbol.IsEnumerator(compilation, out var _))
+            if (declaredTypeSymbol.IsEnumerator(compilation, out _))
             {
                 // check if there's an outer type
                 typeDeclaration = typeDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
@@ -94,7 +94,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
                 getEnumerator = enumerableSymbols.GetEnumerator;
             }
-            else if (declaredTypeSymbol.IsAsyncEnumerator(compilation, out var _))
+            else if (declaredTypeSymbol.IsAsyncEnumerator(compilation, out _))
             {
                 // check if there's an outer type
                 typeDeclaration = typeDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();

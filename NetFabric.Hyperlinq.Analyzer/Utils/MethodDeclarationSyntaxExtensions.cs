@@ -22,18 +22,18 @@ namespace NetFabric.Hyperlinq.Analyzer
         public static bool ReturnsEnumerable(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
         {
             var typeSymbol = context.SemanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
-            return typeSymbol is object 
-                && (typeSymbol.IsEnumerable(context.Compilation, out var _)
-                || typeSymbol.IsAsyncEnumerable(context.Compilation, out var _));
+            return !(typeSymbol is null)
+                && (typeSymbol.IsEnumerable(context.Compilation, out _)
+                || typeSymbol.IsAsyncEnumerable(context.Compilation, out _));
         }
 
         public static bool ReturnsEnumerableInterface(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
         {
             var typeSymbol = context.SemanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
-            return typeSymbol is object
+            return !(typeSymbol is null)
                 && typeSymbol.TypeKind == TypeKind.Interface
-                && (typeSymbol.IsEnumerable(context.Compilation, out var _)
-                || typeSymbol.IsAsyncEnumerable(context.Compilation, out var _));
+                && (typeSymbol.IsEnumerable(context.Compilation, out _)
+                || typeSymbol.IsAsyncEnumerable(context.Compilation, out _));
         }
 
         public static bool IsExtensionMethod(this MethodDeclarationSyntax methodDeclarationSyntax, [NotNullWhen(true)] out ParameterSyntax? parameterSyntax)
@@ -64,7 +64,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                     var typeSymbol = context.SemanticModel.GetTypeInfo(parameterSyntax.Type).Type;
                     if (typeSymbol is object)
                     {
-                        return typeSymbol.IsEnumerable(context.Compilation, out var _) || typeSymbol.IsAsyncEnumerable(context.Compilation, out var _);
+                        return typeSymbol.IsEnumerable(context.Compilation, out _) || typeSymbol.IsAsyncEnumerable(context.Compilation, out _);
                     }
                 }
             }

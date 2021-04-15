@@ -59,14 +59,14 @@ namespace NetFabric.Hyperlinq.Analyzer
             {
                 // check if it returns an enumerator
                 var type = semanticModel.GetTypeInfo(returnType).Type;
-                if (type is null || !type.IsEnumerator(semanticModel.Compilation, out var _))
+                if (type is null || !type.IsEnumerator(semanticModel.Compilation, out _))
                     return;
             }
             else if (identifier == "GetAsyncEnumerator" && methodDeclarationSyntax.ParameterList.Parameters.Count < 2)
             {
                 // check if it returns an async enumerator
                 var type = semanticModel.GetTypeInfo(returnType).Type;
-                if (type is null || !type.IsAsyncEnumerator(semanticModel.Compilation, out var _))
+                if (type is null || !type.IsAsyncEnumerator(semanticModel.Compilation, out _))
                     return;
             }
             else
