@@ -1,10 +1,6 @@
 name: .NET Core
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
   windows:
@@ -12,10 +8,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1.7.2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.408'
+        dotnet-version: 3.1.x
     - name: Build with dotnet
       run: dotnet build -c:Release
     - name: Tests
@@ -24,4 +20,4 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./NetFabric.Hyperlinq.Analyzer.UnitTests/TestResults/coverage.netcoreapp3.1.info 
+        path-to-lcov: ./NetFabric.Hyperlinq.Analyzer.UnitTests/TestResults/coverage.info 
