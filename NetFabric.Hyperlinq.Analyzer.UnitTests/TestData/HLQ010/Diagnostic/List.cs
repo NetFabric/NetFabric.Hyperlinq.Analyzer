@@ -7,7 +7,8 @@ namespace HLQ010.NoDiagnostic.List
     {
         void Method()
         {
-            foreach (var item in new List<int>())
+            var source = new List<int>();
+            foreach (var item in source)
                 Console.WriteLine(item);
         }
     }

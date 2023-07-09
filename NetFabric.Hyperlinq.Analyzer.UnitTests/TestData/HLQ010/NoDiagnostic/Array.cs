@@ -6,7 +6,8 @@ namespace HLQ010.NoDiagnostic.Array
     {
         void Method()
         {
-            foreach (var item in new int[0])
+            var source = new int[0];
+            foreach (var item in source)
                 Console.WriteLine(item);
         }
     }
