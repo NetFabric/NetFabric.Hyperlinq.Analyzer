@@ -1,6 +1,4 @@
-﻿using System; 
-
-namespace HLQ004.NoDiagnostic
+﻿namespace HLQ004.NoDiagnostic
 {
     class RefReadOnly
     {

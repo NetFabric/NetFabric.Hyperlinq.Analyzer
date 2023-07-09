@@ -142,16 +142,16 @@
     <value>'{0}' returns a reference type. Consider returning a value type.</value>
   </data>
   <data name="GetEnumeratorReturnType_Title" xml:space="preserve">
-    <value>GetEnumerator() or GetAsyncEnumerator() should return a value type.</value>
+    <value>GetEnumerator() or GetAsyncEnumerator() should return a value type</value>
   </data>
   <data name="HighestLevelInterface_Description" xml:space="preserve">
     <value>Public methods should return highest admissible level interface.</value>
   </data>
   <data name="HighestLevelInterface_MessageFormat" xml:space="preserve">
-    <value>Consider returning '{0}' instead.</value>
+    <value>Consider returning '{0}' instead</value>
   </data>
   <data name="HighestLevelInterface_Title" xml:space="preserve">
-    <value>Public methods should return highest admissible level interface.</value>
+    <value>Public methods should return highest admissible level interface</value>
   </data>
   <data name="NonDisposableEnumerator_Description" xml:space="preserve">
     <value>The enumerator returned has an empty Dispose(). Consider returning a non-disposable enumerator.</value>
@@ -160,7 +160,7 @@
     <value>'{0}' has an empty Dispose(). Consider returning a non-disposable enumerator.</value>
   </data>
   <data name="NonDisposableEnumerator_Title" xml:space="preserve">
-    <value>Consider returning a non-disposable enumerator.</value>
+    <value>Consider returning a non-disposable enumerator</value>
   </data>
   <data name="NullEnumerable_Description" xml:space="preserve">
     <value>Enumerable can be empty but not null. 'foreach' does not check for null.</value>
@@ -169,7 +169,7 @@
     <value>Enumerable cannot be null. Return an empty enumerable instead.</value>
   </data>
   <data name="NullEnumerable_Title" xml:space="preserve">
-    <value>Enumerable cannot be null.</value>
+    <value>Enumerable cannot be null</value>
   </data>
   <data name="ReadOnlyEnumeratorField_Description" xml:space="preserve">
     <value>Mutable value-type enumerators cannot be stored in a 'readonly' field.</value>
@@ -178,7 +178,7 @@
     <value>'{0}' is a mutable value-type enumerator. It cannot be stored in a 'readonly' field.</value>
   </data>
   <data name="ReadOnlyEnumeratorField_Title" xml:space="preserve">
-    <value>Mutable value-type enumerators cannot be stored in a 'readonly' field.</value>
+    <value>Mutable value-type enumerators cannot be stored in a 'readonly' field</value>
   </data>
   <data name="ReadOnlyRefEnumerable_Description" xml:space="preserve">
     <value>The enumerable is a value type. If it's immutable, add the 'readonly' modifier.</value>
@@ -187,7 +187,7 @@
     <value>'{0}' is a value type. Consider making it 'readonly'.</value>
   </data>
   <data name="ReadOnlyRefEnumerable_Title" xml:space="preserve">
-    <value>The enumerable is a value type. Consider making it 'readonly'.</value>
+    <value>The enumerable is a value type</value>
   </data>
   <data name="RefEnumerationVariable_Description" xml:space="preserve">
     <value>The enumerator returns a reference to the item. The type should be declared acordingly so that no copies are performed.</value>
@@ -196,16 +196,16 @@
     <value>The enumerator returns a reference to the item. Add '{0}' to the item type.</value>
   </data>
   <data name="RefEnumerationVariable_Title" xml:space="preserve">
-    <value>The enumerator returns a reference to the item.</value>
+    <value>The enumerator returns a reference to the item</value>
   </data>
   <data name="RemoveOptionalMethods_Description" xml:space="preserve">
     <value>The method is empty and is only required when an enumerator interface is implemented.</value>
   </data>
   <data name="RemoveOptionalMethods_MessageFormat" xml:space="preserve">
-    <value>Consider removing the empty optional enumerator method '{0}'.</value>
+    <value>Consider removing the empty optional enumerator method '{0}'</value>
   </data>
   <data name="RemoveOptionalMethods_Title" xml:space="preserve">
-    <value>Consider removing an empty optional enumerator method.</value>
+    <value>Consider removing an empty optional enumerator method</value>
   </data>
   <data name="UseForLoop_Description" xml:space="preserve">
     <value>The collection has an indexer. Consider using a 'for' loop instead.</value>
@@ -214,6 +214,6 @@
     <value>The collection has an indexer. Consider using a 'for' loop instead.</value>
   </data>
   <data name="UseForLoop_Title" xml:space="preserve">
-    <value>Consider using a 'for' loop instead.</value>
+    <value>Consider using a 'for' loop instead</value>
   </data>
 </root>

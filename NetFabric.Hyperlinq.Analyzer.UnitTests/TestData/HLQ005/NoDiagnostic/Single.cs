@@ -1,6 +1,5 @@
 ﻿using NetFabric.Hyperlinq.Analyzer.UnitTests.TestData;
 using System;
-using System.Collections.Generic;
 
 namespace HLQ005.NoDiagnostic
 {

@@ -21,7 +21,7 @@ namespace TestHelper
         /// <param name="document">The Document to apply the fix on</param>
         /// <param name="codeAction">A CodeAction that will be applied to the Document.</param>
         /// <returns>A Document with the changes from the CodeAction</returns>
-        private static Document ApplyFix(Document document, CodeAction codeAction)
+        private static Document? ApplyFix(Document document, CodeAction codeAction)
         {
             var operations = codeAction.GetOperationsAsync(CancellationToken.None).Result;
             var solution = operations.OfType<ApplyChangesOperation>().Single().ChangedSolution;
@@ -63,10 +63,8 @@ namespace TestHelper
         /// </summary>
         /// <param name="document">The Document to run the compiler diagnostic analyzers on</param>
         /// <returns>The compiler diagnostics that were found in the code</returns>
-        private static IEnumerable<Diagnostic> GetCompilerDiagnostics(Document document)
-        {
-            return document.GetSemanticModelAsync().Result.GetDiagnostics();
-        }
+        private static IEnumerable<Diagnostic> GetCompilerDiagnostics(Document document) 
+            => document.GetSemanticModelAsync().Result?.GetDiagnostics() ?? Enumerable.Empty<Diagnostic>();
 
         /// <summary>
         /// Given a document, turn it into a string based on the syntax root

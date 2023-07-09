@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HLQ006.Diagnostic
+﻿namespace HLQ006.Diagnostic
 {
     class NoInterfaceEnumerable<T>
     {

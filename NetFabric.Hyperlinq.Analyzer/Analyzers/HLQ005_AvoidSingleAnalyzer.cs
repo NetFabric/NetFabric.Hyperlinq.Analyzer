@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
-using System;
 using System.Collections.Immutable;
 
 namespace NetFabric.Hyperlinq.Analyzer
@@ -38,10 +37,10 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeInvocationExpression(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is InvocationExpressionSyntax invocationExpressionSyntax))
+            if (context.Node is not InvocationExpressionSyntax invocationExpressionSyntax)
                 return;
 
-            if (!(invocationExpressionSyntax.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax))
+            if (invocationExpressionSyntax.Expression is not MemberAccessExpressionSyntax memberAccessExpressionSyntax)
                 return;
 
             if (memberAccessExpressionSyntax.Expression is null)

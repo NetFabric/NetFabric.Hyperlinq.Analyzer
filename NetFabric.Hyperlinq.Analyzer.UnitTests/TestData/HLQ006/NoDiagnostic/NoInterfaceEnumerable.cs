@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HLQ006.NoDiagnostic
+﻿namespace HLQ006.NoDiagnostic
 {
     readonly struct NoInterfaceEnumerable<T>
     {

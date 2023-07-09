@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using NetFabric.CodeAnalysis;
 using System.Collections.Immutable;
 
 namespace NetFabric.Hyperlinq.Analyzer
@@ -37,7 +36,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeStructDeclaration(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is StructDeclarationSyntax structDeclarationSyntax))
+            if (context.Node is not StructDeclarationSyntax structDeclarationSyntax)
                 return;
 
             if (structDeclarationSyntax.Modifiers

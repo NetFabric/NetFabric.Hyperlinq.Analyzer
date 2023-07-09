@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HLQ008.Diagnostic
+﻿namespace HLQ008.Diagnostic
 {
     ref struct RefValueTypeEnumerable<T>
     {

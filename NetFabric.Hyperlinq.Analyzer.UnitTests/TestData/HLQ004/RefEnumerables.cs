@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HLQ004
+﻿namespace HLQ004
 {
     public class RefReadOnlyEnumerable
     {

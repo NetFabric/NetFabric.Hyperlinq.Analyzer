@@ -37,7 +37,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeForEachStatement(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is ForEachStatementSyntax forEachStatementSyntax))
+            if (context.Node is not ForEachStatementSyntax forEachStatementSyntax)
                 return;
 
             var semanticModel = context.SemanticModel;

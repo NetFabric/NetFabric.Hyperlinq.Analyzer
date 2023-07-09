@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace NetFabric.Hyperlinq.Analyzer
@@ -38,7 +37,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is MethodDeclarationSyntax methodDeclarationSyntax))
+            if (context.Node is not MethodDeclarationSyntax methodDeclarationSyntax)
                 return;
 
             var semanticModel = context.SemanticModel;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,7 +7,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests.TestData
 
     public readonly struct OptimizedAsyncEnumerable<T> : IAsyncEnumerable<T>
     {
-        public Enumerator GetAsyncEnumerator(CancellationToken cancellationToken = default)
+        public Enumerator GetAsyncEnumerator()
             => new Enumerator();
         IAsyncEnumerator<T> IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken cancellationToken)
             => new DisposableEnumerator();

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -18,11 +18,19 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Platforms>AnyCPU;x64</Platforms>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
@@ -59,6 +67,7 @@
 
   <ItemGroup>
     <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
+    <None Remove="bin\Debug\netstandard2.0\\NetFabric.Hyperlinq.Analyzer.dll" />
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
@@ -69,7 +78,17 @@
     <ItemGroup>
       <InputAssemblies Include="NetFabric.CodeAnalysis.dll" />
     </ItemGroup>
-    <ILRepack OutputType="$(OutputType)" MainAssembly="$(AssemblyName).dll" OutputAssembly="$(AssemblyName).dll" InputAssemblies="@(InputAssemblies)" InternalizeExcludeAssemblies="@(InternalizeExcludeAssemblies)" WorkingDirectory="$(WorkingDirectory)" />
+    <ItemGroup>
+      <InternalizeExcludeAssemblies>
+      </InternalizeExcludeAssemblies>
+    </ItemGroup>
+    <ILRepack 
+      OutputType="$(OutputType)" 
+      MainAssembly="$(AssemblyName).dll" 
+      OutputAssembly="$(AssemblyName).dll" 
+      InputAssemblies="@(InputAssemblies)" 
+      InternalizeExcludeAssemblies="@(InternalizeExcludeAssemblies)" 
+      WorkingDirectory="$(WorkingDirectory)" />
   </Target>
 
 </Project>

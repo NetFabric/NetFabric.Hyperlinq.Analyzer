@@ -40,7 +40,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeSimpleAssignment(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is AssignmentExpressionSyntax assignmentExpression))
+            if (context.Node is not AssignmentExpressionSyntax assignmentExpression)
                 return;
 
             var semanticModel = context.SemanticModel;
@@ -79,7 +79,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeEqualsValueClause(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is EqualsValueClauseSyntax equalsValueClauseSyntax))
+            if (context.Node is not EqualsValueClauseSyntax equalsValueClauseSyntax)
                 return;
 
             var semanticModel = context.SemanticModel;
@@ -96,10 +96,10 @@ namespace NetFabric.Hyperlinq.Analyzer
                 return;
             }
 
-            if (!(equalsValueClauseSyntax.Parent is VariableDeclaratorSyntax variableDeclaratorSyntax))
+            if (equalsValueClauseSyntax.Parent is not VariableDeclaratorSyntax variableDeclaratorSyntax)
                 return;
 
-            if (!(variableDeclaratorSyntax.Parent is VariableDeclarationSyntax variableDeclarationSyntax))
+            if (variableDeclaratorSyntax.Parent is not VariableDeclarationSyntax variableDeclarationSyntax)
                 return;
 
             switch (variableDeclarationSyntax.Parent)
@@ -164,7 +164,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static bool IsEnumerableType(ITypeSymbol typeSymbol, Compilation compilation, [NotNullWhen(true)] out ITypeSymbol? enumeratorType)
         {
-            if (!(typeSymbol is null))
+            if (typeSymbol is not null)
             {
                 if (typeSymbol.IsEnumerable(compilation, out var enumerableSymbols))
                 {

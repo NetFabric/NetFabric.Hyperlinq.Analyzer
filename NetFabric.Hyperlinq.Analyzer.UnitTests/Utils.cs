@@ -23,18 +23,23 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
                     typeof(ValueTask)),
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-        public static ITypeSymbol GetTypeSymbol(this CSharpCompilation compilation, Type type)
+        public static ITypeSymbol? GetTypeSymbol(this CSharpCompilation compilation, Type type)
         {
             if (type == typeof(int))
                 return compilation.GetSpecialType(SpecialType.System_Int32);
+
+            if (type.FullName is null)
+                return null;
 
             var symbol = compilation.GetTypeByMetadataName(type.FullName);
 
             if (type.IsGenericType)
             {
                 var typeArguments = type.GenericTypeArguments
-                    .Select(argumentType => compilation.GetTypeSymbol(argumentType));
-                return symbol.Construct(typeArguments.ToArray());
+                    .Select(argumentType => compilation.GetTypeSymbol(argumentType))
+                    .Where(typeSymbol => typeSymbol is not null)
+                    .Cast<ITypeSymbol>();
+                return symbol?.Construct(typeArguments?.ToArray() ?? Array.Empty<ITypeSymbol>());
             }
 
             return symbol;

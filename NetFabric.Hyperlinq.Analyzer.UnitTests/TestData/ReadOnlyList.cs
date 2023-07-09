@@ -40,7 +40,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests.TestData
         class DisposableEnumerator : IEnumerator<T>
         {
             public T Current => default;
-            object IEnumerator.Current => default;
+            object? IEnumerator.Current => default;
 
             public bool MoveNext() => false;
 

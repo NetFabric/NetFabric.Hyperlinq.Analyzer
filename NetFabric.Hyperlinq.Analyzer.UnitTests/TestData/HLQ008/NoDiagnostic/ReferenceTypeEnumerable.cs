@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HLQ008.NoDiagnostic
+﻿namespace HLQ008.NoDiagnostic
 {
     class ReferenceTypeEnumerable<T>
     {

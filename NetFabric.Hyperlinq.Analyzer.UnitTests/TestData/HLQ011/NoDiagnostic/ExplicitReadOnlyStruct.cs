@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace HLQ011.NoDiagnostic.ExplicitReadOnlyStruct
+﻿namespace HLQ011.NoDiagnostic.ExplicitReadOnlyStruct
 {
     class Enumerator<T>
     {
