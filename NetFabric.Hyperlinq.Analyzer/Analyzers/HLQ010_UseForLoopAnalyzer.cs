@@ -50,6 +50,11 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (expressionType is null)
                 return;
 
+            if (expressionType.TypeKind == TypeKind.Array ||
+                expressionType.MetadataName == "Span`1" ||
+                expressionType.MetadataName == "ReadOnlySpan`1")
+                return;
+
             // check if it has an indexer
             if (!expressionType.GetMembers().OfType<IPropertySymbol>()
                 .Any(property => property.IsIndexer 
