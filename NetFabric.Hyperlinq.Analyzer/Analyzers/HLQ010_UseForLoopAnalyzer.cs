@@ -50,19 +50,23 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (expressionType is null)
                 return;
 
-            if (expressionType.TypeKind == TypeKind.Array ||
-                expressionType.MetadataName == "Span`1" ||
-                expressionType.MetadataName == "ReadOnlySpan`1")
+            // check if it's an array
+            if (expressionType.TypeKind == TypeKind.Array)
                 return;
 
-            // check if it has an indexer
+            // check if it's a Span<T> or ReadOnlySpan<T>
+            if (expressionType.ContainingNamespace?.ToString() == "System" &&
+                (expressionType.MetadataName == "Span`1" || expressionType.MetadataName == "ReadOnlySpan`1"))
+                return;
+
+            // check if it doesn't have an indexer
             if (!expressionType.GetMembers().OfType<IPropertySymbol>()
                 .Any(property => property.IsIndexer 
                 && property.Parameters.Length == 1 
                 && property.Parameters[0].Type.SpecialType == SpecialType.System_Int32))
                 return;
 
-            // check if it has a Count or a Length property
+            // check if it doesn't have a Count or a Length property
             if (!expressionType.GetMembers().OfType<IPropertySymbol>()
                 .Any(property => property.IsReadOnly
                 && (property.Name == "Length" || property.Name == "Count")))

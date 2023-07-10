@@ -12,7 +12,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>A Roslyn analyzer with rules related to generation and consumption of enumerables and async enumerables in C#.</Description>
     <PackageReleaseNotes>Upgraded to NetFabric.CodeAnalysis 4.0.1</PackageReleaseNotes>
-    <Copyright>Copyright 2019-2021 Antao Almada</Copyright>
+    <Copyright>Copyright 2019-2023 Antao Almada</Copyright>
     <PackageTags>hyperlinq, analyzers, enumerable, async, linq, performance</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <DevelopmentDependency>true</DevelopmentDependency>

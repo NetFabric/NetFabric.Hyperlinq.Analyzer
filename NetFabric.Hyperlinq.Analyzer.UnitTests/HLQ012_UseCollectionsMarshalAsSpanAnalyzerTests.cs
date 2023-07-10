@@ -7,16 +7,13 @@ using Xunit;
 
 namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
-    public class UseCollectionsMarshalAnalyzerTests : DiagnosticVerifier
+    public class UseCollectionsMarshalAsSpanAnalyzerTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
-            new UseCollectionsMarshalAnalyzer();
+            new UseCollectionsMarshalAsSpanAnalyzer();
 
         [Theory]
-        [InlineData("TestData/HLQ010/NoDiagnostic/Array.cs")]
-        [InlineData("TestData/HLQ010/NoDiagnostic/Span.cs")]
-        [InlineData("TestData/HLQ010/NoDiagnostic/ReadOnlySpan.cs")]
-        [InlineData("TestData/HLQ010/NoDiagnostic/Dictionary.cs")]
+        [InlineData("TestData/HLQ012/NoDiagnostic/MarshalCollectionAsSpan.cs")]
         public void Verify_NoDiagnostics(string path)
         {
             var paths = new[]
@@ -27,7 +24,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         }
 
         [Theory]
-        [InlineData("TestData/HLQ010/Diagnostic/List.cs", 11, 34)]
+        [InlineData("TestData/HLQ012/Diagnostic/List.cs", 11, 34)]
         public void Verify_Diagnostic(string path, int line, int column)
         {
             var paths = new[]
@@ -37,7 +34,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             var sources = paths.Select(path => File.ReadAllText(path)).ToArray();
             var expected = new DiagnosticResult
             {
-                Id = "HLQ010",
+                Id = "HLQ012",
                 Message = "The collection has an indexer. Consider using a 'for' loop instead.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {

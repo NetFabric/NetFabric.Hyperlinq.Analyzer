@@ -12,22 +12,22 @@ using System.Text;
 namespace NetFabric.Hyperlinq.Analyzer
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public sealed class UseCollectionsMarshalAnalyzer : DiagnosticAnalyzer
+    public sealed class UseCollectionsMarshalAsSpanAnalyzer : DiagnosticAnalyzer
     {
-        const string DiagnosticId = DiagnosticIds.UseCollectionsMarshalId;
+        const string DiagnosticId = DiagnosticIds.UseCollectionsMarshalAsSpanId;
 
         static readonly LocalizableString Title =
-            new LocalizableResourceString(nameof(Resources.UseCollectionsMarshal_Title), Resources.ResourceManager, typeof(Resources));
+            new LocalizableResourceString(nameof(Resources.UseCollectionsMarshalAsSpan_Title), Resources.ResourceManager, typeof(Resources));
         static readonly LocalizableString MessageFormat =
-            new LocalizableResourceString(nameof(Resources.UseCollectionsMarshal_MessageFormat), Resources.ResourceManager, typeof(Resources));
+            new LocalizableResourceString(nameof(Resources.UseCollectionsMarshalAsSpan_MessageFormat), Resources.ResourceManager, typeof(Resources));
         static readonly LocalizableString Description =
-            new LocalizableResourceString(nameof(Resources.UseCollectionsMarshal_Description), Resources.ResourceManager, typeof(Resources));
+            new LocalizableResourceString(nameof(Resources.UseCollectionsMarshalAsSpan_Description), Resources.ResourceManager, typeof(Resources));
         const string Category = "Performance";
 
         static readonly DiagnosticDescriptor Rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
                 isEnabledByDefault: true, description: Description,
-                helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ010_UseCollectionsMarshal.md");
+                helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ012_UseCollectionsMarshalAsSpanAnalyzer.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
             ImmutableArray.Create(Rule);
@@ -50,22 +50,8 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (expressionType is null)
                 return;
 
-            if (expressionType.TypeKind == TypeKind.Array ||
-                expressionType.MetadataName == "Span`1" ||
-                expressionType.MetadataName == "ReadOnlySpan`1")
-                return;
-
-            // check if it has an indexer
-            if (!expressionType.GetMembers().OfType<IPropertySymbol>()
-                .Any(property => property.IsIndexer 
-                && property.Parameters.Length == 1 
-                && property.Parameters[0].Type.SpecialType == SpecialType.System_Int32))
-                return;
-
-            // check if it has a Count or a Length property
-            if (!expressionType.GetMembers().OfType<IPropertySymbol>()
-                .Any(property => property.IsReadOnly
-                && (property.Name == "Length" || property.Name == "Count")))
+            // check if it's not a List<T>
+            if (expressionType.ContainingNamespace?.ToString() != "System.Collections.Generic" || expressionType.MetadataName != "List`1")
                 return;
 
             var diagnostic = Diagnostic.Create(Rule, forEachStatementSyntax.Expression.GetLocation());

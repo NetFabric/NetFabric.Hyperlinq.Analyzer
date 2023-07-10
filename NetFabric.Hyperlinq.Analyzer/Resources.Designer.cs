@@ -133,7 +133,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GetEnumerator() or GetAsyncEnumerator() should return a value type..
+        ///   Looks up a localized string similar to GetEnumerator() or GetAsyncEnumerator() should return a value type.
         /// </summary>
         internal static string GetEnumeratorReturnType_Title {
             get {
@@ -160,7 +160,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Public methods should return highest admissible level interface..
+        ///   Looks up a localized string similar to Public methods should return highest admissible level interface.
         /// </summary>
         internal static string HighestLevelInterface_Title {
             get {
@@ -187,7 +187,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Consider returning a non-disposable enumerator..
+        ///   Looks up a localized string similar to Consider returning a non-disposable enumerator.
         /// </summary>
         internal static string NonDisposableEnumerator_Title {
             get {
@@ -214,7 +214,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enumerable cannot be null..
+        ///   Looks up a localized string similar to Enumerable cannot be null.
         /// </summary>
         internal static string NullEnumerable_Title {
             get {
@@ -241,7 +241,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mutable value-type enumerators cannot be stored in a &apos;readonly&apos; field..
+        ///   Looks up a localized string similar to Mutable value-type enumerators cannot be stored in a &apos;readonly&apos; field.
         /// </summary>
         internal static string ReadOnlyEnumeratorField_Title {
             get {
@@ -268,7 +268,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The enumerable is a value type. Consider making it &apos;readonly&apos;..
+        ///   Looks up a localized string similar to The enumerable is a value type.
         /// </summary>
         internal static string ReadOnlyRefEnumerable_Title {
             get {
@@ -295,7 +295,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The enumerator returns a reference to the item..
+        ///   Looks up a localized string similar to The enumerator returns a reference to the item.
         /// </summary>
         internal static string RefEnumerationVariable_Title {
             get {
@@ -322,7 +322,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Consider removing an empty optional enumerator method..
+        ///   Looks up a localized string similar to Consider removing an empty optional enumerator method.
         /// </summary>
         internal static string RemoveOptionalMethods_Title {
             get {
@@ -333,27 +333,27 @@ namespace NetFabric.Hyperlinq.Analyzer {
         /// <summary>
         ///   Looks up a localized string similar to CollectionsMarshal.AsSpan() returns the internal span of memory and roreach can iterate much faster on it..
         /// </summary>
-        internal static string UseCollectionsMarshal_Description {
+        internal static string UseCollectionsMarshalAsSpan_Description {
             get {
-                return ResourceManager.GetString("UseCollectionsMarshal_Description", resourceCulture);
+                return ResourceManager.GetString("UseCollectionsMarshalAsSpan_Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is a List&lt;{1}&gt; so consider using CollectionsMarshal.AsSpan().
         /// </summary>
-        internal static string UseCollectionsMarshal_MessageFormat {
+        internal static string UseCollectionsMarshalAsSpan_MessageFormat {
             get {
-                return ResourceManager.GetString("UseCollectionsMarshal_MessageFormat", resourceCulture);
+                return ResourceManager.GetString("UseCollectionsMarshalAsSpan_MessageFormat", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Consider using CollectionsMarshal.AsSpan().
         /// </summary>
-        internal static string UseCollectionsMarshal_Title {
+        internal static string UseCollectionsMarshalAsSpan_Title {
             get {
-                return ResourceManager.GetString("UseCollectionsMarshal_Title", resourceCulture);
+                return ResourceManager.GetString("UseCollectionsMarshalAsSpan_Title", resourceCulture);
             }
         }
         
@@ -376,7 +376,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Consider using a &apos;for&apos; loop instead..
+        ///   Looks up a localized string similar to Consider using a &apos;for&apos; loop instead.
         /// </summary>
         internal static string UseForLoop_Title {
             get {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace HLQ012.NoDiagnostic.MarshalCollection2
+namespace HLQ012.NoDiagnostic.MarshalCollectionAsSpan
 {
     partial class C
     {
