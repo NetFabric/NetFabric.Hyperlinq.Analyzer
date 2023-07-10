@@ -151,7 +151,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Consider returning &apos;{0}&apos; instead..
+        ///   Looks up a localized string similar to Consider returning &apos;{0}&apos; instead.
         /// </summary>
         internal static string HighestLevelInterface_MessageFormat {
             get {
@@ -313,7 +313,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Consider removing the empty optional enumerator method &apos;{0}&apos;..
+        ///   Looks up a localized string similar to Consider removing the empty optional enumerator method &apos;{0}&apos;.
         /// </summary>
         internal static string RemoveOptionalMethods_MessageFormat {
             get {
