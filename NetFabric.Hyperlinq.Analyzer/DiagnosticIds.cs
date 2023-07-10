@@ -13,5 +13,6 @@ namespace NetFabric.Hyperlinq.Analyzer
         public const string RemoveOptionalMethodsId = "HLQ009";
         public const string UseForLoopId = "HLQ010";
         public const string ReadOnlyEnumeratorFieldId = "HLQ011";
+        public const string UseCollectionsMarshalId = "HLQ012";
     }
 }

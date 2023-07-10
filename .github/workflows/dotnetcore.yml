@@ -7,15 +7,19 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+  
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: 8.0.x
+
     - name: Build with dotnet
       run: dotnet build -c:Release
+
     - name: Tests
       run: dotnet test ./NetFabric.Hyperlinq.Analyzer.UnitTests/NetFabric.Hyperlinq.Analyzer.UnitTests.csproj -c:Release -f:netcoreapp3.1 -p:CollectCoverage=true -p:CoverletOutputFormat=lcov -p:CoverletOutput=TestResults/
+
     - name: Publish coverage report to coveralls.io
       uses: coverallsapp/github-action@master
       with:

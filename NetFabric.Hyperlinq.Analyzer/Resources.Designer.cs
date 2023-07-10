@@ -19,7 +19,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -327,6 +327,33 @@ namespace NetFabric.Hyperlinq.Analyzer {
         internal static string RemoveOptionalMethods_Title {
             get {
                 return ResourceManager.GetString("RemoveOptionalMethods_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CollectionsMarshal.AsSpan() returns the internal span of memory and roreach can iterate much faster on it..
+        /// </summary>
+        internal static string UseCollectionsMarshal_Description {
+            get {
+                return ResourceManager.GetString("UseCollectionsMarshal_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is a List&lt;{1}&gt; so consider using CollectionsMarshal.AsSpan().
+        /// </summary>
+        internal static string UseCollectionsMarshal_MessageFormat {
+            get {
+                return ResourceManager.GetString("UseCollectionsMarshal_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consider using CollectionsMarshal.AsSpan().
+        /// </summary>
+        internal static string UseCollectionsMarshal_Title {
+            get {
+                return ResourceManager.GetString("UseCollectionsMarshal_Title", resourceCulture);
             }
         }
         
