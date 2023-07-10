@@ -56,7 +56,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             var expected = new DiagnosticResult
             {
                 Id = "HLQ003",
-                Message = $"Consider returning '{@interface}' instead.",
+                Message = $"Consider returning '{@interface}' instead",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
                     new DiagnosticResultLocation("Test0.cs", line, column)

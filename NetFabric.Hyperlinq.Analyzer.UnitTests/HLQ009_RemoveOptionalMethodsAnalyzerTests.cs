@@ -41,7 +41,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             var expected = new DiagnosticResult
             {
                 Id = "HLQ009",
-                Message = $"Consider removing the empty optional enumerator method '{name}'.",
+                Message = $"Consider removing the empty optional enumerator method '{name}'",
                 Severity = DiagnosticSeverity.Info,
                 Locations = new[] {
                     new DiagnosticResultLocation("Test0.cs", line, column)
