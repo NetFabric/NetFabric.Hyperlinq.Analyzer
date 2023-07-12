@@ -9,8 +9,11 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
     public class RemoveOptionalMethodsAnalyzerTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
+        protected override DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer() =>
             new RemoveOptionalMethodsAnalyzer();
+
+        protected override DiagnosticAnalyzer? GetBasicDiagnosticAnalyzer()
+            => null;
 
         [Theory]
         [InlineData("TestData/HLQ009/NoDiagnostic/AsyncEnumerable.cs")]

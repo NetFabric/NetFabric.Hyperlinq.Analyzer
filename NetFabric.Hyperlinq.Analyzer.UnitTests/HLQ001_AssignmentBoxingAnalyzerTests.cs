@@ -9,8 +9,11 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
     public class AssignmentBoxingTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
-            new AssignmentBoxingAnalyzer();
+        protected override DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer() 
+            => new AssignmentBoxingAnalyzer();
+
+        protected override DiagnosticAnalyzer? GetBasicDiagnosticAnalyzer()
+            => null;
 
         [Theory]
         [InlineData("TestData/HLQ001/NoDiagnostic/FieldDeclaration.cs")]

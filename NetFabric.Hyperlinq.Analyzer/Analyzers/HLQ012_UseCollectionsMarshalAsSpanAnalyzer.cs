@@ -2,19 +2,14 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using NetFabric.CodeAnalysis;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class UseCollectionsMarshalAsSpanAnalyzer : DiagnosticAnalyzer
     {
-        const string DiagnosticId = DiagnosticIds.UseCollectionsMarshalAsSpanId;
+        public const string DiagnosticId = DiagnosticIds.UseCollectionsMarshalAsSpanId;
 
         static readonly LocalizableString Title =
             new LocalizableResourceString(nameof(Resources.UseCollectionsMarshalAsSpan_Title), Resources.ResourceManager, typeof(Resources));
@@ -41,21 +36,18 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeForEachStatement(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is ForEachStatementSyntax forEachStatementSyntax))
-                return;
+            var foreachStatement = (ForEachStatementSyntax)context.Node;
+            var collectionType = context.SemanticModel.GetTypeInfo(foreachStatement.Expression).Type;
 
-            var semanticModel = context.SemanticModel;
-
-            var expressionType = semanticModel.GetTypeInfo(forEachStatementSyntax.Expression).Type;
-            if (expressionType is null)
-                return;
-
-            // check if it's not a List<T>
-            if (expressionType.ContainingNamespace?.ToString() != "System.Collections.Generic" || expressionType.MetadataName != "List`1")
-                return;
-
-            var diagnostic = Diagnostic.Create(Rule, forEachStatementSyntax.Expression.GetLocation());
-            context.ReportDiagnostic(diagnostic);
+            if (collectionType is INamedTypeSymbol namedTypeSymbol &&
+                namedTypeSymbol.IsGenericType &&
+                namedTypeSymbol.OriginalDefinition.ToString() == "System.Collections.Generic.List<T>")
+            {
+                var listType = namedTypeSymbol.TypeArguments[0];
+                var diagnostic = Diagnostic.Create(Rule, foreachStatement.Expression.GetLocation(),
+                    listType.ToDisplayString());
+                context.ReportDiagnostic(diagnostic);
+            }
         }
     }
 }

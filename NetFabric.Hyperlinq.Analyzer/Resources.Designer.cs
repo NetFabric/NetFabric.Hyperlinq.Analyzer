@@ -331,7 +331,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CollectionsMarshal.AsSpan() returns the internal span of memory and roreach can iterate much faster on it..
+        ///   Looks up a localized string similar to Consider using CollectionsMarshal.AsSpan() instead of foreach with List&lt;T&gt;..
         /// </summary>
         internal static string UseCollectionsMarshalAsSpan_Description {
             get {
@@ -340,7 +340,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; is a List&lt;{1}&gt; so consider using CollectionsMarshal.AsSpan().
+        ///   Looks up a localized string similar to Consider using CollectionsMarshal.AsSpan() instead of foreach with List&lt;{0}&gt;.
         /// </summary>
         internal static string UseCollectionsMarshalAsSpan_MessageFormat {
             get {

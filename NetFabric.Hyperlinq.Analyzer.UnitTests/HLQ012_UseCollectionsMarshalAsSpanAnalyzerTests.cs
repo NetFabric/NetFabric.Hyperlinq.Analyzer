@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -7,10 +8,19 @@ using Xunit;
 
 namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
-    public class UseCollectionsMarshalAsSpanAnalyzerTests : DiagnosticVerifier
+    public class UseCollectionsMarshalAsSpanAnalyzerTests : CodeFixVerifier
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
             new UseCollectionsMarshalAsSpanAnalyzer();
+
+        protected override DiagnosticAnalyzer? GetBasicDiagnosticAnalyzer()
+            => null;
+
+        protected override CodeFixProvider? GetCSharpCodeFixProvider()
+            => new UseCollectionsMarshalAsSpanCodeFixProvider();
+
+        protected override CodeFixProvider? GetBasicCodeFixProvider()
+            => null;
 
         [Theory]
         [InlineData("TestData/HLQ012/NoDiagnostic/MarshalCollectionAsSpan.cs")]
@@ -24,8 +34,8 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         }
 
         [Theory]
-        [InlineData("TestData/HLQ012/Diagnostic/List.cs", 11, 34)]
-        public void Verify_Diagnostic(string path, int line, int column)
+        [InlineData("TestData/HLQ012/Diagnostic/List.cs", "int", "TestData/HLQ012/Diagnostic/List.Fix.cs", 11, 34)]
+        public void Verify_Diagnostic(string path, string type, string fix, int line, int column)
         {
             var paths = new[]
             {
@@ -35,7 +45,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             var expected = new DiagnosticResult
             {
                 Id = "HLQ012",
-                Message = "The collection has an indexer. Consider using a 'for' loop instead.",
+                Message = $"Consider using CollectionsMarshal.AsSpan() instead of foreach with List<{type}>",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
                     new DiagnosticResultLocation("Test0.cs", line, column)
@@ -43,6 +53,8 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             };
 
             VerifyCSharpDiagnostic(paths.Select(path => File.ReadAllText(path)).ToArray(), expected);
+
+            VerifyCSharpFix(sources, File.ReadAllText(fix));
         }
     }
 }

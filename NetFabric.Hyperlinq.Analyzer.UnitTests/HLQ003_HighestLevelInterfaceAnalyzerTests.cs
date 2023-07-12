@@ -9,9 +9,11 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
     public class HighestLevelInterfaceAnalyzerTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
-            new HighestLevelInterfaceAnalyzer();
+        protected override DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer() 
+            => new HighestLevelInterfaceAnalyzer();
 
+        protected override DiagnosticAnalyzer? GetBasicDiagnosticAnalyzer()
+            => null;
 
         [Theory]
         [InlineData("TestData/HLQ003/NoDiagnostic/ArrowExpression/Enumerable.cs")]

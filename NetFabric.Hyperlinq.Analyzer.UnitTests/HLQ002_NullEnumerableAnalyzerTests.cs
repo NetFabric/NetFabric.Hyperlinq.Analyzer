@@ -9,8 +9,11 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
     public class NullEnumerableAnalyzerTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
-            new NullEnumerableAnalyzer();
+        protected override DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer() 
+            => new NullEnumerableAnalyzer();
+
+        protected override DiagnosticAnalyzer? GetBasicDiagnosticAnalyzer()
+            => null;
 
         [Theory]
         [InlineData("TestData/HLQ002/NoDiagnostic/Enumerable.cs")]
