@@ -10,11 +10,17 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
     public class RefEnumerationVariableAnalyzerTests : CodeFixVerifier
     {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() 
+        protected override DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer() 
             => new RefEnumerationVariableAnalyzer();
 
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
+        protected override DiagnosticAnalyzer? GetBasicDiagnosticAnalyzer()
+            => null;
+
+        protected override CodeFixProvider? GetCSharpCodeFixProvider()
             => new RefEnumerationVariableCodeFixProvider();
+
+        protected override CodeFixProvider? GetBasicCodeFixProvider()
+            => null;
 
         [Theory]
         [InlineData("TestData/HLQ004/NoDiagnostic/NoRef.cs")]

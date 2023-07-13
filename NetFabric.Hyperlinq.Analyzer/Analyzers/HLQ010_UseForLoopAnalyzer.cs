@@ -2,12 +2,8 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using NetFabric.CodeAnalysis;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {
@@ -41,35 +37,31 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeForEachStatement(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is ForEachStatementSyntax forEachStatementSyntax))
-                return;
+            var foreachStatement = (ForEachStatementSyntax)context.Node;
 
-            var semanticModel = context.SemanticModel;
-
-            var expressionType = semanticModel.GetTypeInfo(forEachStatementSyntax.Expression).Type;
+            var expressionType = context.SemanticModel.GetTypeInfo(foreachStatement.Expression).Type;
             if (expressionType is null)
                 return;
 
-            if (expressionType.TypeKind == TypeKind.Array ||
-                expressionType.MetadataName == "Span`1" ||
-                expressionType.MetadataName == "ReadOnlySpan`1")
+            if (expressionType.IsArrayType() ||
+                expressionType.IsSpanType() ||
+                expressionType.IsReadOnlySpanType())
                 return;
 
-            // check if it has an indexer
-            if (!expressionType.GetMembers().OfType<IPropertySymbol>()
-                .Any(property => property.IsIndexer 
-                && property.Parameters.Length == 1 
-                && property.Parameters[0].Type.SpecialType == SpecialType.System_Int32))
-                return;
+            var properties = expressionType.GetMembers().OfType<IPropertySymbol>();
+            var hasIndexer = properties.Any(property => 
+                property.IsIndexer && 
+                property.Parameters.Length == 1 && 
+                property.Parameters[0].Type.SpecialType == SpecialType.System_Int32);
+            bool hasCountOrLength = properties.Any(property => 
+                property.IsReadOnly && 
+                (property.Name == "Length" || property.Name == "Count"));
 
-            // check if it has a Count or a Length property
-            if (!expressionType.GetMembers().OfType<IPropertySymbol>()
-                .Any(property => property.IsReadOnly
-                && (property.Name == "Length" || property.Name == "Count")))
-                return;
-
-            var diagnostic = Diagnostic.Create(Rule, forEachStatementSyntax.Expression.GetLocation());
-            context.ReportDiagnostic(diagnostic);
+            if (hasIndexer && hasCountOrLength)
+            {
+                var diagnostic = Diagnostic.Create(Rule, foreachStatement.Expression.GetLocation());
+                context.ReportDiagnostic(diagnostic);
+            }
         }
     }
 }

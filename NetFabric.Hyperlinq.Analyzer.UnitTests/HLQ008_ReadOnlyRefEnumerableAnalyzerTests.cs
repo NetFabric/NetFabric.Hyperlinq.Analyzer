@@ -10,11 +10,17 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
     public class ReadOnlyRefEnumerableAnalyzerTests : CodeFixVerifier
     {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
+        protected override DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer() =>
             new ReadOnlyRefEnumerableAnalyzer();
 
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
+        protected override DiagnosticAnalyzer? GetBasicDiagnosticAnalyzer()
+            => null;
+
+        protected override CodeFixProvider? GetCSharpCodeFixProvider()
             => new ReadOnlyRefEnumerableCodeFixProvider();
+
+        protected override CodeFixProvider? GetBasicCodeFixProvider()
+            => null;
 
         [Theory]
         [InlineData("TestData/HLQ008/NoDiagnostic/ReadOnlyValueTypeEnumerable.cs")]

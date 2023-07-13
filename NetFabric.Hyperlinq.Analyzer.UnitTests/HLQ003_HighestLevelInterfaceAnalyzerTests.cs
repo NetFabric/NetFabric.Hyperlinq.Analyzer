@@ -9,9 +9,11 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
     public class HighestLevelInterfaceAnalyzerTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
-            new HighestLevelInterfaceAnalyzer();
+        protected override DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer() 
+            => new HighestLevelInterfaceAnalyzer();
 
+        protected override DiagnosticAnalyzer? GetBasicDiagnosticAnalyzer()
+            => null;
 
         [Theory]
         [InlineData("TestData/HLQ003/NoDiagnostic/ArrowExpression/Enumerable.cs")]
@@ -56,7 +58,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             var expected = new DiagnosticResult
             {
                 Id = "HLQ003",
-                Message = $"Consider returning '{@interface}' instead.",
+                Message = $"Consider returning '{@interface}' instead",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
                     new DiagnosticResultLocation("Test0.cs", line, column)

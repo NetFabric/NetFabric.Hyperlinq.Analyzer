@@ -10,12 +10,17 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
     public class AvoidSingleAnalyzerTests : CodeFixVerifier
     {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+        protected override DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer()
             => new AvoidSingleAnalyzer();
 
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
+        protected override DiagnosticAnalyzer? GetBasicDiagnosticAnalyzer()
+            => null;
+
+        protected override CodeFixProvider? GetCSharpCodeFixProvider()
             => new AvoidSingleCodeFixProvider();
 
+        protected override CodeFixProvider? GetBasicCodeFixProvider()
+            => null;
 
         [Theory]
         [InlineData("TestData/HLQ005/NoDiagnostic/Single.cs")]

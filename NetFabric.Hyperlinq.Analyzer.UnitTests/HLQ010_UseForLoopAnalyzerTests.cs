@@ -9,8 +9,11 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
     public class UseForLoopAnalyzerTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer() =>
+        protected override DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer() =>
             new UseForLoopAnalyzer();
+
+        protected override DiagnosticAnalyzer? GetBasicDiagnosticAnalyzer()
+            => null;
 
         [Theory]
         [InlineData("TestData/HLQ010/NoDiagnostic/Array.cs")]
