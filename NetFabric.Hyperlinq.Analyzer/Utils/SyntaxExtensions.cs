@@ -20,7 +20,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             var token = @readonly ? SyntaxKind.ReadOnlyKeyword.ToToken() : default;
             if (type is RefTypeSyntax @ref)
             {
-                if (@ref.ReadOnlyKeyword.IsSome() == @readonly) 
+                if (@ref.ReadOnlyKeyword.IsSome() == @readonly)
                     return @ref;
 
                 return @ref.WithReadOnlyKeyword(token);
