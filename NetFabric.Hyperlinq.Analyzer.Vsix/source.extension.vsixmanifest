@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-    <Metadata>
-        <Identity Id="NetFabric.Hyperlinq.Analyzer.12bb65cd-c986-4626-8465-9724fa18606a" Version="2.0.4" Language="en-US" Publisher="NetFabric" />
-        <DisplayName>NetFabric.Hyperlinq.Analyzer</DisplayName>
-        <Description xml:space="preserve">A Roslyn analyzer with rules related to generation and consumption of enumerables and async enumerables in C#.</Description>
-        <MoreInfo>https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer</MoreInfo>
-        <Icon>Icon.png</Icon>
-        <Tags>csharp, analyzer, enumeration, performance</Tags>
-    </Metadata>
-    <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
-            <ProductArchitecture>amd64</ProductArchitecture>
-        </InstallationTarget>
-    </Installation>
-    <Dependencies>
-        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
-    </Dependencies>
-    <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
-    </Prerequisites>
-    <Assets>
-        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-    </Assets>
+  <Metadata>
+    <Identity Id="NetFabric.Hyperlinq.Analyzer.f2e33b95-76c6-4d9a-92f2-1ab493d6c649" Version="2.0.4" Language="en-US" Publisher="NetFabric"/>
+    <DisplayName>NetFabric.Hyperlinq.Analyzer</DisplayName>
+    <Description xml:space="preserve">A Roslyn analyzer with rules related to generation and consumption of enumerables and async enumerables in C#.</Description>
+    <MoreInfo>https://github.com/NetFabric/NetFabric.CodeAnalysis</MoreInfo>
+    <License>LICENSE</License>
+    <Icon>Icon.png</Icon>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.Services.Icons.Default" Path="NetFabric.ico" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="NetFabric.Hyperlinq.Analyzer" Path="|NetFabric.Hyperlinq.Analyzer|"/>
+    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="NetFabric.Hyperlinq.Analyzer" Path="|NetFabric.Hyperlinq.Analyzer|"/>
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="NetFabric.Hyperlinq.Analyzer.CodeFixes" Path="|NetFabric.Hyperlinq.Analyzer.CodeFixes|"/>
+    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="NetFabric.Hyperlinq.Analyzer.CodeFixes" Path="|NetFabric.Hyperlinq.Analyzer.CodeFixes|"/>
+  </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" DisplayName="Visual Studio core editor" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0,)" DisplayName="Roslyn Language Services" />
+  </Prerequisites>
 </PackageManifest>
