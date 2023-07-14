@@ -9,7 +9,6 @@
 
   <PropertyGroup>
     <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
-    <PackageVersion>1.0.0.0</PackageVersion>
     <PackageVersion>2.0.4</PackageVersion>
     <Authors>Antao Almada</Authors>
     <PackageIcon>Icon.png</PackageIcon>
@@ -17,18 +16,13 @@
     <RepositoryUrl>https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>A Roslyn analyzer with rules related to generation and consumption of enumerables and async enumerables in C#.</Description>
-    <PackageReleaseNotes>Upgraded to NetFabric.CodeAnalysis 4.0.1</PackageReleaseNotes>
-    <Copyright>Copyright 2019-2021 Antao Almada</Copyright>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <Copyright>Copyright 2019-2023 Antao Almada</Copyright>
     <PackageTags>hyperlinq, analyzers, enumerable, async, linq, performance</PackageTags>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
 
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NetFabric.Hyperlinq.Analyzer.CodeFixes\NetFabric.Hyperlinq.Analyzer.CodeFixes.csproj" />
     <ProjectReference Include="..\NetFabric.Hyperlinq.Analyzer\NetFabric.Hyperlinq.Analyzer.csproj" />
   </ItemGroup>
 
@@ -46,8 +41,8 @@
 
   <Target Name="_AddAnalyzersToOutput">
     <ItemGroup>
-      <TfmSpecificPackageFile Include="$(OutputPath)\Analyzer1.dll" PackagePath="analyzers/dotnet/cs" />
-      <TfmSpecificPackageFile Include="$(OutputPath)\Analyzer1.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\NetFabric.Hyperlinq.Analyzer.dll" PackagePath="analyzers/dotnet/cs" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\NetFabric.Hyperlinq.Analyzer.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
     </ItemGroup>
   </Target>
 

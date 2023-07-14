@@ -7,7 +7,6 @@
         <MoreInfo>https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer</MoreInfo>
         <Icon>Icon.png</Icon>
         <Tags>csharp, analyzer, enumeration, performance</Tags>
-        <Preview>true</Preview>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
