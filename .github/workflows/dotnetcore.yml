@@ -14,11 +14,14 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
+    - name: Restore dependencies
+      run: dotnet restore
+
     - name: Build with dotnet
-      run: dotnet build -c:Release
+      run: dotnet build ./NetFabric.Hyperlinq.Analyzer.UnitTests/NetFabric.Hyperlinq.Analyzer.UnitTests.csproj --no-restore -c:Release
 
     - name: Tests
-      run: dotnet test ./NetFabric.Hyperlinq.Analyzer.UnitTests/NetFabric.Hyperlinq.Analyzer.UnitTests.csproj -c:Release -p:CollectCoverage=true -p:CoverletOutputFormat=lcov -p:CoverletOutput=TestResults/
+      run: dotnet test ./NetFabric.Hyperlinq.Analyzer.UnitTests/NetFabric.Hyperlinq.Analyzer.UnitTests.csproj --no-build -c:Release -p:CollectCoverage=true -p:CoverletOutputFormat=lcov -p:CoverletOutput=TestResults/
 
     - name: Publish coverage report to coveralls.io
       uses: coverallsapp/github-action@master
