@@ -2,7 +2,7 @@
 
 namespace NetFabric.Hyperlinq.Analyzer.Benchmarks;
 
-public class HLQ001_AssignmentBoxing
+public class HLQ001_AssignmentBoxingAnalyzer
 {
     List<int>? list;
     IEnumerable<int>? enumerable;

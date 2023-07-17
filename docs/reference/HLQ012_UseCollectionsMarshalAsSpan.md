@@ -15,6 +15,10 @@ This incurs additional memory allocations and can impact performance, especially
 By using the `CollectionsMarshal.AsSpan()` method, you can eliminate these overheads and directly access the underlying elements of the `List<T>` without creating an enumerator. 
 Iterating a `Span<T>` directly avoids the overhead of the enumerator, resulting in faster loop iterations.
 
+### Benchmarking
+
+Source: https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/NetFabric.Hyperlinq.Analyzer.Benchmarks/HLQ012_UseCollectionsMarshalAsSpanAnalyzer.cs
+
 ```
 
 BenchmarkDotNet v0.13.6, Windows 10 (10.0.19045.3155/22H2/2022Update)
