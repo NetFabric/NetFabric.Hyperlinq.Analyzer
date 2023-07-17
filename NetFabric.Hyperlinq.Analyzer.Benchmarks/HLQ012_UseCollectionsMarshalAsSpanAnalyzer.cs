@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace NetFabric.Hyperlinq.Analyzer.Benchmarks;
 
-public class CollectionsMarshalAsSpanBenchmarks
+public class HLQ012_UseCollectionsMarshalAsSpanAnalyzer
 {
     List<int>? list;
 
@@ -35,7 +35,7 @@ public class CollectionsMarshalAsSpanBenchmarks
     }
 
     [Benchmark]
-    public int CollectionsMarshalAsSpan()
+    public int ForEachAsSpan()
     {
         var sum = 0;
         foreach (var angle in CollectionsMarshal.AsSpan(list!))
