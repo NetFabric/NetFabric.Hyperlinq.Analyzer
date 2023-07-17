@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Reflection.Metadata;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {
@@ -55,7 +56,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             // check if it's "GetEnumerator" or "GetAsyncEnumerator"
             var identifier = methodDeclarationSyntax.Identifier.ValueText;
-            if (identifier == "GetEnumerator" && !methodDeclarationSyntax.ParameterList.Parameters.Any())
+            if (identifier == "GetEnumerator" && methodDeclarationSyntax.ParameterList.Parameters.Count == 0)
             {
                 // check if it returns an enumerator
                 var type = semanticModel.GetTypeInfo(returnType).Type;
