@@ -14,5 +14,6 @@ namespace NetFabric.Hyperlinq.Analyzer
         public const string UseForLoopId = "HLQ010";
         public const string ReadOnlyEnumeratorFieldId = "HLQ011";
         public const string UseCollectionsMarshalAsSpanId = "HLQ012";
+        public const string UseForEachLoopId = "HLQ013";
     }
 }

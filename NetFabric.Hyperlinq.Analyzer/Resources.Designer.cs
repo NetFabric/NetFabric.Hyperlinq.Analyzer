@@ -358,7 +358,34 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The collection has an indexer. Consider using a &apos;for&apos; loop instead..
+        ///   Looks up a localized string similar to Consider using &apos;foreach&apos; instead of &apos;for&apos; for iterating over arrays, Spans, or ReadOnlySpans..
+        /// </summary>
+        internal static string UseForEachLoop_Description {
+            get {
+                return ResourceManager.GetString("UseForEachLoop_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consider using &apos;foreach&apos; loop instead of &apos;for&apos; loop for iterating over {0}.
+        /// </summary>
+        internal static string UseForEachLoop_MessageFormat {
+            get {
+                return ResourceManager.GetString("UseForEachLoop_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consider using &apos;foreach&apos; instead of &apos;for&apos; for iterating over arrays or spans.
+        /// </summary>
+        internal static string UseForEachLoop_Title {
+            get {
+                return ResourceManager.GetString("UseForEachLoop_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consider using &apos;for&apos; instead of &apos;foreach&apos; for iterating over collections featuring an indexer.
         /// </summary>
         internal static string UseForLoop_Description {
             get {
@@ -367,7 +394,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The collection has an indexer. Consider using a &apos;for&apos; loop instead..
+        ///   Looks up a localized string similar to Consider using &apos;for&apos; instead of &apos;foreach&apos; for iterating over collections featuring an indexer.
         /// </summary>
         internal static string UseForLoop_MessageFormat {
             get {
@@ -376,7 +403,7 @@ namespace NetFabric.Hyperlinq.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Consider using a &apos;for&apos; loop instead.
+        ///   Looks up a localized string similar to Consider using &apos;for&apos; instead of &apos;foreach&apos; for indexer collections.
         /// </summary>
         internal static string UseForLoop_Title {
             get {

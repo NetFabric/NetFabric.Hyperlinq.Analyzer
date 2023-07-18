@@ -7,19 +7,17 @@ using Xunit;
 
 namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 {
-    public class UseForLoopAnalyzerTests : DiagnosticVerifier
+    public class UseForEachLoopAnalyzerTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer() =>
-            new UseForLoopAnalyzer();
+            new UseForEachLoopAnalyzer();
 
         protected override DiagnosticAnalyzer? GetBasicDiagnosticAnalyzer()
             => null;
 
         [Theory]
-        [InlineData("TestData/HLQ010/NoDiagnostic/Array.cs")]
-        [InlineData("TestData/HLQ010/NoDiagnostic/Span.cs")]
-        [InlineData("TestData/HLQ010/NoDiagnostic/ReadOnlySpan.cs")]
-        [InlineData("TestData/HLQ010/NoDiagnostic/Dictionary.cs")]
+        [InlineData("TestData/HLQ013/NoDiagnostic/List.cs")]
+        [InlineData("TestData/HLQ013/NoDiagnostic/Array.cs")]
         public void Verify_NoDiagnostics(string path)
         {
             var paths = new[]
@@ -30,8 +28,10 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         }
 
         [Theory]
-        [InlineData("TestData/HLQ010/Diagnostic/List.cs", 11, 34)]
-        public void Verify_Diagnostic(string path, int line, int column)
+        [InlineData("TestData/HLQ013/Diagnostic/Array.cs", 10, 13, "int[]")]
+        [InlineData("TestData/HLQ013/Diagnostic/Span.cs", 10, 13, "System.Span<int>")]
+        [InlineData("TestData/HLQ013/Diagnostic/ReadOnlySpan.cs", 10, 13, "System.ReadOnlySpan<int>")]
+        public void Verify_Diagnostic(string path, int line, int column, string collectionType)
         {
             var paths = new[]
             {
@@ -40,8 +40,8 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
             var sources = paths.Select(path => File.ReadAllText(path)).ToArray();
             var expected = new DiagnosticResult
             {
-                Id = "HLQ010",
-                Message = "Consider using 'for' instead of 'foreach' for iterating over collections featuring an indexer",
+                Id = "HLQ013",
+                Message = $"Consider using 'foreach' loop instead of 'for' loop for iterating over {collectionType}",
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] {
                     new DiagnosticResultLocation("Test0.cs", line, column)
