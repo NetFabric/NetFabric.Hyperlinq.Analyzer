@@ -1,13 +1,12 @@
 ﻿using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
 
 namespace NetFabric.Hyperlinq.Analyzer.Benchmarks;
 
-public class ArrayIterationBenchmarks
+public class HLQ013_UseForEachLoop
 {
     int[]? array;
 
-    [Params(1_000)]
+    [Params(10, 1_000)]
     public int Count { get; set; }
 
     [GlobalSetup]

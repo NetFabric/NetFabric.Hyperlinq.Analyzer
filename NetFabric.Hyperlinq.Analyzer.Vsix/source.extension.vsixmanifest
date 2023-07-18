@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="NetFabric.Hyperlinq.Analyzer.f2e33b95-76c6-4d9a-92f2-1ab493d6c649" Version="2.0.5" Language="en-US" Publisher="NetFabric"/>
+    <Identity Id="NetFabric.Hyperlinq.Analyzer.f2e33b95-76c6-4d9a-92f2-1ab493d6c649" Version="2.0.6" Language="en-US" Publisher="NetFabric"/>
     <DisplayName>NetFabric.Hyperlinq.Analyzer</DisplayName>
     <Description xml:space="preserve">A Roslyn analyzer with rules related to generation and consumption of enumerables and async enumerables in C#.</Description>
     <MoreInfo>https://github.com/NetFabric/NetFabric.CodeAnalysis</MoreInfo>

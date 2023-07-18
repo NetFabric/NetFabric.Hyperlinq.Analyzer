@@ -35,15 +35,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		docs\reference\HLQ010_UseForLoop.md = docs\reference\HLQ010_UseForLoop.md
 		docs\reference\HLQ011_ReadOnlyEnumeratorField.md = docs\reference\HLQ011_ReadOnlyEnumeratorField.md
 		docs\reference\HLQ012_UseCollectionsMarshalAsSpan.md = docs\reference\HLQ012_UseCollectionsMarshalAsSpan.md
+		docs\reference\HLQ013_UseForEachLoop.md = docs\reference\HLQ013_UseForEachLoop.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFabric.Hyperlinq.Analyzer.Benchmarks", "NetFabric.Hyperlinq.Analyzer.Benchmarks\NetFabric.Hyperlinq.Analyzer.Benchmarks.csproj", "{36798F2F-7C79-4700-AC0F-7FAACEEA3CC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFabric.Hyperlinq.Analyzer.Vsix", "NetFabric.Hyperlinq.Analyzer.Vsix\NetFabric.Hyperlinq.Analyzer.Vsix.csproj", "{0E9369DB-4A7C-4AD6-816A-7EC3ED7B78A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFabric.Hyperlinq.Analyzer.Vsix", "NetFabric.Hyperlinq.Analyzer.Vsix\NetFabric.Hyperlinq.Analyzer.Vsix.csproj", "{0E9369DB-4A7C-4AD6-816A-7EC3ED7B78A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFabric.Hyperlinq.Analyzer.Package", "NetFabric.Hyperlinq.Analyzer.Package\NetFabric.Hyperlinq.Analyzer.Package.csproj", "{79D101FA-33AF-4534-8B7A-CD6D7D37B811}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFabric.Hyperlinq.Analyzer.Package", "NetFabric.Hyperlinq.Analyzer.Package\NetFabric.Hyperlinq.Analyzer.Package.csproj", "{79D101FA-33AF-4534-8B7A-CD6D7D37B811}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFabric.Hyperlinq.Analyzer.CodeFixes", "NetFabric.Hyperlinq.Analyzer.CodeFixes\NetFabric.Hyperlinq.Analyzer.CodeFixes.csproj", "{F17C4C8B-9AC7-439C-B901-451445883468}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFabric.Hyperlinq.Analyzer.CodeFixes", "NetFabric.Hyperlinq.Analyzer.CodeFixes\NetFabric.Hyperlinq.Analyzer.CodeFixes.csproj", "{F17C4C8B-9AC7-439C-B901-451445883468}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

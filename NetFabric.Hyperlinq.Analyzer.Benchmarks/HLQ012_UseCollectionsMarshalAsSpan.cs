@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace NetFabric.Hyperlinq.Analyzer.Benchmarks;
 
-public class HLQ012_UseCollectionsMarshalAsSpanAnalyzer
+public class HLQ012_UseCollectionsMarshalAsSpan
 {
     List<int>? list;
 

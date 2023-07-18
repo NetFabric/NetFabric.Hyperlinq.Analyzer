@@ -216,13 +216,22 @@
   <data name="UseCollectionsMarshalAsSpan_Title" xml:space="preserve">
     <value>Consider using CollectionsMarshal.AsSpan()</value>
   </data>
+  <data name="UseForEachLoop_Description" xml:space="preserve">
+    <value>Consider using 'foreach' instead of 'for' for iterating over arrays, Spans, or ReadOnlySpans.</value>
+  </data>
+  <data name="UseForEachLoop_MessageFormat" xml:space="preserve">
+    <value>Consider using 'foreach' loop instead of 'for' loop for iterating over {0}</value>
+  </data>
+  <data name="UseForEachLoop_Title" xml:space="preserve">
+    <value>Consider using 'foreach' instead of 'for' for iterating over arrays or spans</value>
+  </data>
   <data name="UseForLoop_Description" xml:space="preserve">
-    <value>The collection has an indexer. Consider using a 'for' loop instead.</value>
+    <value>Consider using 'for' instead of 'foreach' for iterating over collections featuring an indexer</value>
   </data>
   <data name="UseForLoop_MessageFormat" xml:space="preserve">
-    <value>The collection has an indexer. Consider using a 'for' loop instead.</value>
+    <value>Consider using 'for' instead of 'foreach' for iterating over collections featuring an indexer</value>
   </data>
   <data name="UseForLoop_Title" xml:space="preserve">
-    <value>Consider using a 'for' loop instead</value>
+    <value>Consider using 'for' instead of 'foreach' for indexer collections</value>
   </data>
 </root>

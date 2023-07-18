@@ -44,8 +44,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                 return;
 
             if (expressionType.IsArrayType() ||
-                expressionType.IsSpanType() ||
-                expressionType.IsReadOnlySpanType())
+                expressionType.IsSpanType())
                 return;
 
             var properties = expressionType.GetMembers().OfType<IPropertySymbol>();

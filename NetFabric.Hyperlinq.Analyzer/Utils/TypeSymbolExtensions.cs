@@ -8,8 +8,5 @@ static class TypeSymbolExtensions
         => typeSymbol is IArrayTypeSymbol;
 
     public static bool IsSpanType(this ITypeSymbol typeSymbol) 
-        => typeSymbol.ToString().StartsWith("System.Span<");
-
-    public static bool IsReadOnlySpanType(this ITypeSymbol typeSymbol) 
-        => typeSymbol.ToString().StartsWith("System.ReadOnlySpan<");
+        => typeSymbol.ToString().StartsWith("System.Span<") || typeSymbol.ToString().StartsWith("System.ReadOnlySpan<");
 }
