@@ -19,18 +19,17 @@ public class HLQ013_UseForEachLoop
     public int For()
     {
         var sum = 0;
-        var length = array!.Length;
-        for (var index = 0; index < length; index++)
+        for (var index = 0; index < Count; index++)
             sum += array![index];
         return sum;
     }
 
     [Benchmark]
-    public int ForEach_Array()
+    public int ForEach()
     {
         var sum = 0;
-        foreach (var angle in array!)
-            sum += angle;
+        foreach (var item in array!)
+            sum += item;
         return sum;
     }
 
@@ -38,8 +37,8 @@ public class HLQ013_UseForEachLoop
     public int ForEach_Span()
     {
         var sum = 0;
-        foreach (ref var angle in array!.AsSpan())
-            sum += angle;
+        foreach (var item in array!.AsSpan()[..Count])
+            sum += item;
         return sum;
     }
 }
