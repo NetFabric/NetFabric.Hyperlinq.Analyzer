@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
-    <PackageVersion>2.0.5</PackageVersion>
+    <PackageVersion>2.1.0</PackageVersion>
     <Authors>Antao Almada</Authors>
     <PackageIcon>Icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

@@ -25,9 +25,15 @@ Rule ID | Category | Severity | Notes
 [HLQ010](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ010_UseForLoop.md)  | Performance |  Warning | Consider using a `for` loop instead.
 [HLQ011](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ011_ReadOnlyEnumeratorField.md)  | Compiler |  Error | Mutable value-type enumerators cannot be stored in a `readonly` field.
 [HLQ012](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ012_UseCollectionsMarshalAsSpan.md)  | Performance |  Warning | Consider using `CollectionsMarshal.AsSpan()` when iterating a `List<T>`.
-
+[HLQ013](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ013_UseForEachLoop.md)  | Performance |  Warning | Consider using `foreach` when iterating an array or a `Span<T>`.
 
 # Usage
+
+## Visual Studio Marketplace
+
+Install the [NetFabric.Hyperlinq.Analyzer](https://marketplace.visualstudio.com/items?itemName=NetFabric.NetFabricHyperlinqAnalyzer) extension from the Visual Studio Marketplace.
+
+## Nuget package
 
 Add the [NetFabric.Hyperlinq.Analyzer](https://www.nuget.org/packages/NetFabric.Hyperlinq.Analyzer/) package to your project using your favorite NuGet client.
 
