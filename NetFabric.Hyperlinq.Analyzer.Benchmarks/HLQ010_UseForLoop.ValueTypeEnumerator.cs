@@ -2,9 +2,9 @@
 
 namespace NetFabric.Hyperlinq.Analyzer.Benchmarks;
 
-public class HLQ010_UseForLoop
+public class HLQ010_UseForLoop_ValueTypeEnumerator
 {
-    List<int>? list;
+    ArraySegment<int> source;
 
     [Params(100, 10_000)]
     public int Count { get; set; }
@@ -12,14 +12,14 @@ public class HLQ010_UseForLoop
     [GlobalSetup]
     public void GlobalSetup()
     {
-        list = System.Linq.Enumerable.Range(0, Count).ToList();
+        source = new ArraySegment<int>(Enumerable.Range(0, Count).ToArray());
     }
 
     [Benchmark(Baseline = true)]
     public int Foreach()
     {
         var sum = 0;
-        foreach (var item in list!)
+        foreach (var item in source!)
             sum += item;
         return sum;
     }
@@ -28,9 +28,9 @@ public class HLQ010_UseForLoop
     public int For()
     {
         var sum = 0;
-        for (var index = 0; index < list!.Count; index++)
+        for (var index = 0; index < source!.Count; index++)
         {
-            var item = list![index];
+            var item = source![index];
             sum += item;
         }
         return sum;

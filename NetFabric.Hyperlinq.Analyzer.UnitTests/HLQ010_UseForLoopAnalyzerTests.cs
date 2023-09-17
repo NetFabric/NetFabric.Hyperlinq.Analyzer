@@ -18,8 +18,10 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         [Theory]
         [InlineData("TestData/HLQ010/NoDiagnostic/Array.cs")]
         [InlineData("TestData/HLQ010/NoDiagnostic/Span.cs")]
+        [InlineData("TestData/HLQ010/NoDiagnostic/List.cs")]
         [InlineData("TestData/HLQ010/NoDiagnostic/ReadOnlySpan.cs")]
         [InlineData("TestData/HLQ010/NoDiagnostic/Dictionary.cs")]
+        [InlineData("TestData/HLQ010/NoDiagnostic/ImmutableArray.cs")]
         public void Verify_NoDiagnostics(string path)
         {
             var paths = new[]
@@ -30,7 +32,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         }
 
         [Theory]
-        [InlineData("TestData/HLQ010/Diagnostic/List.cs", 11, 34)]
+        [InlineData("TestData/HLQ010/Diagnostic/ArraySegment.cs", 10, 34)]
         public void Verify_Diagnostic(string path, int line, int column)
         {
             var paths = new[]

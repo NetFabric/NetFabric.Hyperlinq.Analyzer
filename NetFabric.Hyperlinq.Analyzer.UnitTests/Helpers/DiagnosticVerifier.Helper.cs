@@ -15,10 +15,13 @@ namespace TestHelper
     /// </summary>
     public abstract partial class DiagnosticVerifier
     {
-        private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
-        private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
-        private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
-        private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
+        private static readonly MetadataReference SystemPrivateCorLibReference = MetadataReference.CreateFromFile(typeof(Object).Assembly.Location);
+        private static readonly MetadataReference SystemRuntimeReference = MetadataReference.CreateFromFile(typeof(ValueType).Assembly.Location);
+        private static readonly MetadataReference SystemLinqReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
+        private static readonly MetadataReference MicrosoftCodeAnalysisCSharpReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
+        private static readonly MetadataReference MicrosoftCodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
+        private static readonly MetadataReference SystemCollectionsImmutableReference = MetadataReference.CreateFromFile(typeof(ImmutableArray).Assembly.Location);
+        private static readonly MetadataReference SystemRuntimeCompilerServicesUnsafeReference = MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.Unsafe).Assembly.Location);
 
         internal static string DefaultFilePathPrefix = "Test";
         internal static string CSharpDefaultFileExt = "cs";
@@ -138,27 +141,56 @@ namespace TestHelper
         private static Project CreateProject(string[] sources, string language = LanguageNames.CSharp)
         {
             string fileNamePrefix = DefaultFilePathPrefix;
-            string fileExt = language == LanguageNames.CSharp ? CSharpDefaultFileExt : VisualBasicDefaultExt;
+            string fileExt = language == LanguageNames.CSharp 
+                ? CSharpDefaultFileExt 
+                : VisualBasicDefaultExt;
 
-            var projectId = ProjectId.CreateNewId(debugName: TestProjectName);
+            // Create the workspace
+            var workspace = new AdhocWorkspace();
 
-            var solution = new AdhocWorkspace()
-                .CurrentSolution
-                .AddProject(projectId, TestProjectName, TestProjectName, language)
-                .AddMetadataReference(projectId, CorlibReference)
-                .AddMetadataReference(projectId, SystemCoreReference)
-                .AddMetadataReference(projectId, CSharpSymbolsReference)
-                .AddMetadataReference(projectId, CodeAnalysisReference);
+            // Create the project
+            var projectId = ProjectId.CreateNewId();
+            var versionStamp = VersionStamp.Create();
+            var projectName = TestProjectName;
+            var assemblyName = TestProjectName;
+            var projectInfo = ProjectInfo.Create(
+                projectId,
+                versionStamp,
+                projectName,
+                assemblyName,
+                language);
 
-            int count = 0;
-            foreach (var source in sources)
+            // Set the target framework by adding metadata references
+            var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
+            projectInfo = projectInfo.WithCompilationOptions(compilationOptions);
+
+            var metadataReferences = new[]
             {
-                var newFileName = fileNamePrefix + count + "." + fileExt;
-                var documentId = DocumentId.CreateNewId(projectId, debugName: newFileName);
-                solution = solution.AddDocument(documentId, newFileName, SourceText.From(source));
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.Unsafe).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(ImmutableArray).Assembly.Location),
+                // TODO: Add other framework assemblies as needed
+            };
+            projectInfo = projectInfo.WithMetadataReferences(metadataReferences);
+
+            // Add the project to the workspace
+            var project = workspace.AddProject(projectInfo);
+
+            // Add documents to the project
+            int count = 0;
+            foreach (var sourceCode in sources)
+            {
+                // Add the document to the project
+                var newFileName = $"{fileNamePrefix}{count}.{fileExt}";
+                var sourceText = SourceText.From(sourceCode);
+                project = project.AddDocument(newFileName, sourceText).Project;
+
                 count++;
             }
-            return solution.GetProject(projectId);
+            return project;
         }
         #endregion
     }

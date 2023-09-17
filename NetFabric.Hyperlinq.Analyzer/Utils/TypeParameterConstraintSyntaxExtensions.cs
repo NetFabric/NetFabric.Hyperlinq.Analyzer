@@ -13,9 +13,9 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (typeParameterConstraintSyntax is TypeConstraintSyntax typeConstraintSyntax)
             {
                 var typeSymbol = context.SemanticModel.GetTypeInfo(typeConstraintSyntax.Type).Type;
-                if (typeSymbol is object
-                    && (typeSymbol.IsEnumerator(context.Compilation, out _)
-                    || typeSymbol.IsAsyncEnumerator(context.Compilation, out _)))
+                if (typeSymbol is not null
+                    && (typeSymbol.IsEnumerator()
+                    || typeSymbol.IsAsyncEnumerator(context.Compilation)))
                     return true;
             }
             return false;

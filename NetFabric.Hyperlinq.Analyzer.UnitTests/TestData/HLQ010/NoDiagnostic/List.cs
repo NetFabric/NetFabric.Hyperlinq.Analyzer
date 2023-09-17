@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HLQ010.NoDiagnostic.List
+namespace HLQ010.Diagnostic.List
 {
     partial class C
     {

@@ -23,7 +23,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         {
             var name = typeDeclarationSyntax.GetMetadataName();
             var declaredTypeSymbol = context.Compilation.GetTypeByMetadataName(name);
-            return declaredTypeSymbol is object 
+            return declaredTypeSymbol is not null 
                 && (declaredTypeSymbol.IsEnumerable(context.Compilation, out _) 
                 || declaredTypeSymbol.IsAsyncEnumerable(context.Compilation, out _));
         }
@@ -31,12 +31,12 @@ namespace NetFabric.Hyperlinq.Analyzer
         public static bool ImplementsInterface(this TypeDeclarationSyntax typeDeclarationSyntax, SpecialType interfaceType, SyntaxNodeAnalysisContext context)
         {
             var baseList = typeDeclarationSyntax.BaseList;
-            if (baseList is object)
+            if (baseList is not null)
             {
                 foreach (var type in baseList.Types.Select(baseType => baseType.Type))
                 {
                     var typeSymbol = context.SemanticModel.GetTypeInfo(type).Type;
-                    if (typeSymbol is object 
+                    if (typeSymbol is not null 
                         && (typeSymbol.OriginalDefinition.SpecialType == interfaceType 
                         || typeSymbol.ImplementsInterface(interfaceType, out _)))
                         return true;
@@ -49,12 +49,12 @@ namespace NetFabric.Hyperlinq.Analyzer
         public static bool ImplementsInterface(this TypeDeclarationSyntax typeDeclarationSyntax, INamedTypeSymbol interfaceType, SyntaxNodeAnalysisContext context)
         {
             var baseList = typeDeclarationSyntax.BaseList;
-            if (baseList is object)
+            if (baseList is not null)
             {
                 foreach (var type in baseList.Types.Select(baseType => baseType.Type))
                 {
                     var typeSymbol = context.SemanticModel.GetTypeInfo(type).Type;
-                    if (typeSymbol is object
+                    if (typeSymbol is not null
                         && (SymbolEqualityComparer.Default.Equals(typeSymbol.OriginalDefinition, interfaceType)
                         || typeSymbol.ImplementsInterface(interfaceType, out _)))
                         return true;
@@ -72,7 +72,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             var namespaces = new LinkedList<NamespaceDeclarationSyntax>();
             var types = new LinkedList<TypeDeclarationSyntax>();
-            for (var parent = typeDeclarationSyntax.Parent; parent is object; parent = parent.Parent)
+            for (var parent = typeDeclarationSyntax.Parent; parent is not null; parent = parent.Parent)
             {
                 if (parent is NamespaceDeclarationSyntax @namespace)
                 {
@@ -85,11 +85,11 @@ namespace NetFabric.Hyperlinq.Analyzer
             }
 
             var result = new StringBuilder();
-            for (var item = namespaces.First; item is object; item = item.Next)
+            for (var item = namespaces.First; item is not null; item = item.Next)
             {
                 _ = result.Append(item.Value.Name).Append(NAMESPACE_CLASS_DELIMITER);
             }
-            for (var item = types.First; item is object; item = item.Next)
+            for (var item = types.First; item is not null; item = item.Next)
             {
                 var type = item.Value;
                 AppendName(result, type);
