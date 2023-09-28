@@ -6,8 +6,7 @@
     <LangVersion>10</LangVersion>
     <EnforceExtendedAnalyzerRules>True</EnforceExtendedAnalyzerRules>
     
-    <!-- Avoid ID conflicts with the package project. -->
-    <PackageId>*$(MSBuildProjectFile)*</PackageId>
+    <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

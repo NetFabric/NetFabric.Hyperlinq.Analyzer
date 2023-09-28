@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
-    <PackageVersion>2.1.0</PackageVersion>
+    <PackageVersion>2.2.0</PackageVersion>
     <Authors>Antao Almada</Authors>
     <PackageIcon>Icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -21,7 +21,7 @@
     <PackageTags>hyperlinq, analyzers, enumerable, async, linq, performance</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
-
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
 
@@ -41,6 +41,7 @@
 
   <Target Name="_AddAnalyzersToOutput">
     <ItemGroup>
+      <TfmSpecificPackageFile Include="$(OutputPath)\NetFabric.CodeAnalysis.dll" PackagePath="analyzers/dotnet/cs" />
       <TfmSpecificPackageFile Include="$(OutputPath)\NetFabric.Hyperlinq.Analyzer.dll" PackagePath="analyzers/dotnet/cs" />
       <TfmSpecificPackageFile Include="$(OutputPath)\NetFabric.Hyperlinq.Analyzer.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
     </ItemGroup>
