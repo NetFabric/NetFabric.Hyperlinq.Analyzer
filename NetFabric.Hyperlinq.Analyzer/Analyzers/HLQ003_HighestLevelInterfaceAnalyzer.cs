@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -23,7 +22,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         const string Category = "Performance";
 
         static readonly DiagnosticDescriptor Rule =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
+            new(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ003_HighestLevelInterface.md");
 
@@ -39,7 +38,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is MethodDeclarationSyntax methodDeclarationSyntax))
+            if (context.Node is not MethodDeclarationSyntax methodDeclarationSyntax)
                 return;
 
             if (methodDeclarationSyntax.ReturnsVoid())

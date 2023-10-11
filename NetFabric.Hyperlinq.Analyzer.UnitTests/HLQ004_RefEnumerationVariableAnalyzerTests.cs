@@ -26,6 +26,7 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         [InlineData("TestData/HLQ004/NoDiagnostic/NoRef.cs")]
         [InlineData("TestData/HLQ004/NoDiagnostic/Ref.cs")]
         [InlineData("TestData/HLQ004/NoDiagnostic/RefReadOnly.cs")]
+        [InlineData("TestData/HLQ004/NoDiagnostic/Yield.cs")]
         public void Verify_NoDiagnostics(string path)
         {
             var paths = new[]

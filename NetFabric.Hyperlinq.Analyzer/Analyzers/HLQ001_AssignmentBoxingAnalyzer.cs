@@ -2,10 +2,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using NetFabric.CodeAnalysis;
 using NetFabric.Hyperlinq.Analyzer.Utils;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {
@@ -23,7 +21,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         const string Category = "Performance";
 
         static readonly DiagnosticDescriptor Rule =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, 
+            new(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, 
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ001_AssignmentBoxing.md");
 
@@ -40,14 +38,14 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeSimpleAssignment(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is AssignmentExpressionSyntax assignmentExpression))
+            if (context.Node is not AssignmentExpressionSyntax assignmentExpression)
                 return;
 
             var semanticModel = context.SemanticModel;
 
             var rightTypeSymbol = semanticModel.GetTypeInfo(assignmentExpression.Right).Type;
             if (rightTypeSymbol is null 
-                || !IsEnumerableType(rightTypeSymbol, context.Compilation, out var enumeratorType) 
+                || !rightTypeSymbol.IsEnumerableOrAsyncEnumerable(context.Compilation, out var enumeratorType) 
                 || enumeratorType.IsReferenceType)
                 return;
 
@@ -69,7 +67,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             var leftTypeSymbol = semanticModel.GetTypeInfo(assignmentExpression.Left).Type;
             if (leftTypeSymbol is null 
-                || !IsEnumerableType(leftTypeSymbol, context.Compilation, out enumeratorType) 
+                || !leftTypeSymbol.IsEnumerableOrAsyncEnumerable(context.Compilation, out enumeratorType) 
                 || enumeratorType.IsValueType)
                 return;
 
@@ -79,14 +77,14 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeEqualsValueClause(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is EqualsValueClauseSyntax equalsValueClauseSyntax))
+            if (context.Node is not EqualsValueClauseSyntax equalsValueClauseSyntax)
                 return;
 
             var semanticModel = context.SemanticModel;
 
             var typeSymbol = semanticModel.GetTypeInfo(equalsValueClauseSyntax.Value).Type; 
             if (typeSymbol is null 
-                || !IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) 
+                || !typeSymbol.IsEnumerableOrAsyncEnumerable(context.Compilation, out var enumeratorType) 
                 || enumeratorType.IsReferenceType)
                 return;
 
@@ -96,10 +94,10 @@ namespace NetFabric.Hyperlinq.Analyzer
                 return;
             }
 
-            if (!(equalsValueClauseSyntax.Parent is VariableDeclaratorSyntax variableDeclaratorSyntax))
+            if (equalsValueClauseSyntax.Parent is not VariableDeclaratorSyntax variableDeclaratorSyntax)
                 return;
 
-            if (!(variableDeclaratorSyntax.Parent is VariableDeclarationSyntax variableDeclarationSyntax))
+            if (variableDeclaratorSyntax.Parent is not VariableDeclarationSyntax variableDeclarationSyntax)
                 return;
 
             switch (variableDeclarationSyntax.Parent)
@@ -123,7 +121,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             var typeSymbol = semanticModel.GetDeclaredSymbol(propertyDeclarationSyntax)?.Type;
             if (typeSymbol is null 
-                || !IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) 
+                || !typeSymbol.IsEnumerableOrAsyncEnumerable(context.Compilation, out var enumeratorType) 
                 || enumeratorType.IsValueType)
                 return;
 
@@ -137,7 +135,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
             var typeSymbol = semanticModel.GetTypeInfo(typeSyntax).Type;
             if (typeSymbol is null 
-                || !IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) 
+                || !typeSymbol.IsEnumerableOrAsyncEnumerable(context.Compilation, out var enumeratorType) 
                 || enumeratorType.IsValueType)
                 return;
 
@@ -154,33 +152,12 @@ namespace NetFabric.Hyperlinq.Analyzer
             var semanticModel = context.SemanticModel;
             var typeSymbol = semanticModel.GetTypeInfo(typeSyntax).Type;
             if (typeSymbol is null 
-                || !IsEnumerableType(typeSymbol, context.Compilation, out var enumeratorType) 
+                || !typeSymbol.IsEnumerableOrAsyncEnumerable(context.Compilation, out var enumeratorType) 
                 || enumeratorType.IsValueType)
                 return;
 
             var diagnostic = Diagnostic.Create(Rule, typeSyntax.GetLocation(), enumerableTypeSymbol.MetadataName, typeSymbol.MetadataName);
             context.ReportDiagnostic(diagnostic);
-        }
-
-        static bool IsEnumerableType(ITypeSymbol typeSymbol, Compilation compilation, [NotNullWhen(true)] out ITypeSymbol? enumeratorType)
-        {
-            if (!(typeSymbol is null))
-            {
-                if (typeSymbol.IsEnumerable(compilation, out var enumerableSymbols))
-                {
-                    enumeratorType = enumerableSymbols.GetEnumerator.ReturnType;
-                    return true;
-                }
-
-                if (typeSymbol.IsAsyncEnumerable(compilation, out var asyncEnumerableSymbols))
-                {
-                    enumeratorType = asyncEnumerableSymbols.GetAsyncEnumerator.ReturnType;
-                    return true;
-                }
-            }
-
-            enumeratorType = default;
-            return false;
         }
     }
 }

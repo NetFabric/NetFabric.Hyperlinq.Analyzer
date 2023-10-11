@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using NetFabric.CodeAnalysis;
 using System.Collections.Immutable;
 
 namespace NetFabric.Hyperlinq.Analyzer
@@ -21,7 +20,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         const string Category = "Performance";
 
         static readonly DiagnosticDescriptor Rule =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Info,
+            new(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Info,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ008_ReadOnlyRefEnumerable.md");
 
@@ -37,14 +36,14 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeStructDeclaration(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is StructDeclarationSyntax structDeclarationSyntax))
+            if (context.Node is not StructDeclarationSyntax structDeclarationSyntax)
                 return;
 
             if (structDeclarationSyntax.Modifiers
                 .Any(modifier => modifier.IsKind(SyntaxKind.ReadOnlyKeyword)))
                 return;
 
-            if (!structDeclarationSyntax.IsEnumerable(context))
+            if (!structDeclarationSyntax.IsEnumerableOrAsyncEnumerable(context))
                 return;
 
             var diagnostic = Diagnostic.Create(Rule, structDeclarationSyntax.Keyword.GetLocation(), structDeclarationSyntax.Identifier.Text);

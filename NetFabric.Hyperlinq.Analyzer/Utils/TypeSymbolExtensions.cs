@@ -32,6 +32,27 @@ static class TypeSymbolExtensions
         return false;
     }
 
+    public static bool IsEnumerableOrAsyncEnumerable(this ITypeSymbol typeSymbol, Compilation compilation, [NotNullWhen(true)] out ITypeSymbol? enumeratorType)
+    {
+        if (typeSymbol is not null)
+        {
+            if (typeSymbol.IsEnumerable(compilation, out var enumerableSymbols))
+            {
+                enumeratorType = enumerableSymbols.GetEnumerator.ReturnType;
+                return true;
+            }
+
+            if (typeSymbol.IsAsyncEnumerable(compilation, out var asyncEnumerableSymbols))
+            {
+                enumeratorType = asyncEnumerableSymbols.GetAsyncEnumerator.ReturnType;
+                return true;
+            }
+        }
+
+        enumeratorType = default;
+        return false;
+    }
+
     public static bool IsEnumerator(this ITypeSymbol type)
         => type.ImplementsInterface(SpecialType.System_Collections_IEnumerator, out _) ||
         (type.GetPublicReadProperty("Current") is not null && type.GetPublicMethod("MoveNext") is not null);

@@ -19,13 +19,12 @@ namespace NetFabric.Hyperlinq.Analyzer
         public static bool IsValueType(this TypeDeclarationSyntax typeDeclarationSyntax)
             => typeDeclarationSyntax is StructDeclarationSyntax;
 
-        public static bool IsEnumerable(this TypeDeclarationSyntax typeDeclarationSyntax, SyntaxNodeAnalysisContext context)
+        public static bool IsEnumerableOrAsyncEnumerable(this TypeDeclarationSyntax typeDeclarationSyntax, SyntaxNodeAnalysisContext context)
         {
             var name = typeDeclarationSyntax.GetMetadataName();
             var declaredTypeSymbol = context.Compilation.GetTypeByMetadataName(name);
             return declaredTypeSymbol is not null 
-                && (declaredTypeSymbol.IsEnumerable(context.Compilation, out _) 
-                || declaredTypeSymbol.IsAsyncEnumerable(context.Compilation, out _));
+                && declaredTypeSymbol.IsEnumerableOrAsyncEnumerable(context.Compilation, out _);
         }
 
         public static bool ImplementsInterface(this TypeDeclarationSyntax typeDeclarationSyntax, SpecialType interfaceType, SyntaxNodeAnalysisContext context)

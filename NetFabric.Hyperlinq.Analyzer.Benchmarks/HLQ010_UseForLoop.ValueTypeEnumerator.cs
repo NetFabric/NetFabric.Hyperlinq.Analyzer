@@ -8,7 +8,7 @@ namespace NetFabric.Hyperlinq.Analyzer.Benchmarks;
 public class HLQ010_UseForLoop_ValueTypeEnumerator
 {
     ArraySegment<int> arraySegment;
-    Dictionary<int, int> dictionary;
+    Dictionary<int, int>? dictionary;
 
     [Params(100, 10_000)]
     public int Count { get; set; }
@@ -26,7 +26,7 @@ public class HLQ010_UseForLoop_ValueTypeEnumerator
     public int ArraySegment_Foreach()
     {
         var sum = 0;
-        foreach (var item in arraySegment!)
+        foreach (var item in arraySegment)
             sum += item;
         return sum;
     }
@@ -36,9 +36,9 @@ public class HLQ010_UseForLoop_ValueTypeEnumerator
     public int ArraySegment_For()
     {
         var sum = 0;
-        for (var index = 0; index < arraySegment!.Count; index++)
+        for (var index = 0; index < arraySegment.Count; index++)
         {
-            var item = arraySegment![index];
+            var item = arraySegment[index];
             sum += item;
         }
         return sum;

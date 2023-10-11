@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
-using System;
 using System.Collections.Immutable;
 
 namespace NetFabric.Hyperlinq.Analyzer
@@ -22,7 +21,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         const string Category = "Performance";
 
         static readonly DiagnosticDescriptor Rule =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
+            new(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ005_AvoidSingle.md");
 
@@ -38,10 +37,10 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeInvocationExpression(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is InvocationExpressionSyntax invocationExpressionSyntax))
+            if (context.Node is not InvocationExpressionSyntax invocationExpressionSyntax)
                 return;
 
-            if (!(invocationExpressionSyntax.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax))
+            if (invocationExpressionSyntax.Expression is not MemberAccessExpressionSyntax memberAccessExpressionSyntax)
                 return;
 
             if (memberAccessExpressionSyntax.Expression is null)
@@ -49,28 +48,28 @@ namespace NetFabric.Hyperlinq.Analyzer
 
             string methodFound;
             string methodReplace;
-            bool isAsync;
+            bool mustBeAsync;
             switch (memberAccessExpressionSyntax.Name.Identifier.Text)
             {
                 case "Single":
                     methodFound = "Single";
                     methodReplace = "First";
-                    isAsync = false;
+                    mustBeAsync = false;
                     break;
                 case "SingleOrDefault":
                     methodFound = "SingleOrDefault";
                     methodReplace = "FirstOrDefault";
-                    isAsync = false;
+                    mustBeAsync = false;
                     break;
                 case "SingleAsync":
                     methodFound = "SingleAsync";
                     methodReplace = "FirstAsync";
-                    isAsync = true;
+                    mustBeAsync = true;
                     break;
                 case "SingleOrDefaultAsync":
                     methodFound = "SingleOrDefaultAsync";
                     methodReplace = "FirstOrDefaultAsync";
-                    isAsync = true;
+                    mustBeAsync = true;
                     break;
                 default:
                     return;
@@ -93,26 +92,22 @@ namespace NetFabric.Hyperlinq.Analyzer
             }
 
             var type = context.SemanticModel.GetTypeInfo(syntaxNode).Type;
-            if (type is null || !IsEnumerable(type, context.Compilation, isAsync))
+            if (type is null)
                 return;
 
-            var diagnostic = Diagnostic.Create(Rule, memberAccessExpressionSyntax.Name.GetLocation(), methodFound, methodReplace);
-            context.ReportDiagnostic(diagnostic);
-        }
-
-        static bool IsEnumerable(ITypeSymbol type, Compilation compilation, bool isAsync)
-        {
-            if (isAsync)
+            if (mustBeAsync)
             {
-                if (type.IsAsyncEnumerable(compilation, out _))
-                    return true;
+                if (!type.IsAsyncEnumerable(context.Compilation, out _))
+                    return;
             }
             else
             {
-                if (type.IsEnumerable(compilation, out _))
-                    return true;
+                if (!type.IsEnumerable(context.Compilation, out _))
+                    return;
             }
-            return false;
+
+            var diagnostic = Diagnostic.Create(Rule, memberAccessExpressionSyntax.Name.GetLocation(), methodFound, methodReplace);
+            context.ReportDiagnostic(diagnostic);
         }
     }
 }

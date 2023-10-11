@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -19,21 +18,19 @@ namespace NetFabric.Hyperlinq.Analyzer
             => methodDeclarationSyntax.ReturnType is IdentifierNameSyntax identifierNameSyntax
                 && identifierNameSyntax.Identifier.ValueText == valueText;
 
-        public static bool ReturnsEnumerable(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
+        public static bool ReturnsEnumerableOrAsyncEnumerable(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
         {
             var typeSymbol = context.SemanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
-            return !(typeSymbol is null)
-                && (typeSymbol.IsEnumerable(context.Compilation, out _)
-                || typeSymbol.IsAsyncEnumerable(context.Compilation, out _));
+            return typeSymbol is not null
+                && typeSymbol.IsEnumerableOrAsyncEnumerable(context.Compilation, out _);
         }
 
-        public static bool ReturnsEnumerableInterface(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
+        public static bool ReturnsEnumerableOrAsyncEnumerableInterface(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
         {
             var typeSymbol = context.SemanticModel.GetTypeInfo(methodDeclarationSyntax.ReturnType).Type;
-            return !(typeSymbol is null)
+            return typeSymbol is not null
                 && typeSymbol.TypeKind == TypeKind.Interface
-                && (typeSymbol.IsEnumerable(context.Compilation, out _)
-                || typeSymbol.IsAsyncEnumerable(context.Compilation, out _));
+                && typeSymbol.IsEnumerableOrAsyncEnumerable(context.Compilation, out _);
         }
 
         public static bool IsExtensionMethod(this MethodDeclarationSyntax methodDeclarationSyntax, [NotNullWhen(true)] out ParameterSyntax? parameterSyntax)
@@ -52,7 +49,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         public static bool IsEnumerableInstanceMethod(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
         {
             var typeDeclaration = methodDeclarationSyntax.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
-            return typeDeclaration is not null && typeDeclaration.IsEnumerable(context);
+            return typeDeclaration is not null && typeDeclaration.IsEnumerableOrAsyncEnumerable(context);
         }
 
         public static bool IsEnumerableExtensionMethod(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
@@ -64,7 +61,7 @@ namespace NetFabric.Hyperlinq.Analyzer
                     var typeSymbol = context.SemanticModel.GetTypeInfo(parameterSyntax.Type).Type;
                     if (typeSymbol is not null)
                     {
-                        return typeSymbol.IsEnumerable(context.Compilation, out _) || typeSymbol.IsAsyncEnumerable(context.Compilation, out _);
+                        return typeSymbol.IsEnumerableOrAsyncEnumerable(context.Compilation, out _);
                     }
                 }
             }

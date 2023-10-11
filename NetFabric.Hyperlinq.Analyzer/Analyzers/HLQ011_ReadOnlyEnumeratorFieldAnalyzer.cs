@@ -2,12 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using NetFabric.CodeAnalysis;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {
@@ -25,7 +20,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         const string Category = "Compiler";
 
         static readonly DiagnosticDescriptor Rule =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error,
+            new(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ011_ReadOnlyEnumeratorField.md");
 
@@ -41,7 +36,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeFieldDeclaration(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is FieldDeclarationSyntax fieldDeclaration))
+            if (context.Node is not FieldDeclarationSyntax fieldDeclaration)
                 return;
 
             if (!fieldDeclaration.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.ReadOnlyKeyword))

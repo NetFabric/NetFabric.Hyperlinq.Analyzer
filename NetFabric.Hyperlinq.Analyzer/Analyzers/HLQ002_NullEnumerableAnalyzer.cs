@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using NetFabric.CodeAnalysis;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -22,7 +21,7 @@ namespace NetFabric.Hyperlinq.Analyzer
         const string Category = "Compiler";
 
         static readonly DiagnosticDescriptor Rule =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error,
+            new(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error,
                 isEnabledByDefault: true, description: Description,
                 helpLinkUri: "https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/tree/master/docs/reference/HLQ002_NullEnumerable.md");
 
@@ -38,10 +37,10 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is MethodDeclarationSyntax methodDeclarationSyntax))
+            if (context.Node is not MethodDeclarationSyntax methodDeclarationSyntax)
                 return;
 
-            if (!methodDeclarationSyntax.ReturnsEnumerableInterface(context))
+            if (!methodDeclarationSyntax.ReturnsEnumerableOrAsyncEnumerableInterface(context))
                 return;
 
             if (methodDeclarationSyntax.Body is null)
