@@ -3,8 +3,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NetFabric.CodeAnalysis;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -76,7 +74,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             IMethodSymbol getEnumerator;
 
             // check if disposable type is an enumerator
-            if (declaredTypeSymbol.IsEnumerator(compilation, out _))
+            if (declaredTypeSymbol.IsEnumerator())
             {
                 // check if there's an outer type
                 typeDeclaration = typeDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
@@ -94,7 +92,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
                 getEnumerator = enumerableSymbols.GetEnumerator;
             }
-            else if (declaredTypeSymbol.IsAsyncEnumerator(compilation, out _))
+            else if (declaredTypeSymbol.IsAsyncEnumerator(compilation))
             {
                 // check if there's an outer type
                 typeDeclaration = typeDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();

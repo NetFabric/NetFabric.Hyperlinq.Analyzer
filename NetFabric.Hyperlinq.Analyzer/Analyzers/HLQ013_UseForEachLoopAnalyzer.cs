@@ -40,27 +40,20 @@ namespace NetFabric.Hyperlinq.Analyzer
         {
             var forStatement = (ForStatementSyntax)context.Node;
 
-            var declaration = forStatement.Declaration;
-            if (declaration is null || declaration.Variables.Count != 1)
-                return;
-
             var statement = forStatement.Statement;
             if (statement is null)
                 return;
 
-            // check if declaration declares a variable of type int
-            var variableType = context.SemanticModel.GetTypeInfo(declaration.Type).Type;
-            if (variableType is null || variableType.SpecialType != SpecialType.System_Int32)
+            if (!forStatement.IsIncrementalStep(context, out var forIdentifier))
                 return;
 
             // check if the variable is used in the statement only for accessing indexer of one single array or span
-            var variableIdentifier = declaration.Variables[0].Identifier.ToString();
             var indexedCollection = default(string);
             var indexedCollectionType = default(ITypeSymbol);
             foreach (var identifierNameSyntax in statement.DescendantNodes().OfType<IdentifierNameSyntax>())
             {
                 // check if the identifier is using the variable
-                if (identifierNameSyntax.Identifier.ToString() != variableIdentifier)
+                if (identifierNameSyntax.Identifier.ToString() != forIdentifier)
                     continue;
 
                 // check if the identifier is used for something other than to access indexer
@@ -68,19 +61,27 @@ namespace NetFabric.Hyperlinq.Analyzer
                 if (elementAccessExpressionSyntax is null)
                     return;
 
-                if (elementAccessExpressionSyntax.ArgumentList.Arguments.Count != 1)
+                var arguments = elementAccessExpressionSyntax.ArgumentList.Arguments;
+                if (arguments.Count != 1)
                     continue;
 
-                var expression = elementAccessExpressionSyntax.Expression;
+                // check if the indexer variable is the same as the one used in the for loop
+                if (arguments[0].ToString() != forIdentifier)
+                    return;
 
-                // check if the indexed collection is an array or a span
-                var expressionType = context.SemanticModel.GetTypeInfo(expression).Type;
-                if (!(expressionType.IsArrayType() || expressionType.IsSpanType()))
+                var expression = elementAccessExpressionSyntax.Expression;
+                if (expression is not IdentifierNameSyntax elementAccessIdentifierNameSyntax)
                     return;
 
                 // check if the indexed collection is the same for all accesses
                 var expressionString = expression.ToString();
                 if (!string.IsNullOrEmpty(indexedCollection) && indexedCollection != expressionString)
+                    return;
+
+                // check if foreach is optimized for this type
+                var typeInfo = context.SemanticModel.GetTypeInfo(elementAccessIdentifierNameSyntax);
+                var expressionType = typeInfo.ConvertedType;
+                if (!expressionType.IsForEachOptimized())
                     return;
 
                 indexedCollection = expressionString;
@@ -89,8 +90,8 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (indexedCollection is null)
                 return;
 
-            var diagnostic = Diagnostic.Create(Rule, forStatement.ForKeyword.GetLocation(), indexedCollectionType!.ToDisplayString());
-            context.ReportDiagnostic(diagnostic);
+            var diagnostic2 = Diagnostic.Create(Rule, forStatement.ForKeyword.GetLocation(), indexedCollectionType!.ToString());
+            context.ReportDiagnostic(diagnostic2);
         }
     }
 }

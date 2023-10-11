@@ -39,13 +39,10 @@ namespace NetFabric.Hyperlinq.Analyzer
             var foreachStatement = (ForEachStatementSyntax)context.Node;
             var collectionType = context.SemanticModel.GetTypeInfo(foreachStatement.Expression).Type;
 
-            if (collectionType is INamedTypeSymbol namedTypeSymbol &&
-                namedTypeSymbol.IsGenericType &&
-                namedTypeSymbol.OriginalDefinition.ToString() == "System.Collections.Generic.List<T>")
+            if (collectionType.IsList(out var itemType))
             {
-                var listType = namedTypeSymbol.TypeArguments[0];
                 var diagnostic = Diagnostic.Create(Rule, foreachStatement.Expression.GetLocation(),
-                    listType.ToDisplayString());
+                    itemType.ToDisplayString());
                 context.ReportDiagnostic(diagnostic);
             }
         }

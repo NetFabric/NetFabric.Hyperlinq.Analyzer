@@ -2,10 +2,9 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using NetFabric.CodeAnalysis;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Reflection.Metadata;
+using NetFabric.CodeAnalysis;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {
@@ -39,7 +38,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is MethodDeclarationSyntax methodDeclarationSyntax))
+            if (context.Node is not MethodDeclarationSyntax methodDeclarationSyntax)
                 return;
 
             var semanticModel = context.SemanticModel;
@@ -60,14 +59,14 @@ namespace NetFabric.Hyperlinq.Analyzer
             {
                 // check if it returns an enumerator
                 var type = semanticModel.GetTypeInfo(returnType).Type;
-                if (type is null || !type.IsEnumerator(semanticModel.Compilation, out _))
+                if (!type.IsEnumerator())
                     return;
             }
             else if (identifier == "GetAsyncEnumerator" && methodDeclarationSyntax.ParameterList.Parameters.Count < 2)
             {
                 // check if it returns an async enumerator
                 var type = semanticModel.GetTypeInfo(returnType).Type;
-                if (type is null || !type.IsAsyncEnumerator(semanticModel.Compilation, out _))
+                if (!type.IsAsyncEnumerator(context.Compilation))
                     return;
             }
             else

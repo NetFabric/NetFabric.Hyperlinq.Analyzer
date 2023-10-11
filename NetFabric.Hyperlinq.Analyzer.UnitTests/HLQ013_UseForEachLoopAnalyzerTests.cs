@@ -17,7 +17,11 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
 
         [Theory]
         [InlineData("TestData/HLQ013/NoDiagnostic/List.cs")]
-        [InlineData("TestData/HLQ013/NoDiagnostic/Array.cs")]
+        [InlineData("TestData/HLQ013/NoDiagnostic/ImmutableArray.cs")]
+        [InlineData("TestData/HLQ013/NoDiagnostic/IndexNotUsed.cs")]
+        [InlineData("TestData/HLQ013/NoDiagnostic/MathOnIndex.cs")]
+        [InlineData("TestData/HLQ013/NoDiagnostic/MultipleIndexing.cs")]
+        [InlineData("TestData/HLQ013/NoDiagnostic/CompoundAssignmentNotOne.cs")]
         public void Verify_NoDiagnostics(string path)
         {
             var paths = new[]
@@ -31,6 +35,10 @@ namespace NetFabric.Hyperlinq.Analyzer.UnitTests
         [InlineData("TestData/HLQ013/Diagnostic/Array.cs", 10, 13, "int[]")]
         [InlineData("TestData/HLQ013/Diagnostic/Span.cs", 10, 13, "System.Span<int>")]
         [InlineData("TestData/HLQ013/Diagnostic/ReadOnlySpan.cs", 10, 13, "System.ReadOnlySpan<int>")]
+        [InlineData("TestData/HLQ013/Diagnostic/PrefixIncrement.cs", 10, 13, "int[]")]
+        [InlineData("TestData/HLQ013/Diagnostic/CompoundAssignmentOne.cs", 10, 13, "int[]")]
+        [InlineData("TestData/HLQ013/Diagnostic/PrefixAssignPlusOne.cs", 10, 13, "int[]")]
+        [InlineData("TestData/HLQ013/Diagnostic/PostfixAssignPlusOne.cs", 10, 13, "int[]")]
         public void Verify_Diagnostic(string path, int line, int column, string collectionType)
         {
             var paths = new[]

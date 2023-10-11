@@ -52,17 +52,17 @@ namespace NetFabric.Hyperlinq.Analyzer
         public static bool IsEnumerableInstanceMethod(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
         {
             var typeDeclaration = methodDeclarationSyntax.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
-            return typeDeclaration is object && typeDeclaration.IsEnumerable(context);
+            return typeDeclaration is not null && typeDeclaration.IsEnumerable(context);
         }
 
         public static bool IsEnumerableExtensionMethod(this MethodDeclarationSyntax methodDeclarationSyntax, SyntaxNodeAnalysisContext context)
         {
             if (methodDeclarationSyntax.IsExtensionMethod(out var parameterSyntax))
             {
-                if (parameterSyntax.Type is object)
+                if (parameterSyntax.Type is not null)
                 {
                     var typeSymbol = context.SemanticModel.GetTypeInfo(parameterSyntax.Type).Type;
-                    if (typeSymbol is object)
+                    if (typeSymbol is not null)
                     {
                         return typeSymbol.IsEnumerable(context.Compilation, out _) || typeSymbol.IsAsyncEnumerable(context.Compilation, out _);
                     }
@@ -151,7 +151,7 @@ namespace NetFabric.Hyperlinq.Analyzer
 
         public static bool IsPublic(this MethodDeclarationSyntax methodDeclarationSyntax)
         {
-            for (SyntaxNode? node = methodDeclarationSyntax; node is object; node = node.Parent)
+            for (SyntaxNode? node = methodDeclarationSyntax; node is not null; node = node.Parent)
             {
                 if (node is TypeDeclarationSyntax type)
                 {
@@ -186,7 +186,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             => methodDeclarationSyntax.AttributeLists
                 .Select(attributeList => attributeList.Target)
                 .Any(target => 
-                    target is object &&
+                    target is not null &&
                     (target.Identifier.ValueText == name || target.Identifier.ValueText == $"{name}Attribute"));
     }
 }

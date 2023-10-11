@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HLQ013.NoDiagnostic.List
+namespace HLQ013.NoDiagnostic.ListTest
 {
     partial class C
     {

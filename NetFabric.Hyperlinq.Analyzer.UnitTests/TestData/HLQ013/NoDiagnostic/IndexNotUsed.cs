@@ -1,16 +1,17 @@
 ﻿using System;
 
-namespace HLQ013.Diagnostic.SpanTest
+namespace HLQ013.NoDiagnostic.IndexNotUsedTest
 {
     partial class C
     {
         void Method()
         {
-            var source = (new[] { 1, 2, 3 }).AsSpan();
+            var source = new[] { 1, 2, 3 };
+
             for (var index = 0; index < source.Length; index++)
             {
-                var item = source[index];
-                Console.WriteLine(item);
+                // variable not used for indexing
+                Console.WriteLine(index);
             }
         }
     }

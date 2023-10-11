@@ -2,8 +2,8 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using NetFabric.CodeAnalysis;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace NetFabric.Hyperlinq.Analyzer
 {
@@ -43,20 +43,15 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (expressionType is null)
                 return;
 
-            if (expressionType.IsArrayType() ||
-                expressionType.IsSpanType())
+            // if foreach uses indexer for this type then let it be
+            if (expressionType.IsForEachOptimized())
                 return;
 
-            var properties = expressionType.GetMembers().OfType<IPropertySymbol>();
-            var hasIndexer = properties.Any(property => 
-                property.IsIndexer && 
-                property.Parameters.Length == 1 && 
-                property.Parameters[0].Type.SpecialType == SpecialType.System_Int32);
-            bool hasCountOrLength = properties.Any(property => 
-                property.IsReadOnly && 
-                (property.Name == "Length" || property.Name == "Count"));
+            // if it's List<T> then should be using foreach with CollectionsMarshal.AsSpan()
+            if (expressionType.IsList(out _))
+                return;
 
-            if (hasIndexer && hasCountOrLength)
+            if (expressionType.IsIndexable(out _))
             {
                 var diagnostic = Diagnostic.Create(Rule, foreachStatement.Expression.GetLocation());
                 context.ReportDiagnostic(diagnostic);

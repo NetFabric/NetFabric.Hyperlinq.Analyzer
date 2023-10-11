@@ -15,7 +15,7 @@ namespace NetFabric.Hyperlinq.Analyzer
             if (!fieldDeclarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PublicKeyword)))
                 return false;
 
-            for (var node = fieldDeclarationSyntax.Parent; node is object; node = node.Parent)
+            for (var node = fieldDeclarationSyntax.Parent; node is not null; node = node.Parent)
             {
                 if (node is TypeDeclarationSyntax type)
                 {
@@ -46,8 +46,8 @@ namespace NetFabric.Hyperlinq.Analyzer
             else
             {
                 if (!typeSymbol.IsValueType
-                    || !(typeSymbol.IsEnumerator(context.Compilation, out _)
-                        || typeSymbol.IsAsyncEnumerator(context.Compilation, out _)))
+                    || !(typeSymbol.IsEnumerator()
+                        || typeSymbol.IsAsyncEnumerator(context.Compilation)))
                     return false;
             }
 

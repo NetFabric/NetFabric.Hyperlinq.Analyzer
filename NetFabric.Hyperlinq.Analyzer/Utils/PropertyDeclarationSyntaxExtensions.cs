@@ -11,7 +11,7 @@ namespace NetFabric.Hyperlinq.Analyzer.Utils
             if (!propertyDeclarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PublicKeyword)))
                 return false;
 
-            for (var node = propertyDeclarationSyntax.Parent; node is object; node = node.Parent)
+            for (var node = propertyDeclarationSyntax.Parent; node is not null; node = node.Parent)
             {
                 if (node is TypeDeclarationSyntax type)
                 {

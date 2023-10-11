@@ -1,25 +1,12 @@
 ﻿using System;
 
-namespace HLQ013.NoDiagnostic.Array
+namespace HLQ013.NoDiagnostic.MultipleIndexingTest
 {
     partial class C
     {
         void Method()
         {
             var source = new[] { 1, 2, 3 };
-
-            for (var index = 0; index < source.Length; index++)
-            {
-                // variable not used for indexing
-                Console.WriteLine(index);
-            }
-
-            for (var index = 0; index < source.Length; index++)
-            {
-                var item = source[index]; // using variable for indexing
-                Console.WriteLine(item);
-                Console.WriteLine(index); // using variable for something else
-            }
 
             var source2 = source;
             for (var index = 0; index < source.Length; index++)
