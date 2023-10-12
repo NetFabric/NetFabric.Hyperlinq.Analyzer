@@ -5,8 +5,10 @@
     <IsPackable>false</IsPackable>
     <LangVersion>10</LangVersion>
     <EnforceExtendedAnalyzerRules>True</EnforceExtendedAnalyzerRules>
-    
-    <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+    <!-- Avoid ID conflicts with the package project. -->
+    <PackageId>*$(MSBuildProjectFile)*</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,11 +22,30 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="ILRepack.MSBuild.Task" Version="2.0.13">      
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
     <EmbeddedResource Update="Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
   </ItemGroup>
+
+  <Target Name="ILRepack" AfterTargets="Build">
+    <PropertyGroup>
+      <WorkingDirectory>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(TargetFramework)</WorkingDirectory>
+    </PropertyGroup>
+    <ItemGroup>
+      <InputAssemblies Include="NetFabric.CodeAnalysis.dll" />
+    </ItemGroup>
+    <ILRepack OutputType="$(OutputType)" 
+              MainAssembly="$(AssemblyName).dll" 
+              OutputAssembly="$(AssemblyName).dll" 
+              InputAssemblies="@(InputAssemblies)" 
+              InternalizeExcludeAssemblies="@(InternalizeExcludeAssemblies)" 
+              WorkingDirectory="$(WorkingDirectory)" />
+  </Target>
 
 </Project>
