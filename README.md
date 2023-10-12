@@ -22,7 +22,6 @@ Rule ID | Category | Severity | Notes
 [HLQ007](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ007_NonDisposableEnumerator.md)  | Performance |  Warning | Consider returning a non-disposable enumerator.
 [HLQ008](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ008_ReadOnlyRefEnumerable.md)  | Performance |  Info | The enumerable is a value type. Consider making it `readonly`.
 [HLQ009](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ009_RemoveOptionalMethods.md)  | Performance |  Info | Consider removing an empty optional enumerator method.
-[HLQ010](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ010_UseForLoop.md)  | Performance |  Warning | Consider using a `for` loop instead.
 [HLQ011](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ011_ReadOnlyEnumeratorField.md)  | Compiler |  Error | Mutable value-type enumerators cannot be stored in a `readonly` field.
 [HLQ012](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ012_UseCollectionsMarshalAsSpan.md)  | Performance |  Warning | Consider using `CollectionsMarshal.AsSpan()` when iterating a `List<T>`.
 [HLQ013](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ013_UseForEachLoop.md)  | Performance |  Warning | Consider using `foreach` when iterating an array or a `Span<T>`.

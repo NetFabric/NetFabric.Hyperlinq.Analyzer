@@ -12,7 +12,6 @@ HLQ006  | Performance | Warning  | HLQ006_GetEnumeratorReturnTypeAnalyzer, [Docu
 HLQ007  | Performance |  Warning | HLQ007_NonDisposableEnumeratorAnalyzer, [Documentation](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ007_NonDisposableEnumerator.md) 
 HLQ008  | Performance |  Info | HLQ008_ReadOnlyRefEnumerableAnalyzer, [Documentation](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ008_ReadOnlyRefEnumerable.md) 
 HLQ009  | Performance |  Info | HLQ009_RemoveOptionalMethodsAnalyzer, [Documentation](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ009_RemoveOptionalMethods.md) 
-HLQ010  | Performance |  Warning | HLQ010_UseForLoopAnalyzer, [Documentation](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ010_UseForLoop.md) 
 HLQ011  | Compiler |  Error | HLQ011_ReadOnlyEnumeratorFieldAnalyzer, [Documentation](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ011_ReadOnlyEnumeratorField.md) 
 HLQ012  | Performance |  Warning | HLQ012_UseCollectionsMarshalAsSpanAnalyzer, [Documentation](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ012_UseCollectionsMarshalAsSpan.md) 
 HLQ013  | Performance |  Warning | HLQ013_UseForEachLoopAnalyzer, [Documentation](https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer/blob/master/docs/reference/HLQ013_UseForEachLoop.md) 
