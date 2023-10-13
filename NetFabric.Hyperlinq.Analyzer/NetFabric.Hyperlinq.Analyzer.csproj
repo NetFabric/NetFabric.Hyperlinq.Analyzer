@@ -8,6 +8,15 @@
     
     <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <IsTrimmable>true</IsTrimmable>
+    <TrimMode>partial</TrimMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <TrimmableAssembly Include="NetFabric.CodeAnalysis" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="NetFabric.CodeAnalysis" Version="5.1.0" />
