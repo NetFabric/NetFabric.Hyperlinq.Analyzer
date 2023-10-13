@@ -1,49 +1,78 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<IsPackable>true</IsPackable>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
+	<PropertyGroup>
+		<PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
+		<PackageVersion>2.3.1</PackageVersion>
+		<Authors>Antao Almada</Authors>
+		<PackageIcon>Icon.png</PackageIcon>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<RepositoryUrl>https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer</RepositoryUrl>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<Description>A Roslyn analyzer with rules related to generation and consumption of enumerables and async enumerables in C#.</Description>
+		<PackageReleaseNotes></PackageReleaseNotes>
+		<Copyright>Copyright 2019-2023 Antao Almada</Copyright>
+		<PackageTags>hyperlinq, analyzers, enumerable, async, linq, performance</PackageTags>
+		<DevelopmentDependency>true</DevelopmentDependency>
+		<NoPackageAnalysis>true</NoPackageAnalysis>
+		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
-    <PackageVersion>2.2.0</PackageVersion>
-    <Authors>Antao Almada</Authors>
-    <PackageIcon>Icon.png</PackageIcon>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <RepositoryUrl>https://github.com/NetFabric/NetFabric.Hyperlinq.Analyzer</RepositoryUrl>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>A Roslyn analyzer with rules related to generation and consumption of enumerables and async enumerables in C#.</Description>
-    <PackageReleaseNotes></PackageReleaseNotes>
-    <Copyright>Copyright 2019-2023 Antao Almada</Copyright>
-    <PackageTags>hyperlinq, analyzers, enumerable, async, linq, performance</PackageTags>
-    <DevelopmentDependency>true</DevelopmentDependency>
-    <NoPackageAnalysis>true</NoPackageAnalysis>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
-  </PropertyGroup>
+	<ItemGroup>
+		<None Include="..\Icon.png" Pack="true" PackagePath="" />
+		<None Include="..\LICENSE" Pack="true" PackagePath="" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\Icon.png" Pack="true" PackagePath="" />
-    <None Include="..\LICENSE" Pack="true" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\NetFabric.Hyperlinq.Analyzer.CodeFixes\NetFabric.Hyperlinq.Analyzer.CodeFixes.csproj" />
-    <ProjectReference Include="..\NetFabric.Hyperlinq.Analyzer\NetFabric.Hyperlinq.Analyzer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="tools\*.ps1" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="" />
-  </ItemGroup>
-
-  <Target Name="_AddAnalyzersToOutput">
-    <ItemGroup>
-      <TfmSpecificPackageFile Include="$(OutputPath)\NetFabric.Hyperlinq.Analyzer.dll" PackagePath="analyzers/dotnet/cs" />
-      <TfmSpecificPackageFile Include="$(OutputPath)\NetFabric.Hyperlinq.Analyzer.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
+	<ItemGroup>
+		<ProjectReference Include="..\NetFabric.Hyperlinq.Analyzer.CodeFixes\NetFabric.Hyperlinq.Analyzer.CodeFixes.csproj" />
+		<ProjectReference Include="..\NetFabric.Hyperlinq.Analyzer\NetFabric.Hyperlinq.Analyzer.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<None Update="tools\*.ps1" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="" />
     </ItemGroup>
-  </Target>
 
+	<ItemGroup>
+		<PackageReference Include="NetFabric.CodeAnalysis" Version="5.1.0" PrivateAssets="all" Pack="true" GeneratePathProperty="true" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.3.1" PrivateAssets="all" />
+	</ItemGroup>
+
+	<!-- For every PackageReference with Pack=true, we include the assemblies from it in the package -->
+	<Target Name="AddPackDependencies" Inputs="@(RuntimeCopyLocalItems)" Outputs="%(RuntimeCopyLocalItems.NuGetPackageId)" DependsOnTargets="ResolvePackageAssets" BeforeTargets="GenerateNuspec" AfterTargets="ResolvePackageAssets">
+		<ItemGroup>
+			<NuGetPackageId Include="@(RuntimeCopyLocalItems -> '%(NuGetPackageId)')" />
+		</ItemGroup>
+		<PropertyGroup>
+			<NuGetPackageId>@(NuGetPackageId -&gt; Distinct())</NuGetPackageId>
+		</PropertyGroup>
+		<ItemGroup>
+			<PackageReferenceDependency Include="@(PackageReference -&gt; WithMetadataValue('Identity', '$(NuGetPackageId)'))" />
+		</ItemGroup>
+		<PropertyGroup>
+			<NuGetPackagePack>@(PackageReferenceDependency -> '%(Pack)')</NuGetPackagePack>
+		</PropertyGroup>
+		<ItemGroup Condition="'$(NuGetPackagePack)' == 'true'">
+			<_PackageFiles Include="@(RuntimeCopyLocalItems)" PackagePath="$(BuildOutputTargetFolder)/$(TargetFramework)/%(Filename)%(Extension)" />
+			<None Include="@(RuntimeCopyLocalItems)" Pack="true" PackagePath="analyzers/dotnet/cs" />
+	        <RuntimeCopyLocalItems Update="@(RuntimeCopyLocalItems)" CopyLocal="true" Private="true" />
+			<ResolvedFileToPublish Include="@(RuntimeCopyLocalItems)" CopyToPublishDirectory="PreserveNewest" RelativePath="%(Filename)%(Extension)" />
+		</ItemGroup>
+	</Target>
+	
+	<Target Name="_AddAnalyzersToOutput">
+		<ItemGroup>
+			<TfmSpecificPackageFile Include="$(OutputPath)\*.dll" PackagePath="analyzers/dotnet/cs" />
+		</ItemGroup>
+	</Target>
+	
 </Project>

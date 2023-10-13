@@ -32,6 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		docs\reference\HLQ007_NonDisposableEnumerator.md = docs\reference\HLQ007_NonDisposableEnumerator.md
 		docs\reference\HLQ008_ReadOnlyRefEnumerable.md = docs\reference\HLQ008_ReadOnlyRefEnumerable.md
 		docs\reference\HLQ009_RemoveOptionalMethods.md = docs\reference\HLQ009_RemoveOptionalMethods.md
+		docs\reference\HLQ010_UseForLoop.md = docs\reference\HLQ010_UseForLoop.md
 		docs\reference\HLQ011_ReadOnlyEnumeratorField.md = docs\reference\HLQ011_ReadOnlyEnumeratorField.md
 		docs\reference\HLQ012_UseCollectionsMarshalAsSpan.md = docs\reference\HLQ012_UseCollectionsMarshalAsSpan.md
 		docs\reference\HLQ013_UseForEachLoop.md = docs\reference\HLQ013_UseForEachLoop.md
