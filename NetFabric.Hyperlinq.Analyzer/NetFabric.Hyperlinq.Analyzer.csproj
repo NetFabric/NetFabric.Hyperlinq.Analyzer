@@ -6,7 +6,7 @@
     <LangVersion>10</LangVersion>
     <EnforceExtendedAnalyzerRules>True</EnforceExtendedAnalyzerRules>
     
-    <PackageId>NetFabric.Hyperlinq.Analyzer</PackageId>
+    <PackageId>*$(MSBuildProjectFile)*</PackageId>
   </PropertyGroup>
   
   <PropertyGroup>
